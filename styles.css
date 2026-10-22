@@ -1058,8 +1058,108 @@ p {
 }
 
 /* --------------------------------------------------------------------------
-   8. HOW MOTION DOJO WORKS & GRADIENT SECTIONS
+   8. HOW MOTION DOJO WORKS SECTION (Light: Dojo White)
    -------------------------------------------------------------------------- */
+.section-steps {
+  padding-top: var(--section-pad-y);
+  padding-bottom: var(--section-pad-y);
+  background-color: var(--dojo-white);
+}
+
+.steps-section-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto var(--space-6);
+}
+
+.steps-section-header .section-heading {
+  color: var(--dojo-midnight);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: var(--space-2);
+}
+
+.steps-subheading {
+  color: rgba(20, 10, 46, 0.75);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  margin: 0 auto;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.step-card {
+  background-color: var(--surface);
+  border-radius: 24px;
+  border: 1px solid var(--lavender-border);
+  box-shadow: 0 10px 30px rgba(109, 50, 232, 0.08);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.step-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(109, 50, 232, 0.14);
+}
+
+.step-icon-wrap {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 16px;
+  background-color: var(--lavender-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.step-icon-wrap svg {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  stroke: var(--motion-violet);
+  display: block;
+}
+
+.step-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.step-num-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--dojo-midnight);
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+
+.step-text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: rgba(20, 10, 46, 0.8);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .section-gradient {
   background: var(--gradient-brand);
   position: relative;
@@ -3709,6 +3809,11 @@ p {
     gap: var(--space-4);
   }
 
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
   .team-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-3);
@@ -3735,6 +3840,14 @@ p {
 
   .mobile-menu-toggle {
     display: inline-flex;
+  }
+
+  .section-hero {
+    padding-bottom: 0;
+  }
+
+  .section-who-for {
+    padding-top: var(--space-6);
   }
 
   .hero-container {
@@ -3813,6 +3926,17 @@ p {
   .footer-card-inner {
     grid-template-columns: 1fr;
     gap: var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .step-card {
+    width: 100%;
   }
 }
 
