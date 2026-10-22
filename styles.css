@@ -673,6 +673,7 @@ p {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .hero-poster-img {

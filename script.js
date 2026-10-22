@@ -517,6 +517,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     heroVideoTrigger.appendChild(iframe);
 
+    iframe.addEventListener('load', () => {
+      const posterWrap = heroVideoTrigger.querySelector('.video-poster-wrapper');
+      if (posterWrap) posterWrap.style.display = 'none';
+    });
+
     const playBtn = heroVideoTrigger.querySelector('.play-button-kinetic');
     if (playBtn) playBtn.style.display = 'none';
   };

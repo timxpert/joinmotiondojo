@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://motiondojo.vercel.app/sitemap.xml
+Sitemap: https://joinmotiondojo.vercel.app/sitemap.xml
