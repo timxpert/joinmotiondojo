@@ -711,35 +711,29 @@ document.addEventListener('DOMContentLoaded', () => {
   let enrollTriggerToRestore = null;
   let bodyOverflowBeforeEnroll = '';
   let enrollFocusFrame = null;
-  let paystackScriptPromise = null;
+  let paystackInstance = null;
 
-  // Dynamically ensure Paystack inline script is loaded
-  const loadPaystackScript = () => {
+  // Initialize PaystackPop once and reuse it across checkout requests
+  const initPaystackInstance = () => {
+    if (paystackInstance) return paystackInstance;
     if (typeof window.PaystackPop !== 'undefined') {
-      return Promise.resolve(window.PaystackPop);
-    }
-    if (paystackScriptPromise) return paystackScriptPromise;
-    paystackScriptPromise = new Promise((resolve, reject) => {
-      let script = document.querySelector('script[src="https://js.paystack.co/v2/inline.js"]');
-      if (!script) {
-        script = document.createElement('script');
-        script.src = 'https://js.paystack.co/v2/inline.js';
-        script.async = true;
-        document.head.appendChild(script);
+      if (typeof window.PaystackPop.newTransaction === 'function') {
+        paystackInstance = window.PaystackPop;
+      } else if (typeof window.PaystackPop === 'function') {
+        paystackInstance = new window.PaystackPop();
       }
-      script.addEventListener('load', () => {
-        if (typeof window.PaystackPop !== 'undefined') {
-          resolve(window.PaystackPop);
-        } else {
-          reject(new Error('PaystackPop is undefined'));
-        }
-      });
-      script.addEventListener('error', () => {
-        reject(new Error('Failed to load Paystack script'));
-      });
-    });
-    return paystackScriptPromise;
+    }
+    return paystackInstance;
   };
+
+  // Pre-initialize instance as soon as the deferred script is parsed
+  if (typeof window.PaystackPop !== 'undefined') {
+    initPaystackInstance();
+  } else {
+    window.addEventListener('load', () => {
+      initPaystackInstance();
+    });
+  }
 
   const isEnrollTrigger = (el) => {
     if (!el) return false;
@@ -803,6 +797,15 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleMobileMenu(false);
     }
 
+    // Pause any playing videos (including hero loop) to free up bandwidth on mobile data
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach((v) => {
+      if (!v.paused) {
+        v.pause();
+        v.dataset.pausedByEnrollModal = 'true';
+      }
+    });
+
     bodyOverflowBeforeEnroll = document.body.style.overflow;
     enrollModal.classList.add('is-open');
     enrollModal.setAttribute('aria-hidden', 'false');
@@ -811,10 +814,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset to initial choice step
     showChoiceStep();
 
-    // Prefetch Paystack inline script in the background while user browses options
-    if (typeof loadPaystackScript === 'function') {
-      loadPaystackScript().catch(() => {});
-    }
+    // Ensure Paystack instance is ready
+    initPaystackInstance();
 
     cancelAnimationFrame(enrollFocusFrame);
     enrollFocusFrame = requestAnimationFrame(() => {
@@ -833,6 +834,21 @@ document.addEventListener('DOMContentLoaded', () => {
     enrollModal.classList.remove('is-open');
     enrollModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = bodyOverflowBeforeEnroll || '';
+
+    // Resume any video paused by the enrolment modal
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach((v) => {
+      if (v.dataset.pausedByEnrollModal === 'true') {
+        delete v.dataset.pausedByEnrollModal;
+        if (v === heroLoopVideo) {
+          if (!isFullVideoLoaded && !shouldPreventAutoplay() && isHeroVideoInView) {
+            v.play().catch(() => {});
+          }
+        } else {
+          v.play().catch(() => {});
+        }
+      }
+    });
 
     if (enrollTriggerToRestore && typeof enrollTriggerToRestore.focus === 'function') {
       enrollTriggerToRestore.focus();
@@ -936,6 +952,127 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const setPayButtonLoading = (loading) => {
+    if (!enrollSubmitBtn) return;
+    if (loading) {
+      enrollSubmitBtn.disabled = true;
+      enrollSubmitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Opening secure checkout...';
+    } else {
+      enrollSubmitBtn.disabled = false;
+      enrollSubmitBtn.innerHTML = 'Pay ₦40,000';
+    }
+  };
+
+  const openPaystackCheckoutSync = (nameVal, emailVal, phoneVal) => {
+    const config = window.MOTION_DOJO_CONFIG || {};
+    const publicKey = config.PAYSTACK_PUBLIC_KEY || 'pk_test_REPLACE_ME';
+    const amountKobo = Number(config.AMOUNT_KOBO) || 4000000;
+    const currency = config.CURRENCY || 'NGN';
+    const courseName = config.COURSE_NAME || 'Black Belt in Motion Design';
+    const attemptReference = 'MD-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    const transactionOptions = {
+      key: publicKey,
+      email: emailVal,
+      amount: amountKobo,
+      currency: currency,
+      ref: attemptReference,
+      metadata: {
+        custom_fields: [
+          {
+            display_name: 'Customer Name',
+            variable_name: 'customer_name',
+            value: nameVal
+          },
+          {
+            display_name: 'WhatsApp Number',
+            variable_name: 'whatsapp_number',
+            value: phoneVal
+          },
+          {
+            display_name: 'Course Name',
+            variable_name: 'course_name',
+            value: courseName
+          }
+        ]
+      },
+      onSuccess: (transaction) => {
+        const finalRef = (transaction && (transaction.reference || transaction.ref)) || attemptReference;
+
+        if (enrollPaymentStatus) {
+          enrollPaymentStatus.textContent = 'Confirming your payment...';
+          enrollPaymentStatus.removeAttribute('hidden');
+        }
+        if (enrollSubmitBtn) {
+          enrollSubmitBtn.disabled = true;
+          enrollSubmitBtn.textContent = 'Confirming your payment...';
+        }
+
+        // Server-side verification strictly occurs AFTER successful payment
+        fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ reference: finalRef })
+        })
+          .then(async (res) => {
+            let data = null;
+            try { data = await res.json(); } catch (_) { data = null; }
+            return { ok: res.ok, data };
+          })
+          .then(({ ok, data }) => {
+            setPayButtonLoading(false);
+            if (ok && data && data.verified === true) {
+              showSuccessStep(finalRef);
+            } else {
+              const errorMsg = (data && data.message) || 'Payment verification could not be confirmed.';
+              if (enrollPaymentStatus) {
+                enrollPaymentStatus.textContent = `${errorMsg} If you have been debited, please contact us on WhatsApp with reference: ${finalRef}.`;
+                enrollPaymentStatus.removeAttribute('hidden');
+              }
+              if (enrollFallbackLink) {
+                enrollFallbackLink.removeAttribute('hidden');
+              }
+            }
+          })
+          .catch((err) => {
+            console.error('Verification network error:', err);
+            setPayButtonLoading(false);
+            if (enrollPaymentStatus) {
+              enrollPaymentStatus.textContent = `Could not verify payment automatically due to a network error. Keep your reference: ${finalRef} and message us on WhatsApp.`;
+              enrollPaymentStatus.removeAttribute('hidden');
+            }
+            if (enrollFallbackLink) {
+              enrollFallbackLink.removeAttribute('hidden');
+            }
+          });
+      },
+      onCancel: () => {
+        setPayButtonLoading(false);
+        showDetailsStep();
+        if (enrollPaymentStatus) {
+          enrollPaymentStatus.textContent = 'Payment was not completed. You can try again.';
+          enrollPaymentStatus.removeAttribute('hidden');
+        }
+      }
+    };
+
+    try {
+      paystackInstance.newTransaction(transactionOptions);
+    } catch (err) {
+      console.error('Paystack transaction call error:', err);
+      setPayButtonLoading(false);
+      if (enrollPaymentStatus) {
+        enrollPaymentStatus.textContent = 'Payment gateway could not be loaded. Prefer a direct bank transfer? You can get our account number on WhatsApp.';
+        enrollPaymentStatus.removeAttribute('hidden');
+      }
+      if (enrollFallbackLink) {
+        enrollFallbackLink.removeAttribute('hidden');
+      }
+    }
+  };
+
   // Handle Form Submission -> Paystack
   if (enrollForm) {
     enrollForm.addEventListener('submit', (e) => {
@@ -956,10 +1093,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const emailVal = enrollEmail.value.trim();
       const phoneVal = enrollPhone.value.trim();
 
-      if (enrollSubmitBtn) {
-        enrollSubmitBtn.disabled = true;
-        enrollSubmitBtn.textContent = 'Connecting to Paystack...';
-      }
+      // Immediately transition button into loading state with spinner
+      setPayButtonLoading(true);
+
       if (enrollPaymentStatus) {
         enrollPaymentStatus.textContent = '';
         enrollPaymentStatus.setAttribute('hidden', '');
@@ -968,136 +1104,16 @@ document.addEventListener('DOMContentLoaded', () => {
         enrollFallbackLink.setAttribute('hidden', '');
       }
 
-      // Generate unique reference per attempt
-      const attemptReference = 'MD-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-
-      loadPaystackScript()
-        .then(() => {
-          const config = window.MOTION_DOJO_CONFIG || {};
-          const publicKey = config.PAYSTACK_PUBLIC_KEY || 'pk_test_REPLACE_ME';
-          const amountKobo = Number(config.AMOUNT_KOBO) || 4000000;
-          const currency = config.CURRENCY || 'NGN';
-          const courseName = config.COURSE_NAME || 'Black Belt in Motion Design';
-
-          const transactionOptions = {
-            key: publicKey,
-            email: emailVal,
-            amount: amountKobo,
-            currency: currency,
-            ref: attemptReference,
-            metadata: {
-              custom_fields: [
-                {
-                  display_name: 'Customer Name',
-                  variable_name: 'customer_name',
-                  value: nameVal
-                },
-                {
-                  display_name: 'WhatsApp Number',
-                  variable_name: 'whatsapp_number',
-                  value: phoneVal
-                },
-                {
-                  display_name: 'Course Name',
-                  variable_name: 'course_name',
-                  value: courseName
-                }
-              ]
-            },
-            onSuccess: (transaction) => {
-              const finalRef = (transaction && (transaction.reference || transaction.ref)) || attemptReference;
-
-              // Show "Confirming your payment..." while verification runs
-              if (enrollPaymentStatus) {
-                enrollPaymentStatus.textContent = 'Confirming your payment...';
-                enrollPaymentStatus.removeAttribute('hidden');
-              }
-              if (enrollSubmitBtn) {
-                enrollSubmitBtn.disabled = true;
-                enrollSubmitBtn.textContent = 'Confirming your payment...';
-              }
-
-              // Server-side verification
-              fetch('/api/verify-payment', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ reference: finalRef })
-              })
-                .then(async (res) => {
-                  let data = null;
-                  try {
-                    data = await res.json();
-                  } catch (e) {
-                    data = null;
-                  }
-                  return { ok: res.ok, status: res.status, data };
-                })
-                .then(({ ok, data }) => {
-                  if (enrollSubmitBtn) {
-                    enrollSubmitBtn.disabled = false;
-                    enrollSubmitBtn.textContent = 'Pay ₦40,000';
-                  }
-
-                  if (ok && data && data.verified === true) {
-                    // Confirmed: status is "success", amount is 4000000 kobo, currency is NGN
-                    showSuccessStep(finalRef);
-                  } else {
-                    const errorMsg = (data && data.message) || 'Payment verification could not be confirmed.';
-                    if (enrollPaymentStatus) {
-                      enrollPaymentStatus.textContent = `${errorMsg} If you have been debited, please contact us on WhatsApp with reference: ${finalRef}.`;
-                      enrollPaymentStatus.removeAttribute('hidden');
-                    }
-                    if (enrollFallbackLink) {
-                      enrollFallbackLink.removeAttribute('hidden');
-                    }
-                  }
-                })
-                .catch((err) => {
-                  console.error('Verification network error:', err);
-                  if (enrollSubmitBtn) {
-                    enrollSubmitBtn.disabled = false;
-                    enrollSubmitBtn.textContent = 'Pay ₦40,000';
-                  }
-                  if (enrollPaymentStatus) {
-                    enrollPaymentStatus.textContent = `Could not verify payment automatically due to a network error. Keep your reference: ${finalRef} and message us on WhatsApp.`;
-                    enrollPaymentStatus.removeAttribute('hidden');
-                  }
-                  if (enrollFallbackLink) {
-                    enrollFallbackLink.removeAttribute('hidden');
-                  }
-                });
-            },
-            onCancel: () => {
-              if (enrollSubmitBtn) {
-                enrollSubmitBtn.disabled = false;
-                enrollSubmitBtn.textContent = 'Pay ₦40,000';
-              }
-              showDetailsStep();
-              if (enrollPaymentStatus) {
-                enrollPaymentStatus.textContent = 'Payment was not completed. You can try again.';
-                enrollPaymentStatus.removeAttribute('hidden');
-              }
-            }
-          };
-
-          const popupInstance = typeof PaystackPop !== 'undefined' && typeof PaystackPop.newTransaction === 'function'
-            ? PaystackPop
-            : (typeof PaystackPop === 'function' ? new PaystackPop() : null);
-
-          if (popupInstance && typeof popupInstance.newTransaction === 'function') {
-            popupInstance.newTransaction(transactionOptions);
-          } else {
-            throw new Error('PaystackPop.newTransaction is not available');
-          }
-        })
-        .catch((err) => {
-          console.error('Paystack initialization error:', err);
-          if (enrollSubmitBtn) {
-            enrollSubmitBtn.disabled = false;
-            enrollSubmitBtn.textContent = 'Pay ₦40,000';
-          }
+      const instance = initPaystackInstance();
+      if (instance && typeof instance.newTransaction === 'function') {
+        // Fast synchronous launch: zero await, zero fetch, zero server call before popup
+        openPaystackCheckoutSync(nameVal, emailVal, phoneVal);
+      } else {
+        // Fallback: If script is still downloading, poll for up to 8 seconds
+        let timedOut = false;
+        const timeoutTimer = setTimeout(() => {
+          timedOut = true;
+          setPayButtonLoading(false);
           if (enrollPaymentStatus) {
             enrollPaymentStatus.textContent = 'Payment gateway could not be loaded. Prefer a direct bank transfer? You can get our account number on WhatsApp.';
             enrollPaymentStatus.removeAttribute('hidden');
@@ -1105,7 +1121,21 @@ document.addEventListener('DOMContentLoaded', () => {
           if (enrollFallbackLink) {
             enrollFallbackLink.removeAttribute('hidden');
           }
-        });
+        }, 8000);
+
+        const checkInterval = setInterval(() => {
+          if (timedOut) {
+            clearInterval(checkInterval);
+            return;
+          }
+          const inst = initPaystackInstance();
+          if (inst && typeof inst.newTransaction === 'function') {
+            clearInterval(checkInterval);
+            clearTimeout(timeoutTimer);
+            openPaystackCheckoutSync(nameVal, emailVal, phoneVal);
+          }
+        }, 50);
+      }
     });
   }
 

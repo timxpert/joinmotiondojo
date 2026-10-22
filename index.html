@@ -39,6 +39,17 @@
   <link rel="preload" href="assets/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="images/hero-video-poster.webp" as="image" type="image/webp" fetchpriority="high">
 
+  <!-- Preconnect & DNS-Prefetch for Paystack -->
+  <link rel="preconnect" href="https://js.paystack.co" crossorigin>
+  <link rel="dns-prefetch" href="https://js.paystack.co">
+  <link rel="preconnect" href="https://checkout.paystack.com" crossorigin>
+  <link rel="dns-prefetch" href="https://checkout.paystack.com">
+  <link rel="preconnect" href="https://api.paystack.co" crossorigin>
+  <link rel="dns-prefetch" href="https://api.paystack.co">
+
+  <!-- Paystack Inline Script (deferred for instant checkout on tap) -->
+  <script src="https://js.paystack.co/v2/inline.js" defer></script>
+
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="styles.css?v=2">
 

@@ -553,10 +553,10 @@ p {
 }
 
 .hero-title {
-  font-size: clamp(2rem, 4.5vw, var(--text-3xl));
+  font-size: clamp(38px, 11vw, 88px);
   font-weight: 800;
   color: var(--dojo-midnight);
-  line-height: 1.15;
+  line-height: 1.02;
   margin-bottom: var(--space-3);
   text-wrap: balance;
 }
@@ -3533,15 +3533,35 @@ p {
 }
 
 .btn-outline.enroll-option-button {
-  background: transparent;
-  color: var(--motion-violet);
-  border: 1.5px solid var(--motion-violet);
+  background-color: var(--kinetic-lime);
+  color: var(--dojo-midnight);
+  border: 1.5px solid var(--kinetic-lime);
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  box-shadow: 0 12px 28px -10px rgba(200, 255, 61, 0.6);
+  transition: all var(--transition-normal);
 }
 
 .btn-outline.enroll-option-button:hover {
-  background-color: var(--lavender-light);
-  color: var(--motion-violet);
-  border-color: var(--motion-violet);
+  background-color: #B8F028;
+  border-color: #B8F028;
+  color: var(--dojo-midnight);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -10px rgba(200, 255, 61, 0.7);
+}
+
+.btn-outline.enroll-option-button:active {
+  background-color: #B8F028;
+  border-color: #B8F028;
+  color: var(--dojo-midnight);
+  transform: translateY(0);
+}
+
+.btn-outline.enroll-option-button:focus-visible {
+  outline: 3px solid var(--motion-violet);
+  outline-offset: 2px;
 }
 
 .enroll-installment-note {
@@ -3701,6 +3721,25 @@ p {
   display: none !important;
 }
 
+/* Pay Button Spinner */
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: var(--surface);
+  border-radius: 50%;
+  animation: btnSpinnerRotate 0.75s linear infinite;
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+
+@keyframes btnSpinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Success step */
 .enroll-success-step {
   text-align: center;
@@ -3781,6 +3820,11 @@ p {
   .enroll-modal-box {
     transition: none !important;
     animation: none !important;
+    transform: none !important;
+  }
+
+  .btn-outline.enroll-option-button:hover,
+  .btn-outline.enroll-option-button:active {
     transform: none !important;
   }
 }
@@ -3950,6 +3994,14 @@ p {
 }
 
 @media (max-width: 768px) {
+  .section-hero {
+    padding-top: 24px;
+  }
+
+  .highlight-wrapper {
+    white-space: normal;
+  }
+
   .experience-subtext {
     max-width: 100%;
     font-size: 16px;
@@ -3957,15 +4009,6 @@ p {
 }
 
 @media (max-width: 540px) {
-  .hero-title {
-    font-size: clamp(1.85rem, 6.8vw, 2.25rem);
-    line-height: 1.18;
-  }
-
-  .highlight-wrapper {
-    white-space: normal;
-  }
-
   .team-grid {
     grid-template-columns: 1fr;
   }
