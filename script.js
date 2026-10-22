@@ -500,12 +500,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   };
 
+  const playHeroVideo = () => {
+    if (!heroVideoTrigger || heroVideoTrigger.classList.contains('is-playing')) return;
+    heroVideoTrigger.classList.add('is-playing');
+    heroVideoTrigger.removeAttribute('role');
+    heroVideoTrigger.removeAttribute('tabindex');
+
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://player.vimeo.com/video/1238403606?autoplay=1&autopause=0&dnt=1';
+    iframe.className = 'hero-video-iframe';
+    iframe.title = 'Motion Dojo Smartphone Motion Design Course';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    iframe.setAttribute('allowfullscreen', 'true');
+
+    heroVideoTrigger.appendChild(iframe);
+
+    const playBtn = heroVideoTrigger.querySelector('.play-button-kinetic');
+    if (playBtn) playBtn.style.display = 'none';
+  };
+
   if (heroVideoTrigger) {
-    heroVideoTrigger.addEventListener('click', () => openVideo('Black Belt in Motion Design — Course Overview'));
+    heroVideoTrigger.addEventListener('click', playHeroVideo);
     heroVideoTrigger.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openVideo('Black Belt in Motion Design — Course Overview');
+        playHeroVideo();
       }
     });
   }
@@ -653,6 +674,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Reset to initial choice step
     showChoiceStep();
+
+    // Prefetch Paystack inline script in the background while user browses options
+    if (typeof loadPaystackScript === 'function') {
+      loadPaystackScript().catch(() => {});
+    }
 
     cancelAnimationFrame(enrollFocusFrame);
     enrollFocusFrame = requestAnimationFrame(() => {

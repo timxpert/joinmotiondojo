@@ -643,6 +643,26 @@ p {
   box-shadow: 0 28px 56px -8px rgba(109, 50, 232, 0.28);
 }
 
+.video-preview-card.is-playing {
+  cursor: default;
+}
+
+.video-preview-card.is-playing:hover {
+  transform: none;
+  box-shadow: 0 20px 48px -8px rgba(20, 10, 46, 0.24);
+}
+
+.hero-video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: var(--radius-xl);
+  z-index: 5;
+}
+
 .video-poster-wrapper {
   position: relative;
   width: 100%;
