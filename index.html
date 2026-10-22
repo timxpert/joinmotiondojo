@@ -1213,7 +1213,7 @@
     </div>
   </div>
 
-  <!-- INTERACTIVE MODAL: ENROLMENT AND PAYSTACK -->
+  <!-- INTERACTIVE MODAL: ENROLMENT -->
   <div class="modal-backdrop enroll-modal-backdrop" id="enrollModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalEnrollTitle">
     <div class="modal-box enroll-modal-box">
       <div class="modal-header enroll-modal-header">
@@ -1221,11 +1221,15 @@
           <span class="enroll-modal-tag">ENROL</span>
           <h3 class="modal-title" id="modalEnrollTitle">How would you like to enrol?</h3>
         </div>
-        <button class="modal-close-btn" id="closeEnrollModal" aria-label="Close enrolment dialog">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <button class="modal-close-btn" id="closeEnrollModal" aria-label="Close enrolment dialog" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
       <div class="enroll-modal-content">
+        <!-- STEP 1: CHOICE -->
         <section class="enroll-step" id="enrollChoiceStep" aria-label="Enrolment options">
           <div class="enroll-options">
             <article class="enroll-option-card">
@@ -1247,44 +1251,51 @@
                 <h4>Request account number</h4>
                 <p>Prefer a direct bank transfer? Get our account number on WhatsApp.</p>
               </div>
-              <a class="btn btn-outline-dark enroll-option-button" href="https://wa.link/ava9k0" target="_blank" rel="noopener noreferrer">Request on WhatsApp</a>
+              <a class="btn btn-outline enroll-option-button" href="https://wa.link/ava9k0" target="_blank" rel="noopener noreferrer">Request on WhatsApp</a>
             </article>
           </div>
 
           <p class="enroll-installment-note">Want to pay in two instalments of ₦20,000? <a href="https://wa.link/92p2yh" target="_blank" rel="noopener noreferrer">Start your instalment on WhatsApp</a></p>
         </section>
 
+        <!-- STEP 2: DETAILS -->
         <section class="enroll-step" id="enrollDetailsStep" aria-label="Payment details" hidden>
-          <button class="enroll-back-button" id="enrollBackBtn" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          <button class="enroll-back-button" id="enrollBackBtn" type="button" aria-label="Back to enrolment options">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
             <span>Back</span>
           </button>
+
           <p class="enroll-course-summary">Black Belt in Motion Design: ₦40,000</p>
 
           <form class="enroll-form" id="enrollForm" novalidate>
-          <div class="form-group">
+            <div class="form-group">
               <label for="enrollName">Full name</label>
-              <input type="text" id="enrollName" name="name" autocomplete="name" required aria-describedby="enrollNameError">
-              <span class="enroll-field-error" id="enrollNameError" aria-live="polite" hidden></span>
-          </div>
-          <div class="form-group">
+              <input type="text" id="enrollName" name="name" autocomplete="name" placeholder="e.g. Alex Johnson" required aria-describedby="enrollNameError">
+              <span class="enroll-field-error" id="enrollNameError" role="alert" aria-live="polite" hidden></span>
+            </div>
+
+            <div class="form-group">
               <label for="enrollEmail">Email address</label>
-              <input type="email" id="enrollEmail" name="email" autocomplete="email" required aria-describedby="enrollEmailError">
-              <span class="enroll-field-error" id="enrollEmailError" aria-live="polite" hidden></span>
-          </div>
-          <div class="form-group">
+              <input type="email" id="enrollEmail" name="email" autocomplete="email" placeholder="e.g. alex@example.com" required aria-describedby="enrollEmailError">
+              <span class="enroll-field-error" id="enrollEmailError" role="alert" aria-live="polite" hidden></span>
+            </div>
+
+            <div class="form-group">
               <label for="enrollPhone">WhatsApp number</label>
               <input type="tel" id="enrollPhone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+234 800 000 0000" required aria-describedby="enrollPhoneHint enrollPhoneError">
-              <span class="enroll-field-hint" id="enrollPhoneHint">Include your +234 country code.</span>
-              <span class="enroll-field-error" id="enrollPhoneError" aria-live="polite" hidden></span>
-          </div>
-            <p class="enroll-payment-status" id="enrollPaymentStatus" role="status" aria-live="polite"></p>
-            <a class="enroll-fallback-link" id="enrollFallbackLink" href="https://wa.link/ava9k0" target="_blank" rel="noopener noreferrer" hidden>Request account number on WhatsApp</a>
+              <span class="enroll-field-hint" id="enrollPhoneHint">Include your country code (e.g. +234).</span>
+              <span class="enroll-field-error" id="enrollPhoneError" role="alert" aria-live="polite" hidden></span>
+            </div>
+
+            <p class="enroll-payment-status" id="enrollPaymentStatus" role="status" aria-live="polite" hidden></p>
+            <a class="btn btn-outline enroll-fallback-link" id="enrollFallbackLink" href="https://wa.link/ava9k0" target="_blank" rel="noopener noreferrer" hidden>Request account number on WhatsApp</a>
+
             <button type="submit" class="btn btn-primary btn-block" id="enrollSubmitBtn">Pay ₦40,000</button>
           </form>
         </section>
 
-        <section class="enroll-step" id="enrollSuccessStep" aria-label="Payment successful" hidden>
+        <!-- STEP 3: SUCCESS -->
+        <section class="enroll-step enroll-success-step" id="enrollSuccessStep" aria-label="Payment successful" hidden>
           <div class="enroll-success-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>
           </div>
@@ -1325,6 +1336,7 @@
   </div>
 
   <!-- JavaScript -->
+  <script src="https://js.paystack.co/v2/inline.js" async></script>
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>

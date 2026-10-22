@@ -132,9 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   mobileNavLinks.forEach(link => {
     link.addEventListener('click', () => {
-      if (!link.matches('[data-enroll-trigger]')) {
-        toggleMobileMenu(false);
-      }
+      toggleMobileMenu(false);
     });
   });
 
@@ -522,38 +520,385 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ------------------------------------------------------------------------
-  // 7. Interactive Enrolment Modal
+  // 7. Interactive Enrolment Modal & Paystack Integration
   // ------------------------------------------------------------------------
   const enrollModal = document.getElementById('enrollModal');
   const closeEnrollModal = document.getElementById('closeEnrollModal');
-  const enrollTriggers = document.querySelectorAll('[data-enroll-trigger], [data-checkout-plan]');
-  const enrollCloseButton = document.getElementById('closeEnrollModal');
+  const modalEnrollTitle = document.getElementById('modalEnrollTitle');
+
+  // Step containers
+  const enrollChoiceStep = document.getElementById('enrollChoiceStep');
+  const enrollDetailsStep = document.getElementById('enrollDetailsStep');
+  const enrollSuccessStep = document.getElementById('enrollSuccessStep');
+
+  // Step controls
+  const choosePaystackBtn = document.getElementById('choosePaystack');
+  const enrollBackBtn = document.getElementById('enrollBackBtn');
+  const enrollForm = document.getElementById('enrollForm');
+  const enrollSubmitBtn = document.getElementById('enrollSubmitBtn');
+  const enrollPaymentStatus = document.getElementById('enrollPaymentStatus');
+  const enrollFallbackLink = document.getElementById('enrollFallbackLink');
+  const paymentReference = document.getElementById('paymentReference');
+
+  // Form input fields
+  const enrollName = document.getElementById('enrollName');
+  const enrollEmail = document.getElementById('enrollEmail');
+  const enrollPhone = document.getElementById('enrollPhone');
+  const enrollNameError = document.getElementById('enrollNameError');
+  const enrollEmailError = document.getElementById('enrollEmailError');
+  const enrollPhoneError = document.getElementById('enrollPhoneError');
+
   let enrollTriggerToRestore = null;
   let bodyOverflowBeforeEnroll = '';
   let enrollFocusFrame = null;
+  let paystackScriptPromise = null;
+
+  // Dynamically ensure Paystack inline script is loaded
+  const loadPaystackScript = () => {
+    if (typeof window.PaystackPop !== 'undefined') {
+      return Promise.resolve(window.PaystackPop);
+    }
+    if (paystackScriptPromise) return paystackScriptPromise;
+    paystackScriptPromise = new Promise((resolve, reject) => {
+      let script = document.querySelector('script[src="https://js.paystack.co/v2/inline.js"]');
+      if (!script) {
+        script = document.createElement('script');
+        script.src = 'https://js.paystack.co/v2/inline.js';
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener('load', () => {
+        if (typeof window.PaystackPop !== 'undefined') {
+          resolve(window.PaystackPop);
+        } else {
+          reject(new Error('PaystackPop is undefined'));
+        }
+      });
+      script.addEventListener('error', () => {
+        reject(new Error('Failed to load Paystack script'));
+      });
+    });
+    return paystackScriptPromise;
+  };
+
+  const isEnrollTrigger = (el) => {
+    if (!el) return false;
+    if (el.matches('[data-enroll-trigger], [data-checkout-plan="full"], [data-checkout-plan], [data-modal="enrollModal"], .sticky-mobile-cta, .btn-sticky-mobile')) {
+      return true;
+    }
+    const text = (el.textContent || '').trim().toLowerCase();
+    return text === 'enrol now' || text === 'enrol';
+  };
+
+  const getModalFocusableElements = (container) => {
+    if (!container) return [];
+    return Array.from(
+      container.querySelectorAll(
+        'button:not([disabled]):not([hidden]), [href]:not([hidden]), input:not([disabled]):not([hidden]), select:not([disabled]):not([hidden]), textarea:not([disabled]):not([hidden]), [tabindex]:not([tabindex="-1"]):not([hidden])'
+      )
+    ).filter(el => {
+      return !el.hasAttribute('hidden') && !el.closest('[hidden]') && (el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0);
+    });
+  };
+
+  // Step transitions
+  const showChoiceStep = () => {
+    if (enrollChoiceStep) enrollChoiceStep.removeAttribute('hidden');
+    if (enrollDetailsStep) enrollDetailsStep.setAttribute('hidden', '');
+    if (enrollSuccessStep) enrollSuccessStep.setAttribute('hidden', '');
+    if (modalEnrollTitle) modalEnrollTitle.textContent = 'How would you like to enrol?';
+  };
+
+  const showDetailsStep = () => {
+    if (enrollChoiceStep) enrollChoiceStep.setAttribute('hidden', '');
+    if (enrollDetailsStep) enrollDetailsStep.removeAttribute('hidden');
+    if (enrollSuccessStep) enrollSuccessStep.setAttribute('hidden', '');
+    if (modalEnrollTitle) modalEnrollTitle.textContent = 'Enter your details';
+    clearAllFieldErrors();
+    if (enrollPaymentStatus) {
+      enrollPaymentStatus.textContent = '';
+      enrollPaymentStatus.setAttribute('hidden', '');
+    }
+    if (enrollFallbackLink) {
+      enrollFallbackLink.setAttribute('hidden', '');
+    }
+  };
+
+  const showSuccessStep = (reference) => {
+    if (enrollChoiceStep) enrollChoiceStep.setAttribute('hidden', '');
+    if (enrollDetailsStep) enrollDetailsStep.setAttribute('hidden', '');
+    if (enrollSuccessStep) enrollSuccessStep.removeAttribute('hidden');
+    if (modalEnrollTitle) modalEnrollTitle.textContent = 'Payment received';
+    if (paymentReference) paymentReference.textContent = reference || 'N/A';
+    const waLink = enrollSuccessStep?.querySelector('a[href*="wa.link"]');
+    waLink?.focus();
+  };
 
   const openEnroll = (trigger) => {
-    enrollTriggerToRestore = trigger;
+    if (!enrollModal) return;
+    enrollTriggerToRestore = trigger || null;
+
+    // If mobile menu drawer is open, close it
+    if (typeof toggleMobileMenu === 'function' && typeof mobileDrawer !== 'undefined' && mobileDrawer && mobileDrawer.classList.contains('is-open')) {
+      toggleMobileMenu(false);
+    }
+
     bodyOverflowBeforeEnroll = document.body.style.overflow;
     enrollModal.classList.add('is-open');
     enrollModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+
+    // Reset to initial choice step
+    showChoiceStep();
+
     cancelAnimationFrame(enrollFocusFrame);
     enrollFocusFrame = requestAnimationFrame(() => {
-      if (enrollModal.classList.contains('is-open')) enrollCloseButton?.focus();
+      if (enrollModal.classList.contains('is-open')) {
+        const focusable = getModalFocusableElements(enrollModal);
+        const targetFocus = closeEnrollModal || focusable[0];
+        targetFocus?.focus();
+      }
     });
   };
 
   const closeEnroll = () => {
-    if (!enrollModal.classList.contains('is-open')) return;
+    if (!enrollModal || !enrollModal.classList.contains('is-open')) return;
     cancelAnimationFrame(enrollFocusFrame);
     enrollFocusFrame = null;
     enrollModal.classList.remove('is-open');
     enrollModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = bodyOverflowBeforeEnroll;
-    enrollTriggerToRestore?.focus();
+    document.body.style.overflow = bodyOverflowBeforeEnroll || '';
+
+    if (enrollTriggerToRestore && typeof enrollTriggerToRestore.focus === 'function') {
+      enrollTriggerToRestore.focus();
+    }
+    enrollTriggerToRestore = null;
   };
 
+  // Form Field Validation
+  const setFieldError = (input, errorEl, message) => {
+    if (input) input.classList.add('is-invalid');
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.removeAttribute('hidden');
+    }
+  };
+
+  const clearFieldError = (input, errorEl) => {
+    if (input) input.classList.remove('is-invalid');
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.setAttribute('hidden', '');
+    }
+  };
+
+  const clearAllFieldErrors = () => {
+    clearFieldError(enrollName, enrollNameError);
+    clearFieldError(enrollEmail, enrollEmailError);
+    clearFieldError(enrollPhone, enrollPhoneError);
+  };
+
+  const validateName = () => {
+    const val = (enrollName?.value || '').trim();
+    if (!val) {
+      setFieldError(enrollName, enrollNameError, 'Please enter your full name.');
+      return false;
+    }
+    clearFieldError(enrollName, enrollNameError);
+    return true;
+  };
+
+  const validateEmail = () => {
+    const val = (enrollEmail?.value || '').trim();
+    if (!val) {
+      setFieldError(enrollEmail, enrollEmailError, 'Please enter your email address.');
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(val)) {
+      setFieldError(enrollEmail, enrollEmailError, 'Please enter a valid email address.');
+      return false;
+    }
+    clearFieldError(enrollEmail, enrollEmailError);
+    return true;
+  };
+
+  const validatePhone = () => {
+    const val = (enrollPhone?.value || '').trim();
+    if (!val) {
+      setFieldError(enrollPhone, enrollPhoneError, 'Please enter your WhatsApp number.');
+      return false;
+    }
+    const digits = val.replace(/\D/g, '');
+    if (digits.length < 7) {
+      setFieldError(enrollPhone, enrollPhoneError, 'Please enter a valid phone number with country code.');
+      return false;
+    }
+    clearFieldError(enrollPhone, enrollPhoneError);
+    return true;
+  };
+
+  // Real-time inline validation cleanup on user input
+  enrollName?.addEventListener('input', () => {
+    if (enrollName.value.trim().length > 0) clearFieldError(enrollName, enrollNameError);
+  });
+  enrollEmail?.addEventListener('input', () => {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(enrollEmail.value.trim())) clearFieldError(enrollEmail, enrollEmailError);
+  });
+  enrollPhone?.addEventListener('input', () => {
+    if (enrollPhone.value.replace(/\D/g, '').length >= 7) clearFieldError(enrollPhone, enrollPhoneError);
+  });
+
+  // Switch to Details Step when tapping "Pay with Paystack"
+  if (choosePaystackBtn) {
+    choosePaystackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showDetailsStep();
+      requestAnimationFrame(() => {
+        enrollName?.focus();
+      });
+    });
+  }
+
+  // Back arrow button to return to Choice Step
+  if (enrollBackBtn) {
+    enrollBackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showChoiceStep();
+      requestAnimationFrame(() => {
+        choosePaystackBtn?.focus();
+      });
+    });
+  }
+
+  // Handle Form Submission -> Paystack
+  if (enrollForm) {
+    enrollForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const isNameValid = validateName();
+      const isEmailValid = validateEmail();
+      const isPhoneValid = validatePhone();
+
+      if (!isNameValid || !isEmailValid || !isPhoneValid) {
+        if (!isNameValid) enrollName?.focus();
+        else if (!isEmailValid) enrollEmail?.focus();
+        else if (!isPhoneValid) enrollPhone?.focus();
+        return;
+      }
+
+      const nameVal = enrollName.value.trim();
+      const emailVal = enrollEmail.value.trim();
+      const phoneVal = enrollPhone.value.trim();
+
+      if (enrollSubmitBtn) {
+        enrollSubmitBtn.disabled = true;
+        enrollSubmitBtn.textContent = 'Connecting to Paystack...';
+      }
+      if (enrollPaymentStatus) {
+        enrollPaymentStatus.textContent = '';
+        enrollPaymentStatus.setAttribute('hidden', '');
+      }
+      if (enrollFallbackLink) {
+        enrollFallbackLink.setAttribute('hidden', '');
+      }
+
+      // Generate unique reference per attempt
+      const attemptReference = 'MD-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+      loadPaystackScript()
+        .then(() => {
+          const config = window.MOTION_DOJO_CONFIG || {};
+          const publicKey = config.PAYSTACK_PUBLIC_KEY || 'pk_test_REPLACE_ME';
+          const amountKobo = Number(config.AMOUNT_KOBO) || 4000000;
+          const currency = config.CURRENCY || 'NGN';
+          const courseName = config.COURSE_NAME || 'Black Belt in Motion Design';
+
+          const transactionOptions = {
+            key: publicKey,
+            email: emailVal,
+            amount: amountKobo,
+            currency: currency,
+            ref: attemptReference,
+            metadata: {
+              custom_fields: [
+                {
+                  display_name: 'Customer Name',
+                  variable_name: 'customer_name',
+                  value: nameVal
+                },
+                {
+                  display_name: 'WhatsApp Number',
+                  variable_name: 'whatsapp_number',
+                  value: phoneVal
+                },
+                {
+                  display_name: 'Course Name',
+                  variable_name: 'course_name',
+                  value: courseName
+                }
+              ]
+            },
+            onSuccess: (transaction) => {
+              if (enrollSubmitBtn) {
+                enrollSubmitBtn.disabled = false;
+                enrollSubmitBtn.textContent = 'Pay ₦40,000';
+              }
+              const finalRef = (transaction && (transaction.reference || transaction.ref)) || attemptReference;
+              showSuccessStep(finalRef);
+            },
+            onCancel: () => {
+              if (enrollSubmitBtn) {
+                enrollSubmitBtn.disabled = false;
+                enrollSubmitBtn.textContent = 'Pay ₦40,000';
+              }
+              showDetailsStep();
+              if (enrollPaymentStatus) {
+                enrollPaymentStatus.textContent = 'Payment was not completed. You can try again.';
+                enrollPaymentStatus.removeAttribute('hidden');
+              }
+            }
+          };
+
+          const popupInstance = typeof PaystackPop !== 'undefined' && typeof PaystackPop.newTransaction === 'function'
+            ? PaystackPop
+            : (typeof PaystackPop === 'function' ? new PaystackPop() : null);
+
+          if (popupInstance && typeof popupInstance.newTransaction === 'function') {
+            popupInstance.newTransaction(transactionOptions);
+          } else {
+            throw new Error('PaystackPop.newTransaction is not available');
+          }
+        })
+        .catch((err) => {
+          console.error('Paystack initialization error:', err);
+          if (enrollSubmitBtn) {
+            enrollSubmitBtn.disabled = false;
+            enrollSubmitBtn.textContent = 'Pay ₦40,000';
+          }
+          if (enrollPaymentStatus) {
+            enrollPaymentStatus.textContent = 'Payment gateway could not be loaded. Prefer a direct bank transfer? You can get our account number on WhatsApp.';
+            enrollPaymentStatus.removeAttribute('hidden');
+          }
+          if (enrollFallbackLink) {
+            enrollFallbackLink.removeAttribute('hidden');
+          }
+        });
+    });
+  }
+
+  // Delegate click for every Enrol button (header, hero, pricing, final call to action, sticky mobile button)
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('a, button');
+    if (!trigger) return;
+    if (isEnrollTrigger(trigger)) {
+      event.preventDefault();
+      openEnroll(trigger);
+    }
+  });
+
+  // Attach direct listeners as well to ensure immediate prevention
+  const enrollTriggers = document.querySelectorAll('[data-enroll-trigger], [data-checkout-plan]');
   enrollTriggers.forEach(trigger => {
     trigger.addEventListener('click', (event) => {
       event.preventDefault();
@@ -561,37 +906,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  closeEnrollModal?.addEventListener('click', closeEnroll);
+  // Close with the X button
+  closeEnrollModal?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeEnroll();
+  });
 
-  // Global Backdrop Click & Escape Key Handler
+  // Close when tapping the overlay backdrop
+  if (enrollModal) {
+    enrollModal.addEventListener('click', (e) => {
+      if (e.target === enrollModal) {
+        closeEnroll();
+      }
+    });
+  }
+
+  // Global Backdrop Click Handler for other modals
   window.addEventListener('click', (e) => {
     if (e.target === videoModal) closeVideo();
-    if (e.target === enrollModal) closeEnroll();
     const testimonialModal = document.getElementById('testimonialVideoModal');
     if (e.target === testimonialModal && typeof window.closeTestimonialVideoModal === 'function') {
       window.closeTestimonialVideoModal();
     }
   });
 
+  // Keydown Handler: Escape key & Accessible Focus Trap
   window.addEventListener('keydown', (e) => {
-    if (enrollModal.classList.contains('is-open') && e.key === 'Tab') {
-      const focusable = [...enrollModal.querySelectorAll('a[href]:not([hidden]), button:not([disabled]):not([hidden]), input:not([disabled]):not([hidden])')]
-        .filter(element => element.getClientRects().length > 0);
+    // Focus Trap inside Enrolment Modal
+    if (enrollModal && enrollModal.classList.contains('is-open') && e.key === 'Tab') {
+      const focusable = getModalFocusableElements(enrollModal);
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last?.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first?.focus();
+      if (e.shiftKey) {
+        if (document.activeElement === first || !enrollModal.contains(document.activeElement)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last || !enrollModal.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     }
 
     if (e.key === 'Escape') {
+      if (enrollModal && enrollModal.classList.contains('is-open')) {
+        e.preventDefault();
+        closeEnroll();
+      }
       closeVideo();
-      closeEnroll();
       if (typeof window.closeTestimonialVideoModal === 'function') {
         window.closeTestimonialVideoModal();
       }
