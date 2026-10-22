@@ -785,6 +785,7 @@ p {
   background: none;
   padding: 0;
   border-radius: 0;
+  white-space: nowrap;
 }
 
 .who-for-subline {
@@ -1084,25 +1085,28 @@ p {
 
 .steps-section-header {
   text-align: center;
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto var(--space-6);
 }
 
 .steps-section-header .section-heading {
   color: var(--dojo-midnight);
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-size: clamp(20px, 7vw, 56px);
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: var(--space-2);
+  white-space: nowrap;
 }
 
 .steps-subheading {
   color: rgba(20, 10, 46, 0.75);
   font-family: var(--font-body);
-  font-size: var(--text-md);
+  font-size: 16px;
   line-height: 1.6;
   margin: 0 auto;
+  width: 100%;
+  text-wrap: pretty;
 }
 
 .steps-grid {
@@ -2117,6 +2121,14 @@ p {
   margin-right: auto;
 }
 
+.testimonials-header-box .section-heading {
+  font-size: clamp(24px, 6.5vw, 44px);
+  text-wrap: balance;
+  max-width: 24ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .testimonials-carousel-wrapper {
   position: relative;
   width: 100%;
@@ -2766,6 +2778,8 @@ p {
 
 .section-pricing .section-heading {
   color: var(--surface);
+  white-space: nowrap;
+  font-size: clamp(22px, 8vw, 56px);
 }
 
 .pricing-subheading {
@@ -2934,24 +2948,30 @@ p {
 
 .experience-headline {
   font-family: var(--font-heading);
-  font-size: clamp(2.35rem, 5.5vw, 4.25rem);
+  font-size: clamp(24px, 6.5vw, 48px);
   font-weight: 800;
   color: var(--surface);
-  line-height: 1.08;
+  line-height: 1.12;
   letter-spacing: -0.02em;
   margin-bottom: var(--space-3);
   text-wrap: balance;
+  max-width: 22ch;
+  margin-left: auto;
+  margin-right: auto;
   text-shadow: 0 4px 24px rgba(20, 10, 46, 0.25);
 }
 
 .experience-subtext {
-  font-size: clamp(1rem, 2vw, var(--text-md));
+  font-size: 16px;
   color: var(--surface);
   opacity: 0.95;
   line-height: 1.6;
   max-width: 58ch;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: var(--space-4);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .experience-cta-wrap {
@@ -3985,6 +4005,20 @@ p {
 }
 
 @media (max-width: 768px) {
+  .steps-section-header {
+    max-width: 100%;
+  }
+
+  .steps-subheading {
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  .experience-subtext {
+    max-width: 100%;
+    font-size: 16px;
+  }
+
   .steps-grid {
     grid-template-columns: 1fr;
     gap: 16px;
