@@ -505,28 +505,95 @@ document.addEventListener('DOMContentLoaded', () => {
   const shouldPreventAutoplay = () => {
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const hasDataSaver = Boolean(navigator.connection && navigator.connection.saveData);
-    return prefersReducedMotion || hasDataSaver;
+    return Boolean(prefersReducedMotion || hasDataSaver);
   };
 
-  let isHeroVideoInView = false;
+  let isHeroVideoInView = true;
   let isFullVideoLoaded = false;
+  let autoplayFailed = false;
 
   if (heroLoopVideo) {
-    // Explicitly set muted in JavaScript for mobile browser policy compatibility
+    // Explicitly enforce muted & inline playback for mobile browser policies
     heroLoopVideo.muted = true;
     heroLoopVideo.defaultMuted = true;
+    heroLoopVideo.playsInline = true;
+
+    // Diagnostic logging for mobile video autoplay verification
+    const logDiagnostics = (context, err = null) => {
+      console.log(`[Hero Video - ${context}]`, {
+        paused: heroLoopVideo.paused,
+        readyState: heroLoopVideo.readyState,
+        networkState: heroLoopVideo.networkState,
+        currentSrc: heroLoopVideo.currentSrc,
+        playPromiseError: err ? (err.name || err.message || String(err)) : null,
+        prefersReducedMotion: window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false,
+        saveData: Boolean(navigator.connection && navigator.connection.saveData)
+      });
+    };
+
+    const attemptAutoplay = () => {
+      if (isFullVideoLoaded || shouldPreventAutoplay()) return;
+
+      heroLoopVideo.muted = true;
+      heroLoopVideo.defaultMuted = true;
+      heroLoopVideo.playsInline = true;
+
+      const playPromise = heroLoopVideo.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            autoplayFailed = false;
+            logDiagnostics('Autoplay Succeeded');
+          })
+          .catch((err) => {
+            autoplayFailed = true;
+            logDiagnostics('Autoplay Prevented', err);
+            // Browser policy blocked unprompted autoplay; attach gesture listener on first touch or scroll
+            setupGestureUnlock();
+          });
+      }
+    };
+
+    // Unlock playback on first user gesture (touch or scroll) if initially blocked by mobile policy
+    let gestureListenerAttached = false;
+    const unlockOnGesture = () => {
+      if (isFullVideoLoaded || !autoplayFailed || shouldPreventAutoplay()) return;
+      heroLoopVideo.muted = true;
+      heroLoopVideo.defaultMuted = true;
+      const p = heroLoopVideo.play();
+      if (p !== undefined) {
+        p.then(() => {
+          autoplayFailed = false;
+          logDiagnostics('Gesture Unlock Succeeded');
+        }).catch(() => {});
+      }
+    };
+
+    const setupGestureUnlock = () => {
+      if (gestureListenerAttached) return;
+      gestureListenerAttached = true;
+      const gestureEvents = ['touchstart', 'touchend', 'scroll', 'pointerdown'];
+      const onFirstGesture = () => {
+        gestureEvents.forEach((evt) => window.removeEventListener(evt, onFirstGesture, { passive: true }));
+        unlockOnGesture();
+      };
+      gestureEvents.forEach((evt) => window.addEventListener(evt, onFirstGesture, { passive: true, once: true }));
+    };
 
     if (shouldPreventAutoplay()) {
       heroLoopVideo.pause();
       heroLoopVideo.removeAttribute('autoplay');
       try { heroLoopVideo.currentTime = 0; } catch (_) {}
+      logDiagnostics('Autoplay Prevented By Preference (Reduced Motion / Data Saver)');
     } else {
-      const playPromise = heroLoopVideo.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // If autoplay is blocked by the browser, poster remains visible with play button
-        });
-      }
+      attemptAutoplay();
+
+      // Also attempt playback once media data has loaded
+      heroLoopVideo.addEventListener('loadeddata', () => {
+        if (heroLoopVideo.paused && !isFullVideoLoaded && isHeroVideoInView && !shouldPreventAutoplay()) {
+          attemptAutoplay();
+        }
+      }, { once: true });
     }
 
     // Save Data and Battery: IntersectionObserver pauses preview when off-screen
@@ -537,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (isFullVideoLoaded) return;
 
           if (entry.isIntersecting) {
-            if (!shouldPreventAutoplay()) {
+            if (!shouldPreventAutoplay() && !autoplayFailed) {
               const p = heroLoopVideo.play();
               if (p !== undefined) p.catch(() => {});
             }
@@ -545,9 +612,9 @@ document.addEventListener('DOMContentLoaded', () => {
             heroLoopVideo.pause();
           }
         });
-      }, { threshold: 0.15 });
+      }, { rootMargin: '50px 0px 50px 0px', threshold: 0 });
 
-      heroObserver.observe(heroLoopVideo);
+      heroObserver.observe(heroVideoTrigger || heroLoopVideo);
     }
 
     // Respect dynamic changes to reduced-motion preference
@@ -558,8 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (shouldPreventAutoplay()) {
             heroLoopVideo.pause();
           } else if (isHeroVideoInView && !isFullVideoLoaded) {
-            const p = heroLoopVideo.play();
-            if (p !== undefined) p.catch(() => {});
+            attemptAutoplay();
           }
         });
       }
