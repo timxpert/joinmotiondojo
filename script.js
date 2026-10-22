@@ -1464,4 +1464,60 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   initFoundersDesk();
+
+  // ------------------------------------------------------------------------
+  // 17. Floating Back-to-Home Button
+  // ------------------------------------------------------------------------
+  const initFloatingBackHome = () => {
+    const floatingBackHome = document.getElementById('floatingBackHome');
+    if (!floatingBackHome) return;
+
+    let scrollTicking = false;
+    const updateBackHomeVisibility = () => {
+      // Show when scrolled down past 260px from the top, hide when at the top
+      if (window.scrollY > 260) {
+        floatingBackHome.classList.add('is-visible');
+      } else {
+        floatingBackHome.classList.remove('is-visible');
+      }
+      scrollTicking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(updateBackHomeVisibility);
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    // Initial check on load (e.g. if loaded at a hash anchor or mid-scroll)
+    updateBackHomeVisibility();
+
+    floatingBackHome.addEventListener('click', (e) => {
+      const isFileProtocol = window.location.protocol === 'file:';
+      const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // When already on homepage
+      if (isFileProtocol || (isHomePage && !window.location.search)) {
+        e.preventDefault();
+        if (window.location.hash) {
+          try {
+            history.pushState(null, '', window.location.pathname);
+          } catch (_) {
+            window.location.hash = '';
+          }
+        }
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+      } else {
+        // Direct navigation to homepage root
+        window.location.href = '/';
+      }
+    });
+  };
+
+  initFloatingBackHome();
 });
