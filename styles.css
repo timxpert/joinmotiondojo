@@ -2864,14 +2864,15 @@ p {
 
 .experience-headline {
   font-family: var(--font-heading);
-  font-size: clamp(24px, 6.5vw, 48px);
+  font-size: clamp(36px, 10.5vw, 68px);
   font-weight: 800;
   color: var(--surface);
-  line-height: 1.12;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   margin-bottom: var(--space-3);
+  text-align: center;
   text-wrap: balance;
-  max-width: 22ch;
+  max-width: min(22ch, 100%);
   margin-left: auto;
   margin-right: auto;
   text-shadow: 0 4px 24px rgba(20, 10, 46, 0.25);
