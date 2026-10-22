@@ -37,7 +37,7 @@
   <!-- Preload Critical Fonts & Poster -->
   <link rel="preload" href="assets/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/hero-video-poster.jpg" as="image" type="image/jpeg" fetchpriority="high">
+  <link rel="preload" href="images/hero-video-poster.webp" as="image" type="image/webp" fetchpriority="high">
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="styles.css?v=2">
@@ -268,16 +268,17 @@
 
         <!-- Hero Video Player Simulation -->
         <div class="hero-media-col">
-          <div class="video-preview-card" id="heroVideoTrigger" role="button" tabindex="0" aria-label="Play Motion Dojo smartphone motion design preview video">
-            <div class="video-poster-wrapper">
-              <img src="assets/hero-video-poster.jpg" alt="Motion Dojo Smartphone Motion Design Course with Alight Motion video preview" class="hero-poster-img" width="1280" height="720" fetchpriority="high" decoding="async">
-              <div class="play-button-kinetic" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon" aria-hidden="true">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
+          <button type="button" class="video-preview-card" id="heroVideoTrigger" aria-label="Play the Motion Dojo smartphone motion design preview video">
+            <video class="hero-loop-video" id="heroLoopVideo" autoplay muted loop playsinline preload="auto" poster="images/hero-video-poster.webp" width="1280" height="720">
+              <source src="/videos/hero-loop.mp4" type="video/mp4">
+              <source src="/videos/hero-loop.webm" type="video/webm">
+            </video>
+            <div class="play-button-kinetic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </section>

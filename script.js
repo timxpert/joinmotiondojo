@@ -479,11 +479,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ------------------------------------------------------------------------
-  // 6. Interactive Video Preview Modal
+  // 6. Hero Video Preview Loop & Full Video Player
   // ------------------------------------------------------------------------
   const videoModal = document.getElementById('videoModal');
   const closeVideoModal = document.getElementById('closeVideoModal');
   const heroVideoTrigger = document.getElementById('heroVideoTrigger');
+  const heroLoopVideo = document.getElementById('heroLoopVideo');
   const carouselPlayButtons = document.querySelectorAll('.carousel-play-btn');
   const modalVideoTitle = document.getElementById('modalVideoTitle');
 
@@ -500,11 +501,80 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   };
 
+  // Check Data Saver and Reduced Motion preferences
+  const shouldPreventAutoplay = () => {
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hasDataSaver = Boolean(navigator.connection && navigator.connection.saveData);
+    return prefersReducedMotion || hasDataSaver;
+  };
+
+  let isHeroVideoInView = false;
+  let isFullVideoLoaded = false;
+
+  if (heroLoopVideo) {
+    // Explicitly set muted in JavaScript for mobile browser policy compatibility
+    heroLoopVideo.muted = true;
+    heroLoopVideo.defaultMuted = true;
+
+    if (shouldPreventAutoplay()) {
+      heroLoopVideo.pause();
+      heroLoopVideo.removeAttribute('autoplay');
+      try { heroLoopVideo.currentTime = 0; } catch (_) {}
+    } else {
+      const playPromise = heroLoopVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If autoplay is blocked by the browser, poster remains visible with play button
+        });
+      }
+    }
+
+    // Save Data and Battery: IntersectionObserver pauses preview when off-screen
+    if ('IntersectionObserver' in window) {
+      const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          isHeroVideoInView = entry.isIntersecting;
+          if (isFullVideoLoaded) return;
+
+          if (entry.isIntersecting) {
+            if (!shouldPreventAutoplay()) {
+              const p = heroLoopVideo.play();
+              if (p !== undefined) p.catch(() => {});
+            }
+          } else {
+            heroLoopVideo.pause();
+          }
+        });
+      }, { threshold: 0.15 });
+
+      heroObserver.observe(heroLoopVideo);
+    }
+
+    // Respect dynamic changes to reduced-motion preference
+    if (window.matchMedia) {
+      const motionMql = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (motionMql.addEventListener) {
+        motionMql.addEventListener('change', () => {
+          if (shouldPreventAutoplay()) {
+            heroLoopVideo.pause();
+          } else if (isHeroVideoInView && !isFullVideoLoaded) {
+            const p = heroLoopVideo.play();
+            if (p !== undefined) p.catch(() => {});
+          }
+        });
+      }
+    }
+  }
+
   const playHeroVideo = () => {
     if (!heroVideoTrigger || heroVideoTrigger.classList.contains('is-playing')) return;
+    isFullVideoLoaded = true;
     heroVideoTrigger.classList.add('is-playing');
-    heroVideoTrigger.removeAttribute('role');
-    heroVideoTrigger.removeAttribute('tabindex');
+    heroVideoTrigger.setAttribute('aria-expanded', 'true');
+
+    if (heroLoopVideo) {
+      heroLoopVideo.pause();
+    }
 
     const iframe = document.createElement('iframe');
     iframe.src = 'https://player.vimeo.com/video/1238403606?autoplay=1&autopause=0&dnt=1';
@@ -518,6 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideoTrigger.appendChild(iframe);
 
     iframe.addEventListener('load', () => {
+      if (heroLoopVideo) heroLoopVideo.style.display = 'none';
       const posterWrap = heroVideoTrigger.querySelector('.video-poster-wrapper');
       if (posterWrap) posterWrap.style.display = 'none';
     });
@@ -528,12 +599,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (heroVideoTrigger) {
     heroVideoTrigger.addEventListener('click', playHeroVideo);
-    heroVideoTrigger.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        playHeroVideo();
-      }
-    });
   }
 
   carouselPlayButtons.forEach(btn => {
