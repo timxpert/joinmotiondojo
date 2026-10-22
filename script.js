@@ -840,12 +840,69 @@ document.addEventListener('DOMContentLoaded', () => {
               ]
             },
             onSuccess: (transaction) => {
-              if (enrollSubmitBtn) {
-                enrollSubmitBtn.disabled = false;
-                enrollSubmitBtn.textContent = 'Pay ₦40,000';
-              }
               const finalRef = (transaction && (transaction.reference || transaction.ref)) || attemptReference;
-              showSuccessStep(finalRef);
+
+              // Show "Confirming your payment..." while verification runs
+              if (enrollPaymentStatus) {
+                enrollPaymentStatus.textContent = 'Confirming your payment...';
+                enrollPaymentStatus.removeAttribute('hidden');
+              }
+              if (enrollSubmitBtn) {
+                enrollSubmitBtn.disabled = true;
+                enrollSubmitBtn.textContent = 'Confirming your payment...';
+              }
+
+              // Server-side verification
+              fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reference: finalRef })
+              })
+                .then(async (res) => {
+                  let data = null;
+                  try {
+                    data = await res.json();
+                  } catch (e) {
+                    data = null;
+                  }
+                  return { ok: res.ok, status: res.status, data };
+                })
+                .then(({ ok, data }) => {
+                  if (enrollSubmitBtn) {
+                    enrollSubmitBtn.disabled = false;
+                    enrollSubmitBtn.textContent = 'Pay ₦40,000';
+                  }
+
+                  if (ok && data && data.verified === true) {
+                    // Confirmed: status is "success", amount is 4000000 kobo, currency is NGN
+                    showSuccessStep(finalRef);
+                  } else {
+                    const errorMsg = (data && data.message) || 'Payment verification could not be confirmed.';
+                    if (enrollPaymentStatus) {
+                      enrollPaymentStatus.textContent = `${errorMsg} If you have been debited, please contact us on WhatsApp with reference: ${finalRef}.`;
+                      enrollPaymentStatus.removeAttribute('hidden');
+                    }
+                    if (enrollFallbackLink) {
+                      enrollFallbackLink.removeAttribute('hidden');
+                    }
+                  }
+                })
+                .catch((err) => {
+                  console.error('Verification network error:', err);
+                  if (enrollSubmitBtn) {
+                    enrollSubmitBtn.disabled = false;
+                    enrollSubmitBtn.textContent = 'Pay ₦40,000';
+                  }
+                  if (enrollPaymentStatus) {
+                    enrollPaymentStatus.textContent = `Could not verify payment automatically due to a network error. Keep your reference: ${finalRef} and message us on WhatsApp.`;
+                    enrollPaymentStatus.removeAttribute('hidden');
+                  }
+                  if (enrollFallbackLink) {
+                    enrollFallbackLink.removeAttribute('hidden');
+                  }
+                });
             },
             onCancel: () => {
               if (enrollSubmitBtn) {

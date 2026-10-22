@@ -16,8 +16,38 @@ const MIME_TYPES = {
   '.mp4': 'video/mp4'
 };
 
-const server = http.createServer((req, res) => {
-  const urlPath = decodeURIComponent(req.url.split('?')[0]);
+const verifyPaymentHandler = require('./api/verify-payment');
+const paystackWebhookHandler = require('./api/paystack-webhook');
+
+const server = http.createServer(async (req, res) => {
+  // Decorate response object to emulate Vercel serverless environment
+  res.status = (code) => {
+    res.statusCode = code;
+    return res;
+  };
+  res.json = (data) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(data));
+  };
+  res.send = (data) => {
+    res.end(data);
+  };
+
+  const url = new URL(req.url, `http://${req.headers.host || '127.0.0.1:3000'}`);
+  const pathname = url.pathname;
+  req.query = Object.fromEntries(url.searchParams);
+
+  // Route API requests
+  if (pathname === '/api/verify-payment') {
+    return verifyPaymentHandler(req, res);
+  }
+
+  if (pathname === '/api/paystack-webhook') {
+    return paystackWebhookHandler(req, res);
+  }
+
+  // Static file serving
+  const urlPath = decodeURIComponent(pathname);
   let filePath = path.join(__dirname, urlPath === '/' ? 'index.html' : urlPath);
   const ext = path.extname(filePath).toLowerCase();
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
