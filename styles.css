@@ -103,8 +103,9 @@
   --space-7: 96px;       /* 6rem */
   --space-8: 128px;      /* 8rem */
 
-  --section-pad-y: var(--space-7);
-  --section-pad-y-mobile: var(--space-6);
+  --section-space: clamp(40px, 9vw, 72px);
+  --section-pad-y: var(--section-space);
+  --section-pad-y-mobile: var(--section-space);
 
   /* Unified Downward Soft Shadows */
   --shadow-subtle: 0 4px 16px rgba(20, 10, 46, 0.04);
@@ -131,6 +132,18 @@
   --header-height: 80px;
   --transition-normal: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-space: 88px;
+  }
+}
+
+/* Accessible anchor scrolling accounting for sticky header */
+section[id],
+footer[id] {
+  scroll-margin-top: calc(var(--header-height) + 8px);
 }
 
 /* --------------------------------------------------------------------------
@@ -198,6 +211,14 @@ input:focus-visible {
   padding-right: var(--space-4);
 }
 
+.container > *:first-child {
+  margin-top: 0;
+}
+
+.container > *:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
   .container {
     padding-left: 20px;
@@ -232,7 +253,7 @@ p {
   font-size: clamp(2rem, 3.5vw, var(--text-2xl));
   font-weight: 800;
   line-height: 1.15;
-  margin-bottom: var(--space-3);
+  margin-bottom: 12px;
   text-wrap: balance;
 }
 
@@ -540,9 +561,8 @@ p {
    -------------------------------------------------------------------------- */
 .section-hero {
   position: relative;
-  padding-top: var(--space-6);
-  padding-bottom: var(--space-7);
-  background-color: #F7F5FF;
+  padding-block: var(--section-space);
+  background-color: var(--dojo-white);
 }
 
 .hero-container {
@@ -558,7 +578,7 @@ p {
   color: var(--dojo-midnight);
   line-height: 1.14;
   letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
+  margin-bottom: 12px;
 }
 
 .hero-title-line {
@@ -726,8 +746,7 @@ p {
    6B. WHO IT'S FOR SECTION (Light: Dojo White)
    -------------------------------------------------------------------------- */
 .section-who-for {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white);
 }
 
@@ -741,7 +760,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: var(--space-6);
+  margin-bottom: 24px;
 }
 
 .who-for-pill-wrap {
@@ -794,7 +813,7 @@ p {
   font-size: var(--text-md);
   color: var(--text-secondary);
   max-width: 580px;
-  margin-top: var(--space-2);
+  margin-top: 12px;
   line-height: 1.6;
   text-wrap: balance;
 }
@@ -972,15 +991,14 @@ p {
    7. WHY MOTION DOJO? SECTION (Light: Dojo White)
    -------------------------------------------------------------------------- */
 .section-why {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white);
 }
 
 .why-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 24px;
 }
 
 .why-story {
@@ -1001,6 +1019,10 @@ p {
   color: var(--text-secondary);
 }
 
+.why-paragraphs p:last-child {
+  margin-bottom: 0;
+}
+
 .why-standout-block {
   display: flex;
   flex-direction: column;
@@ -1016,7 +1038,7 @@ p {
 .why-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
+  gap: 16px;
   align-items: stretch;
 }
 
@@ -1101,15 +1123,14 @@ p {
    -------------------------------------------------------------------------- */
 .section-curriculum,
 .section-works {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-midnight);
   position: relative;
 }
 
 .phases-header {
   text-align: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: 24px;
   max-width: 68ch;
   margin-left: auto;
   margin-right: auto;
@@ -1121,7 +1142,7 @@ p {
   font-weight: 700;
   color: var(--surface);
   text-align: center;
-  margin-bottom: var(--space-1);
+  margin-bottom: 12px;
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
@@ -1299,8 +1320,7 @@ p {
    9. PROJECTS SECTION (This is what you'll make - Dojo White)
    -------------------------------------------------------------------------- */
 .section-projects {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white);
   overflow: hidden;
 }
@@ -1318,7 +1338,7 @@ p {
   color: var(--dojo-midnight);
   line-height: 1.15;
   letter-spacing: -0.02em;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   text-align: center;
   white-space: nowrap;
 }
@@ -1539,7 +1559,7 @@ p {
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  margin-top: var(--space-5);
+  margin-top: 24px;
 }
 
 .carousel-ctrl-btn {
@@ -1575,8 +1595,7 @@ p {
    10. COMMUNITY & MEET THE TEAM SECTION
    -------------------------------------------------------------------------- */
 .section-community {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white);
 }
 
@@ -1587,7 +1606,7 @@ p {
 .community-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: 24px;
   text-align: center;
 }
 
@@ -1601,7 +1620,7 @@ p {
 
 .community-header-box {
   text-align: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: 0;
   max-width: 65ch;
   margin-left: auto;
   margin-right: auto;
@@ -1610,15 +1629,15 @@ p {
 .community-subheading {
   font-size: var(--text-md);
   color: var(--text-secondary);
-  margin-top: var(--space-1);
+  margin-top: 12px;
   line-height: 1.6;
 }
 
 .community-perks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  gap: 16px;
+  margin-bottom: 0;
   text-align: left;
 }
 
@@ -1693,7 +1712,7 @@ p {
 
 /* Team Grid */
 .team-headings {
-  margin-bottom: var(--space-4);
+  margin-bottom: 24px;
   text-align: center;
 }
 
@@ -1701,6 +1720,7 @@ p {
   font-size: var(--text-xl);
   font-weight: 800;
   color: var(--dojo-midnight);
+  margin-bottom: 12px;
 }
 
 .section-community.section-gradient .team-title {
@@ -1709,7 +1729,7 @@ p {
 
 .team-subtitle {
   font-size: var(--text-sm);
-  margin-top: var(--space-1);
+  margin-top: 0;
   color: var(--text-secondary);
 }
 
@@ -1721,7 +1741,7 @@ p {
 .team-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
+  gap: 16px;
   align-items: stretch;
 }
 
@@ -2017,8 +2037,7 @@ p {
    10B. TESTIMONIALS SECTION (Three-up Coverflow Carousel)
    -------------------------------------------------------------------------- */
 .section-testimonials {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white); /* solid background with NO overlay, gradient or tint */
   background-image: none;
   overflow: hidden;
@@ -2035,7 +2054,7 @@ p {
 
 .testimonials-header-box {
   text-align: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: 24px;
   max-width: 65ch;
   margin-left: auto;
   margin-right: auto;
@@ -2362,8 +2381,7 @@ p {
    10B. FOUNDER'S DESK SECTION (Dark Accent Box on Dojo White)
    -------------------------------------------------------------------------- */
 .section-founders-desk {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-midnight);
 }
 
@@ -2374,12 +2392,12 @@ p {
 .founders-desk-box {
   background-color: transparent;
   border-radius: 0;
-  padding: 64px 56px;
+  padding: 0;
   border: 0;
   box-shadow: none;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
-  gap: 56px;
+  gap: 48px;
   align-items: start;
   position: relative;
   overflow: hidden;
@@ -2450,7 +2468,7 @@ p {
   font-weight: 800;
   color: var(--surface);
   line-height: 1.15;
-  margin: 0 0 24px 0;
+  margin: 0 0 12px 0;
   text-wrap: balance;
 }
 
@@ -2526,8 +2544,7 @@ p {
    10C. MEET THE TEAM SECTION CONTAINER
    -------------------------------------------------------------------------- */
 .section-team {
-  padding-top: var(--space-2);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white);
 }
 
@@ -2860,14 +2877,13 @@ p {
    11. PRICING & ENROLMENT SECTION
    -------------------------------------------------------------------------- */
 .section-pricing {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-midnight);
 }
 
 .pricing-header-centered {
   text-align: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: 24px;
   max-width: 65ch;
   margin-left: auto;
   margin-right: auto;
@@ -2877,6 +2893,7 @@ p {
   color: var(--surface);
   white-space: nowrap;
   font-size: clamp(22px, 8vw, 56px);
+  margin-bottom: 12px;
 }
 
 .pricing-subheading {
@@ -2885,12 +2902,13 @@ p {
   opacity: 0.94;
   font-weight: 500;
   line-height: 1.6;
+  margin-top: 12px;
 }
 
 .pricing-cards-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  gap: 16px;
   align-items: stretch;
 }
 
@@ -3026,8 +3044,7 @@ p {
    12. DOJO EXPERIENCE BANNER SECTION (Standalone & Very Big)
    -------------------------------------------------------------------------- */
 .section-experience {
-  padding-top: var(--space-8);
-  padding-bottom: var(--space-8);
+  padding-block: var(--section-space);
   background: var(--gradient-brand);
   position: relative;
   overflow: hidden;
@@ -3050,7 +3067,7 @@ p {
   color: var(--surface);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
+  margin-bottom: 12px;
   text-align: center;
   white-space: nowrap;
   margin-left: auto;
@@ -3067,7 +3084,7 @@ p {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: var(--space-4);
+  margin-bottom: 24px;
   text-wrap: pretty;
 }
 
@@ -3098,13 +3115,12 @@ p {
    13. FAQ SECTION (Light: Dojo White)
    -------------------------------------------------------------------------- */
 .section-faq {
-  padding-top: var(--section-pad-y);
-  padding-bottom: var(--section-pad-y);
+  padding-block: var(--section-space);
   background-color: var(--dojo-white);
 }
 
 .faq-badge-header {
-  margin-bottom: var(--space-5);
+  margin-bottom: 24px;
   text-align: center;
 }
 
@@ -3118,7 +3134,7 @@ p {
 .faq-accordion-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 16px;
   max-width: 860px;
   margin: 0 auto;
   width: 100%;
@@ -3190,8 +3206,7 @@ p {
    13. FOOTER (DARK RHYTHM SECTION: ~20% of page)
    -------------------------------------------------------------------------- */
 .site-footer {
-  padding-top: var(--space-6);
-  padding-bottom: var(--space-5);
+  padding-block: var(--section-space);
   background-color: var(--dojo-midnight);
   color: var(--surface);
 }
@@ -3956,7 +3971,7 @@ p {
 
   .team-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
+    gap: 16px;
   }
 
   .testimonials-coverflow {
@@ -3969,10 +3984,6 @@ p {
 }
 
 @media (max-width: 900px) {
-  :root {
-    --section-pad-y: var(--section-pad-y-mobile);
-  }
-
   .desktop-nav,
   .site-header .btn-nav {
     display: none;
@@ -3980,14 +3991,6 @@ p {
 
   .mobile-menu-toggle {
     display: inline-flex;
-  }
-
-  .section-hero {
-    padding-bottom: 0;
-  }
-
-  .section-who-for {
-    padding-top: var(--space-6);
   }
 
   .hero-container {
@@ -4009,17 +4012,17 @@ p {
   }
 
   .why-container {
-    gap: var(--space-5);
+    gap: 24px;
   }
 
   .why-cards-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-2);
+    gap: 16px;
   }
 
   .pricing-cards-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-4);
+    gap: 16px;
   }
 
   .team-grid {
@@ -4056,8 +4059,8 @@ p {
 
   .founders-desk-box {
     grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 48px 36px;
+    gap: 32px;
+    padding: 0;
   }
 
   .founder-photo-wrap {
@@ -4071,9 +4074,6 @@ p {
 }
 
 @media (max-width: 768px) {
-  .section-hero {
-    padding-top: 24px;
-  }
 
   .hero-title {
     font-size: clamp(22px, 6.6vw, 36px);
@@ -4140,9 +4140,8 @@ p {
   }
 
   .founders-desk-box {
-    padding: 36px 20px;
-    border-radius: 24px;
-    gap: 32px;
+    padding: 0;
+    gap: 24px;
   }
 
   .founder-photo-wrap {
