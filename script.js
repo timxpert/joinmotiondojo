@@ -15,7 +15,6 @@ const testimonials = [
     type: 'video',
     studentName: 'Mary',
     orientation: 'landscape',
-    bio: '[SHORT BIO]',
     poster: 'images/testimonial-mary.webp',
     vimeoId: '1238665663',
     vimeoHash: 'df4d75a3d5',
@@ -27,7 +26,6 @@ const testimonials = [
     type: 'video',
     studentName: 'Roseline',
     orientation: 'portrait',
-    bio: '[SHORT BIO]',
     poster: 'images/testimonial-roseline.webp',
     vimeoId: '1238666245',
     vimeoHash: '5ac2fba1a7',
@@ -39,7 +37,6 @@ const testimonials = [
     type: 'video',
     studentName: 'Fatihi',
     orientation: 'landscape',
-    bio: '[SHORT BIO]',
     poster: 'images/testimonial-fatihi.webp',
     vimeoId: '1238668293',
     vimeoHash: 'f2b3558f85',
@@ -291,7 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="testimonial-attached-panel">
               <h3 class="testimonial-student-name">${item.studentName}</h3>
-              <p class="testimonial-student-bio">${item.bio}</p>
             </div>
           </div>
         </div>
@@ -299,6 +295,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
 
     const cardElements = coverflow.querySelectorAll('.testimonial-card-item');
+
+    // Dynamic height synchronisation to ensure zero dead space on mobile and desktop
+    const syncCoverflowHeight = () => {
+      const activeCard = coverflow.querySelector('.testimonial-card-item.is-center .testimonial-card-inner')
+        || coverflow.querySelector('.testimonial-card-item.is-center');
+      if (activeCard && activeCard.offsetHeight > 0) {
+        coverflow.style.minHeight = `${activeCard.offsetHeight}px`;
+        coverflow.style.height = `${activeCard.offsetHeight}px`;
+      }
+    };
 
     const updateCoverflow = () => {
       cardElements.forEach((card, index) => {
@@ -322,7 +328,18 @@ document.addEventListener('DOMContentLoaded', () => {
           card.setAttribute('aria-hidden', 'true');
         }
       });
+      syncCoverflowHeight();
     };
+
+    // Keep height in sync with image loads and viewport resizing
+    coverflow.querySelectorAll('img').forEach((img) => {
+      if (img.complete) {
+        syncCoverflowHeight();
+      } else {
+        img.addEventListener('load', syncCoverflowHeight, { once: true });
+      }
+    });
+    window.addEventListener('resize', syncCoverflowHeight, { passive: true });
 
     const nextSlide = () => {
       currentIndex = (currentIndex + 1) % totalCards;
@@ -345,7 +362,10 @@ document.addEventListener('DOMContentLoaded', () => {
       lastActiveTrigger = triggerEl || document.querySelector(`#testimonial-card-${index} .testimonial-play-btn`);
 
       if (modalTitle) modalTitle.textContent = item.studentName;
-      if (modalSub) modalSub.textContent = item.bio;
+      if (modalSub) {
+        modalSub.textContent = '';
+        modalSub.style.display = 'none';
+      }
       if (modalQuote && modalQuoteWrap) {
         if (item.caption) {
           modalQuote.textContent = item.caption;
@@ -467,8 +487,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, { passive: true });
 
-    // Initial positioning
+    // Initial positioning & height synchronisation
     updateCoverflow();
+    syncCoverflowHeight();
+    requestAnimationFrame(syncCoverflowHeight);
   };
 
   initTestimonialsCoverflow();
