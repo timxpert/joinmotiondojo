@@ -3312,6 +3312,7 @@ p {
 .footer-bottom-bar {
   border-top: 1px solid var(--dark-section-border);
   padding-top: var(--space-3);
+  padding-right: 64px;
 }
 
 .copyright-text {
@@ -4292,14 +4293,15 @@ p {
 }
 
 /* --------------------------------------------------------------------------
-   16. FLOATING BACK-TO-HOME BUTTON
+   16. FLOATING BACK-TO-TOP BUTTON
    -------------------------------------------------------------------------- */
+.floating-back-to-top,
 .floating-back-home {
   position: fixed;
   right: 16px;
-  bottom: 20px;
-  width: 48px;
-  height: 48px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background-color: var(--motion-violet);
   color: var(--surface);
@@ -4314,9 +4316,13 @@ p {
   transform: translateY(12px) scale(0.9);
   transition: opacity var(--transition-normal), transform var(--transition-normal), visibility var(--transition-normal), background-color var(--transition-fast), box-shadow var(--transition-fast);
   text-decoration: none;
+  border: none;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  padding: 0;
 }
 
+.floating-back-to-top.is-visible,
 .floating-back-home.is-visible {
   opacity: 1;
   visibility: visible;
@@ -4324,21 +4330,25 @@ p {
   transform: translateY(0) scale(1);
 }
 
+.floating-back-to-top:hover,
 .floating-back-home:hover {
-  background-color: #5B27C7;
+  background-color: var(--motion-violet-hover);
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 4px 12px rgba(20, 10, 46, 0.24), 0 2px 4px rgba(20, 10, 46, 0.14);
 }
 
+.floating-back-to-top:active,
 .floating-back-home:active {
   transform: translateY(0) scale(0.98);
 }
 
+.floating-back-to-top:focus-visible,
 .floating-back-home:focus-visible {
-  outline: 3px solid var(--kinetic-lime);
+  outline: 3px solid var(--dojo-midnight);
   outline-offset: 2px;
 }
 
+.floating-back-to-top svg,
 .floating-back-home svg {
   display: block;
   width: 20px;
@@ -4347,11 +4357,15 @@ p {
   transition: transform var(--transition-fast);
 }
 
+.floating-back-to-top:hover svg,
 .floating-back-home:hover svg {
-  transform: translateX(-2px);
+  transform: translateY(-2px);
 }
 
 /* Hide button when mobile menu drawer or modal lightboxes are open */
+body:has(#mobileDrawer.is-open) .floating-back-to-top,
+body:has(.modal-backdrop.is-open) .floating-back-to-top,
+body:has(.testimonial-modal-backdrop.is-open) .floating-back-to-top,
 body:has(#mobileDrawer.is-open) .floating-back-home,
 body:has(.modal-backdrop.is-open) .floating-back-home,
 body:has(.testimonial-modal-backdrop.is-open) .floating-back-home {
@@ -4361,13 +4375,15 @@ body:has(.testimonial-modal-backdrop.is-open) .floating-back-home {
 }
 
 @media (max-width: 768px) {
+  .floating-back-to-top,
   .floating-back-home {
     right: 16px;
     bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
 
+  .floating-back-to-top svg,
   .floating-back-home svg {
     width: 20px;
     height: 20px;
@@ -4375,12 +4391,17 @@ body:has(.testimonial-modal-backdrop.is-open) .floating-back-home {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .floating-back-to-top,
   .floating-back-home,
+  .floating-back-to-top:hover,
   .floating-back-home:hover,
+  .floating-back-to-top:active,
   .floating-back-home:active,
+  .floating-back-to-top svg,
   .floating-back-home svg {
     transform: none !important;
   }
+  .floating-back-to-top.is-visible,
   .floating-back-home.is-visible {
     transform: none !important;
   }

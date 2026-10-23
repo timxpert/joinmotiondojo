@@ -1732,58 +1732,53 @@ document.addEventListener('DOMContentLoaded', () => {
   initFoundersDesk();
 
   // ------------------------------------------------------------------------
-  // 17. Floating Back-to-Home Button
+  // 17. Floating Back-to-Top Button
   // ------------------------------------------------------------------------
-  const initFloatingBackHome = () => {
-    const floatingBackHome = document.getElementById('floatingBackHome');
-    if (!floatingBackHome) return;
+  const initFloatingBackToTop = () => {
+    const floatingBtn = document.getElementById('floatingBackToTop') || document.getElementById('floatingBackHome');
+    if (!floatingBtn) return;
 
     let scrollTicking = false;
-    const updateBackHomeVisibility = () => {
-      // Show when scrolled down past 400px from the top, hide when at the top
-      if (window.scrollY > 400) {
-        floatingBackHome.classList.add('is-visible');
+    const updateVisibility = () => {
+      // Hide if any modal or drawer is open
+      const isModalOpen = document.querySelector('.modal-backdrop.is-open, .testimonial-modal-backdrop.is-open, #mobileDrawer.is-open');
+
+      // Show only when scrolled down more than 800px and no modal is open
+      if (window.scrollY > 800 && !isModalOpen) {
+        floatingBtn.classList.add('is-visible');
       } else {
-        floatingBackHome.classList.remove('is-visible');
+        floatingBtn.classList.remove('is-visible');
       }
       scrollTicking = false;
     };
 
     window.addEventListener('scroll', () => {
       if (!scrollTicking) {
-        window.requestAnimationFrame(updateBackHomeVisibility);
+        window.requestAnimationFrame(updateVisibility);
         scrollTicking = true;
       }
     }, { passive: true });
 
-    // Initial check on load (e.g. if loaded at a hash anchor or mid-scroll)
-    updateBackHomeVisibility();
+    // Initial check on load
+    updateVisibility();
 
-    floatingBackHome.addEventListener('click', (e) => {
-      const isFileProtocol = window.location.protocol === 'file:';
-      const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
+    floatingBtn.addEventListener('click', (e) => {
+      e.preventDefault();
       const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // When already on homepage
-      if (isFileProtocol || (isHomePage && !window.location.search)) {
-        e.preventDefault();
-        if (window.location.hash) {
-          try {
-            history.pushState(null, '', window.location.pathname);
-          } catch (_) {
-            window.location.hash = '';
-          }
-        }
-        window.scrollTo({
-          top: 0,
-          behavior: prefersReducedMotion ? 'auto' : 'smooth'
-        });
-      } else {
-        // Direct navigation to homepage root
-        window.location.href = '/';
-      }
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
     });
+
+    // Observer to hide immediately when any modal opens
+    if (window.MutationObserver) {
+      const observer = new MutationObserver(() => updateVisibility());
+      document.querySelectorAll('.modal-backdrop, #mobileDrawer').forEach(el => {
+        observer.observe(el, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
+      });
+    }
   };
 
-  initFloatingBackHome();
+  initFloatingBackToTop();
 });
