@@ -1445,8 +1445,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let scrollTicking = false;
     const updateBackHomeVisibility = () => {
-      // Show when scrolled down past 260px from the top, hide when at the top
-      if (window.scrollY > 260) {
+      // Show when scrolled down past 400px from the top, hide when at the top
+      if (window.scrollY > 400) {
         floatingBackHome.classList.add('is-visible');
       } else {
         floatingBackHome.classList.remove('is-visible');

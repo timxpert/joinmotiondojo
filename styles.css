@@ -1307,19 +1307,37 @@ p {
 
 .projects-header-centered {
   text-align: center;
-  max-width: 65ch;
-  margin: 0 auto var(--space-5);
+  max-width: 800px;
+  margin: 0 auto 24px;
 }
 
-.section-projects .section-heading {
-  color: var(--motion-violet);
+.projects-heading {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(30px, 8.5vw, 56px);
+  color: var(--dojo-midnight);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 440px) {
+  .projects-heading {
+    white-space: normal;
+    text-wrap: balance;
+  }
 }
 
 .projects-subheading {
-  font-size: var(--text-md);
-  color: var(--text-secondary);
-  line-height: 1.6;
-  text-wrap: pretty;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(20, 10, 46, 0.75);
+  line-height: 1.5;
+  text-align: center;
+  margin: 0 auto;
 }
 
 /* 3D Stack Container */
@@ -4234,8 +4252,8 @@ p {
    -------------------------------------------------------------------------- */
 .floating-back-home {
   position: fixed;
-  right: 24px;
-  bottom: 28px;
+  right: 16px;
+  bottom: 20px;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -4244,7 +4262,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(109, 50, 232, 0.35), 0 2px 6px rgba(20, 10, 46, 0.15);
+  box-shadow: 0 2px 8px rgba(20, 10, 46, 0.18), 0 1px 3px rgba(20, 10, 46, 0.12);
   z-index: 900;
   opacity: 0;
   visibility: hidden;
@@ -4265,7 +4283,7 @@ p {
 .floating-back-home:hover {
   background-color: #5B27C7;
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 8px 24px rgba(109, 50, 232, 0.45), 0 4px 10px rgba(20, 10, 46, 0.2);
+  box-shadow: 0 4px 12px rgba(20, 10, 46, 0.24), 0 2px 4px rgba(20, 10, 46, 0.14);
 }
 
 .floating-back-home:active {
@@ -4300,10 +4318,10 @@ body:has(.testimonial-modal-backdrop.is-open) .floating-back-home {
 
 @media (max-width: 768px) {
   .floating-back-home {
-    right: 18px;
+    right: 16px;
     bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
   }
 
   .floating-back-home svg {
