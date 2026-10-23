@@ -6,40 +6,46 @@
 
 // ============================================================================
 // MOTION DOJO — TESTIMONIALS DATA CONFIGURATION
-// Centralized array supporting both 'video' cards and 'text' cards.
+// Centralised array supporting student testimonial videos and posters.
 // Update videos, posters, quotes, or student bios easily in one place.
 // ============================================================================
 const testimonials = [
   {
-    id: 't-1',
+    id: 't-mary',
     type: 'video',
-    studentName: 'Chidubem Okafor',
-    bio: 'Freelance 3D & kinetic motion designer who landed his first international commercial campaign within 6 weeks of Phase 3.',
-    poster: 'assets/George Junior.jpg',
-    videoSrc: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    videoTitle: 'Chidubem Okafor — From Mobile Novice to Commercial Ninja',
-    caption: '“Motion Dojo broke down camera easing and client pitching in a way that landed me my first $1,200 project.”'
+    studentName: 'Mary',
+    orientation: 'landscape',
+    bio: '[SHORT BIO]',
+    poster: 'images/testimonial-mary.webp',
+    vimeoId: '1238665663',
+    vimeoHash: 'df4d75a3d5',
+    videoTitle: 'Mary testimonial',
+    embedUrl: 'https://player.vimeo.com/video/1238665663?h=df4d75a3d5&autoplay=1&dnt=1'
   },
   {
-    id: 't-2',
+    id: 't-roseline',
     type: 'video',
-    studentName: 'Amina Bello',
-    bio: 'Turned smartphone animation into a 6-figure monthly agency retainer with high-velocity product adverts.',
-    poster: 'assets/Osho Elizabeth Oluwatobiloba.jpg',
-    videoSrc: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    videoTitle: 'Amina Bello — Scaling Video Ads on Smartphone',
-    caption: '“I was skeptical about smartphone motion design until Sensei Tim broke down vector masks and null cameras.”'
+    studentName: 'Roseline',
+    orientation: 'portrait',
+    bio: '[SHORT BIO]',
+    poster: 'images/testimonial-roseline.webp',
+    vimeoId: '1238666245',
+    vimeoHash: '5ac2fba1a7',
+    videoTitle: 'Roseline testimonial',
+    embedUrl: 'https://player.vimeo.com/video/1238666245?h=5ac2fba1a7&autoplay=1&dnt=1'
   },
   {
-    id: 't-3',
+    id: 't-fatihi',
     type: 'video',
-    studentName: 'Tunde Adeleke',
-    bio: 'Self-taught animator who transitioned from static graphic design to full-time motion director.',
-    poster: 'assets/Muhammad Fatihi Abdullahi.jpg',
-    videoSrc: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
-    videoTitle: 'Tunde Adeleke — The 4-Phase Journey to Mastery',
-    caption: '“The community feedback and weekly critique sessions pushed my render quality 10x higher.”'
-  },
+    studentName: 'Fatihi',
+    orientation: 'landscape',
+    bio: '[SHORT BIO]',
+    poster: 'images/testimonial-fatihi.webp',
+    vimeoId: '1238668293',
+    vimeoHash: 'f2b3558f85',
+    videoTitle: 'Fatihi testimonial',
+    embedUrl: 'https://player.vimeo.com/video/1238668293?h=f2b3558f85&autoplay=1&dnt=1'
+  }
 ];
 
 // ============================================================================
@@ -247,7 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('testimonialNextBtn');
     const modal = document.getElementById('testimonialVideoModal');
     const closeBtn = document.getElementById('closeTestimonialModal');
-    const videoPlayer = document.getElementById('testimonialVideoPlayer');
+    const playerWrapper = document.getElementById('testimonialPlayerWrapper') || document.querySelector('.testimonial-modal-player-wrapper');
+    const modalBox = modal ? modal.querySelector('.testimonial-modal-box') : null;
     const modalTitle = document.getElementById('testimonialModalTitle');
     const modalSub = document.getElementById('testimonialModalSub');
     const modalQuoteWrap = document.getElementById('testimonialModalQuoteWrap');
@@ -261,11 +268,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render video cards dynamically (ONE single card: landscape 16:9 media on top, attached white panel below)
     coverflow.innerHTML = testimonials.map((item, index) => {
+      const isPortrait = item.orientation === 'portrait';
+      const posterHtml = isPortrait
+        ? `
+            <img src="${item.poster}" alt="" class="testimonial-poster-bg-blur" aria-hidden="true" />
+            <img src="${item.poster}" alt="${item.studentName} motion design testimonial thumbnail" class="testimonial-poster-img is-portrait" loading="lazy" />
+          `
+        : `
+            <img src="${item.poster}" alt="${item.studentName} motion design testimonial thumbnail" class="testimonial-poster-img" loading="lazy" />
+          `;
+
       return `
         <div class="testimonial-card-item" data-index="${index}" id="testimonial-card-${index}" role="group" aria-roledescription="slide" aria-label="Testimonial ${index + 1} of ${totalCards}: ${item.studentName}">
           <div class="testimonial-card-inner is-video-card">
             <div class="testimonial-media-box">
-              <img src="${item.poster}" alt="${item.studentName} motion design testimonial thumbnail" class="testimonial-poster-img" loading="lazy" />
+              ${posterHtml}
               <button type="button" class="testimonial-play-btn" aria-label="Play video testimonial from ${item.studentName}" data-index="${index}">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M8 5v14l11-7z"/>
@@ -338,14 +355,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      if (videoPlayer) {
-        // Lazy load video source on demand (no autoplay beforehand)
-        videoPlayer.src = item.videoSrc;
-        videoPlayer.load();
-        const playPromise = videoPlayer.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {});
-        }
+      if (modalBox) {
+        modalBox.classList.remove('is-portrait', 'is-landscape');
+        modalBox.classList.add(item.orientation === 'portrait' ? 'is-portrait' : 'is-landscape');
+      }
+
+      if (playerWrapper) {
+        playerWrapper.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://player.vimeo.com/video/${item.vimeoId}?h=${item.vimeoHash}&autoplay=1&dnt=1`;
+        iframe.title = `${item.studentName} testimonial`;
+        iframe.className = 'testimonial-vimeo-iframe';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', 'true');
+        playerWrapper.appendChild(iframe);
       }
 
       if (modal) {
@@ -359,10 +383,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.closeTestimonialVideoModal = () => {
       if (!modal || !modal.classList.contains('is-open')) return;
 
-      if (videoPlayer) {
-        videoPlayer.pause();
-        videoPlayer.removeAttribute('src');
-        videoPlayer.load();
+      if (playerWrapper) {
+        playerWrapper.innerHTML = '';
+      }
+
+      if (modalBox) {
+        modalBox.classList.remove('is-portrait', 'is-landscape');
       }
 
       modal.classList.remove('is-open');
@@ -406,6 +432,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (idx !== currentIndex) {
         currentIndex = idx;
         updateCoverflow();
+      } else {
+        const mediaBox = e.target.closest('.testimonial-media-box');
+        if (mediaBox) {
+          openVideoModal(idx, card.querySelector('.testimonial-play-btn'));
+        }
       }
     });
 
