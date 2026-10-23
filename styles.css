@@ -2709,6 +2709,121 @@ p {
   justify-content: center;
 }
 
+/* Instant Video Loader & Poster Placeholder */
+.modal-video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dojo-midnight);
+  pointer-events: none;
+}
+
+.modal-video-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modal-video-loader {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  text-align: center;
+  padding: var(--space-3);
+  max-width: 90%;
+}
+
+.modal-spinner-backdrop {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  background-color: rgba(20, 10, 46, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.modal-spinner-ring {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(200, 255, 61, 0.25);
+  border-top-color: var(--kinetic-lime);
+  border-radius: var(--radius-full);
+  animation: modalSpinnerSpin 0.8s linear infinite;
+}
+
+@keyframes modalSpinnerSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.modal-loading-text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--surface);
+  text-shadow: 0 2px 6px rgba(20, 10, 46, 0.9);
+  margin: 0;
+}
+
+/* 12-second Timeout Notice */
+.modal-loading-timeout {
+  position: relative;
+  z-index: 4;
+  pointer-events: auto;
+  background-color: rgba(20, 10, 46, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--lavender-border);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  max-width: 380px;
+  text-align: center;
+  margin: 0;
+}
+
+.modal-timeout-text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--surface);
+  margin: 0;
+}
+
+.modal-vimeo-link {
+  color: var(--kinetic-lime);
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.modal-vimeo-link:hover,
+.modal-vimeo-link:focus-visible {
+  color: var(--electric-lavender);
+}
+
 .testimonial-vimeo-iframe {
   position: absolute;
   top: 0;
@@ -2718,6 +2833,12 @@ p {
   border: 0;
   border-radius: var(--radius-lg);
   display: block;
+}
+
+.testimonial-vimeo-iframe.modal-iframe-fade {
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* Plain midnight text quote below the video, not over it */

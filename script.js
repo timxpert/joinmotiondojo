@@ -17,7 +17,7 @@ const projects = [
     poster: 'images/project-inmagic.webp',
     alt: 'Inmagic AI motion design project preview',
     videoTitle: 'Inmagic AI motion design project',
-    embedUrl: 'https://player.vimeo.com/video/1238697726?h=a5a200a87b&autoplay=1&dnt=1'
+    embedUrl: 'https://player.vimeo.com/video/1238697726?h=a5a200a87b&autoplay=1&dnt=1&playsinline=1'
   },
   {
     id: 'p-kuda',
@@ -27,7 +27,7 @@ const projects = [
     poster: 'images/project-kuda.webp',
     alt: 'Kuda motion design project preview',
     videoTitle: 'Kuda motion design project',
-    embedUrl: 'https://player.vimeo.com/video/1238698161?h=ea2615b78c&autoplay=1&dnt=1'
+    embedUrl: 'https://player.vimeo.com/video/1238698161?h=ea2615b78c&autoplay=1&dnt=1&playsinline=1'
   },
   {
     id: 'p-mysite',
@@ -37,7 +37,7 @@ const projects = [
     poster: 'images/project-mysite.webp',
     alt: 'Mysite AI motion design project preview',
     videoTitle: 'Mysite AI motion design project',
-    embedUrl: 'https://player.vimeo.com/video/1238698598?h=33f478d30d&autoplay=1&dnt=1'
+    embedUrl: 'https://player.vimeo.com/video/1238698598?h=33f478d30d&autoplay=1&dnt=1&playsinline=1'
   }
 ];
 
@@ -56,7 +56,7 @@ const testimonials = [
     vimeoId: '1238665663',
     vimeoHash: 'df4d75a3d5',
     videoTitle: 'Mary testimonial',
-    embedUrl: 'https://player.vimeo.com/video/1238665663?h=df4d75a3d5&autoplay=1&dnt=1'
+    embedUrl: 'https://player.vimeo.com/video/1238665663?h=df4d75a3d5&autoplay=1&dnt=1&playsinline=1'
   },
   {
     id: 't-roseline',
@@ -67,7 +67,7 @@ const testimonials = [
     vimeoId: '1238666245',
     vimeoHash: '5ac2fba1a7',
     videoTitle: 'Roseline testimonial',
-    embedUrl: 'https://player.vimeo.com/video/1238666245?h=5ac2fba1a7&autoplay=1&dnt=1'
+    embedUrl: 'https://player.vimeo.com/video/1238666245?h=5ac2fba1a7&autoplay=1&dnt=1&playsinline=1'
   },
   {
     id: 't-fatihi',
@@ -78,7 +78,7 @@ const testimonials = [
     vimeoId: '1238668293',
     vimeoHash: 'f2b3558f85',
     videoTitle: 'Fatihi testimonial',
-    embedUrl: 'https://player.vimeo.com/video/1238668293?h=f2b3558f85&autoplay=1&dnt=1'
+    embedUrl: 'https://player.vimeo.com/video/1238668293?h=f2b3558f85&autoplay=1&dnt=1&playsinline=1'
   }
 ];
 
@@ -213,8 +213,112 @@ document.addEventListener('DOMContentLoaded', () => {
   const videoLightboxPlayerWrapper = document.getElementById('testimonialPlayerWrapper') || (videoLightboxModal ? videoLightboxModal.querySelector('.testimonial-modal-player-wrapper') : null);
   const videoLightboxBox = videoLightboxModal ? videoLightboxModal.querySelector('.testimonial-modal-box') : null;
 
+  let activeVideoTimeoutTimer = null;
+  let lastVideoTriggerTime = 0;
+  let lastVideoTriggerIdx = -1;
+  let lastVideoTriggerType = '';
+
+  const loadVideoIntoPlayer = (item, isPortrait) => {
+    if (!videoLightboxPlayerWrapper) return;
+
+    if (activeVideoTimeoutTimer) {
+      clearTimeout(activeVideoTimeoutTimer);
+      activeVideoTimeoutTimer = null;
+    }
+
+    videoLightboxPlayerWrapper.innerHTML = '';
+
+    const renderVideoError = (err) => {
+      if (activeVideoTimeoutTimer) {
+        clearTimeout(activeVideoTimeoutTimer);
+        activeVideoTimeoutTimer = null;
+      }
+      console.error('This video could not be loaded:', err || 'Vimeo playback error', item);
+      videoLightboxPlayerWrapper.innerHTML = `
+        <div class="video-error-container" role="alert">
+          <p class="video-error-message">This video could not be loaded. <a href="https://vimeo.com/${item.vimeoId}" target="_blank" rel="noopener noreferrer" class="video-error-link">Watch it on Vimeo</a></p>
+        </div>
+      `;
+    };
+
+    if (!navigator.onLine) {
+      renderVideoError('Network offline');
+      return;
+    }
+
+    // 1. Immediately show the video's poster image with centred spinner and "Loading video..."
+    const placeholder = document.createElement('div');
+    placeholder.className = 'modal-video-placeholder';
+    placeholder.id = 'modalVideoPlaceholder';
+    placeholder.innerHTML = `
+      <img src="${item.poster}" alt="" class="modal-video-poster" width="${isPortrait ? 1080 : 1920}" height="${isPortrait ? 1920 : 1080}" />
+      <div class="modal-video-loader" id="modalVideoLoader">
+        <div class="modal-spinner-backdrop" aria-hidden="true">
+          <div class="modal-spinner-ring"></div>
+        </div>
+        <p class="modal-loading-text">Loading video...</p>
+      </div>
+    `;
+    videoLightboxPlayerWrapper.appendChild(placeholder);
+
+    // 2. Create the iframe at the same moment, positioned over the poster with opacity: 0
+    const iframe = document.createElement('iframe');
+    const hashParam = item.vimeoHash ? `?h=${item.vimeoHash}&` : '?';
+    iframe.src = `https://player.vimeo.com/video/${item.vimeoId}${hashParam}autoplay=1&dnt=1&playsinline=1`;
+    iframe.title = item.videoTitle || (item.studentName ? `${item.studentName} testimonial` : `${item.name} motion design project`);
+    iframe.className = 'testimonial-vimeo-iframe modal-iframe-fade';
+    iframe.setAttribute('loading', 'eager');
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', 'true');
+    iframe.style.opacity = '0';
+    iframe.style.transition = 'opacity 0.3s ease';
+
+    let isIframeLoaded = false;
+
+    // 3. 12-second timeout: replace spinner with "Taking longer than usual. Check your connection or watch on Vimeo"
+    activeVideoTimeoutTimer = setTimeout(() => {
+      if (!isIframeLoaded) {
+        const loader = placeholder.querySelector('#modalVideoLoader');
+        if (loader) {
+          loader.innerHTML = `
+            <div class="modal-loading-timeout" role="alert">
+              <p class="modal-timeout-text">Taking longer than usual. Check your connection or <a href="https://vimeo.com/${item.vimeoId}" target="_blank" rel="noopener noreferrer" class="modal-vimeo-link">watch on Vimeo</a></p>
+            </div>
+          `;
+        }
+      }
+    }, 12000);
+
+    // Fade in iframe over 0.3s and hide poster and spinner when loaded
+    iframe.addEventListener('load', () => {
+      isIframeLoaded = true;
+      if (activeVideoTimeoutTimer) {
+        clearTimeout(activeVideoTimeoutTimer);
+        activeVideoTimeoutTimer = null;
+      }
+      iframe.style.opacity = '1';
+      setTimeout(() => {
+        if (isIframeLoaded && placeholder) {
+          placeholder.style.display = 'none';
+        }
+      }, 300);
+    });
+
+    iframe.addEventListener('error', (e) => {
+      renderVideoError(e);
+    });
+
+    videoLightboxPlayerWrapper.appendChild(iframe);
+  };
+
   const closeVideoLightbox = () => {
     if (!videoLightboxModal || !videoLightboxModal.classList.contains('is-open')) return;
+
+    if (activeVideoTimeoutTimer) {
+      clearTimeout(activeVideoTimeoutTimer);
+      activeVideoTimeoutTimer = null;
+    }
 
     if (videoLightboxPlayerWrapper) {
       videoLightboxPlayerWrapper.innerHTML = '';
@@ -301,7 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
         item = {
           name: vTitle || (item ? item.name : 'Student Project'),
           vimeoId: vId,
-          vimeoHash: vHash || ''
+          vimeoHash: vHash || '',
+          poster: (item ? item.poster : 'images/project-inmagic.webp'),
+          videoTitle: vTitle ? `${vTitle} motion design project` : 'Motion design project'
         };
       }
     }
@@ -341,36 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeVideoLightboxBtn.setAttribute('aria-label', `Close ${item.name} video preview`);
     }
 
-    if (videoLightboxPlayerWrapper) {
-      videoLightboxPlayerWrapper.innerHTML = '';
-
-      const renderVideoError = (err) => {
-        console.error('This video could not be loaded:', err || 'Vimeo playback error', item);
-        videoLightboxPlayerWrapper.innerHTML = `
-          <div class="video-error-container" role="alert">
-            <p class="video-error-message">This video could not be loaded. <a href="https://vimeo.com/${item.vimeoId}" target="_blank" rel="noopener noreferrer" class="video-error-link">Watch it on Vimeo</a></p>
-          </div>
-        `;
-      };
-
-      if (!navigator.onLine) {
-        renderVideoError('Network offline');
-      } else {
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://player.vimeo.com/video/${item.vimeoId}?h=${item.vimeoHash}&autoplay=1&dnt=1`;
-        iframe.title = `${item.name} motion design project`;
-        iframe.className = 'testimonial-vimeo-iframe';
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-        iframe.setAttribute('allowfullscreen', 'true');
-
-        iframe.addEventListener('error', (e) => {
-          renderVideoError(e);
-        });
-
-        videoLightboxPlayerWrapper.appendChild(iframe);
-      }
-    }
+    loadVideoIntoPlayer(item, false);
 
     videoLightboxModal.classList.add('is-open');
     videoLightboxModal.setAttribute('aria-hidden', 'false');
@@ -378,28 +455,53 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeVideoLightboxBtn) setTimeout(() => closeVideoLightboxBtn.focus(), 150);
   };
 
+  // Early trigger on pointerdown or touchstart saves 100 to 300ms
+  const handleProjectPlayTrigger = (e, triggerEl) => {
+    if (e.type === 'pointerdown' && e.button !== 0) return;
+    const playBtn = triggerEl.closest('.carousel-play-btn') || triggerEl.querySelector('.carousel-play-btn') || triggerEl;
+    const card = triggerEl.closest('.stack-card');
+    const idx = card ? parseInt(card.getAttribute('data-index'), 10) : parseInt(playBtn.getAttribute('data-index'), 10);
+
+    const now = Date.now();
+    if (now - lastVideoTriggerTime < 400 && lastVideoTriggerIdx === idx && lastVideoTriggerType === 'project') {
+      if (e.cancelable && e.type === 'click') e.preventDefault();
+      return;
+    }
+    lastVideoTriggerTime = now;
+    lastVideoTriggerIdx = idx;
+    lastVideoTriggerType = 'project';
+
+    currentProjectIndex = idx;
+    updateCarouselStack();
+    openProjectModal(idx, playBtn);
+  };
+
   // Card click, keyboard, and touch swipe navigation for Carousel
   if (cardStack) {
     const playButtons = cardStack.querySelectorAll('.carousel-play-btn');
     playButtons.forEach(btn => {
+      if (window.PointerEvent) {
+        btn.addEventListener('pointerdown', (e) => handleProjectPlayTrigger(e, btn), { passive: true });
+      } else {
+        btn.addEventListener('touchstart', (e) => handleProjectPlayTrigger(e, btn), { passive: true });
+      }
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const card = btn.closest('.stack-card');
-        const idx = card ? parseInt(card.getAttribute('data-index'), 10) : parseInt(btn.getAttribute('data-index'), 10);
-        currentProjectIndex = idx;
-        updateCarouselStack();
-        openProjectModal(idx, btn);
+        handleProjectPlayTrigger(e, btn);
       });
     });
 
     cardStack.addEventListener('click', (e) => {
+      const playBtn = e.target.closest('.carousel-play-btn');
+      if (playBtn) return;
+
       const card = e.target.closest('.stack-card');
       if (!card) return;
       const idx = parseInt(card.getAttribute('data-index'), 10);
 
       // Tapping the active card opens full-screen video lightbox
       if (card.classList.contains('card-active')) {
-        openProjectModal(idx, card.querySelector('.carousel-play-btn') || card);
+        handleProjectPlayTrigger(e, card);
       } else {
         // Tapping a background card cycles it to the front
         currentProjectIndex = idx;
@@ -575,41 +677,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      const isPortrait = item.orientation === 'portrait';
       if (modalBox) {
         modalBox.classList.remove('is-portrait', 'is-landscape');
-        modalBox.classList.add(item.orientation === 'portrait' ? 'is-portrait' : 'is-landscape');
+        modalBox.classList.add(isPortrait ? 'is-portrait' : 'is-landscape');
       }
 
-      if (playerWrapper) {
-        playerWrapper.innerHTML = '';
-
-        const renderVideoError = (err) => {
-          console.error('This video could not be loaded:', err || 'Vimeo playback error', item);
-          playerWrapper.innerHTML = `
-            <div class="video-error-container" role="alert">
-              <p class="video-error-message">This video could not be loaded. <a href="https://vimeo.com/${item.vimeoId}" target="_blank" rel="noopener noreferrer" class="video-error-link">Watch it on Vimeo</a></p>
-            </div>
-          `;
-        };
-
-        if (!navigator.onLine) {
-          renderVideoError('Network offline');
-        } else {
-          const iframe = document.createElement('iframe');
-          iframe.src = `https://player.vimeo.com/video/${item.vimeoId}?h=${item.vimeoHash}&autoplay=1&dnt=1`;
-          iframe.title = `${item.studentName} testimonial`;
-          iframe.className = 'testimonial-vimeo-iframe';
-          iframe.setAttribute('frameborder', '0');
-          iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-          iframe.setAttribute('allowfullscreen', 'true');
-
-          iframe.addEventListener('error', (e) => {
-            renderVideoError(e);
-          });
-
-          playerWrapper.appendChild(iframe);
-        }
+      if (closeBtn) {
+        closeBtn.setAttribute('aria-label', `Close video testimonial from ${item.studentName}`);
       }
+
+      loadVideoIntoPlayer(item, isPortrait);
 
       if (modal) {
         modal.classList.add('is-open');
@@ -629,21 +707,48 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    const handleTestimonialPlayTrigger = (e, triggerEl) => {
+      if (e.type === 'pointerdown' && e.button !== 0) return;
+      const playBtn = triggerEl.closest('.testimonial-play-btn') || triggerEl.querySelector('.testimonial-play-btn') || triggerEl;
+      const card = triggerEl.closest('.testimonial-card-item');
+      if (!card) return;
+      const idx = parseInt(card.getAttribute('data-index'), 10);
+
+      if (idx !== currentIndex) {
+        currentIndex = idx;
+        updateCoverflow();
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastVideoTriggerTime < 400 && lastVideoTriggerIdx === idx && lastVideoTriggerType === 'testimonial') {
+        if (e.cancelable && e.type === 'click') e.preventDefault();
+        return;
+      }
+      lastVideoTriggerTime = now;
+      lastVideoTriggerIdx = idx;
+      lastVideoTriggerType = 'testimonial';
+
+      openVideoModal(idx, playBtn);
+    };
+
+    // Attach early pointerdown / touchstart triggers on play buttons
+    coverflow.querySelectorAll('.testimonial-play-btn').forEach(btn => {
+      if (window.PointerEvent) {
+        btn.addEventListener('pointerdown', (e) => handleTestimonialPlayTrigger(e, btn), { passive: true });
+      } else {
+        btn.addEventListener('touchstart', (e) => handleTestimonialPlayTrigger(e, btn), { passive: true });
+      }
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleTestimonialPlayTrigger(e, btn);
+      });
+    });
+
     // Tapping side card moves it to center; tapping center card play button opens lightbox
     coverflow.addEventListener('click', (e) => {
       const playBtn = e.target.closest('.testimonial-play-btn');
-      if (playBtn) {
-        e.stopPropagation();
-        const card = playBtn.closest('.testimonial-card-item');
-        const idx = parseInt(card.getAttribute('data-index'), 10);
-        if (idx !== currentIndex) {
-          currentIndex = idx;
-          updateCoverflow();
-        } else {
-          openVideoModal(idx, playBtn);
-        }
-        return;
-      }
+      if (playBtn) return; // Handled directly
 
       const card = e.target.closest('.testimonial-card-item');
       if (!card) return;
@@ -654,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         const mediaBox = e.target.closest('.testimonial-media-box');
         if (mediaBox) {
-          openVideoModal(idx, card.querySelector('.testimonial-play-btn'));
+          handleTestimonialPlayTrigger(e, card);
         }
       }
     });
