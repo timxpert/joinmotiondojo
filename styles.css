@@ -3268,112 +3268,37 @@ p {
   height: 20px;
 }
 
-/* Video Player Simulation */
-.simulated-player {
-  width: 100%;
-  border-radius: var(--radius-md);
-  background-color: var(--dojo-midnight);
-  overflow: hidden;
-}
-
-.player-canvas-mock {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  position: relative;
+/* Video Load Error Fallback */
+.video-error-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--dojo-midnight);
-  overflow: hidden;
-}
-
-.motion-demo-element {
-  position: absolute;
-  pointer-events: none;
-}
-
-.element-circle {
-  width: 160px;
-  height: 160px;
-  border-radius: var(--radius-full);
-  background-color: var(--kinetic-lime);
-  filter: blur(40px);
-  opacity: 0.45;
-  animation: pulseGlow 4s infinite alternate ease-in-out;
-  border-radius: var(--radius-full);
-  background-color: rgba(167, 123, 255, 0.18);
-  border: 1px solid rgba(167, 123, 255, 0.32);
-  width: 200px;
-  height: 200px;
-  border-radius: var(--radius-full);
-  border: 3px dashed var(--electric-lavender);
-  animation: spinSlow 12s linear infinite;
-}
-
-.element-typography {
-  text-align: center;
-  z-index: 2;
-}
-
-.demo-sub {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: var(--text-xs);
-  font-weight: 800;
-  color: var(--kinetic-lime);
-  letter-spacing: 0.15em;
-  margin-bottom: var(--space-1);
-}
-
-.demo-bold {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: var(--text-lg);
-  font-weight: 800;
-  color: var(--surface);
-  letter-spacing: -0.02em;
-}
-
-.player-controls-mock {
-  padding: var(--space-2) var(--space-3);
-  background-color: var(--midnight-input-bg);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.mock-play-toggle {
-  color: var(--kinetic-lime);
-  min-width: 44px;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mock-play-toggle svg {
-  width: 22px;
-  height: 22px;
-}
-
-.mock-progress-track {
-  flex: 1;
-  height: 6px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.mock-progress-fill {
-  width: 35%;
+  width: 100%;
   height: 100%;
-  background-color: var(--kinetic-lime);
+  min-height: 240px;
+  padding: var(--space-4);
+  text-align: center;
+  background-color: var(--dojo-midnight);
 }
 
-.mock-time {
-  font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.7);
-  font-family: monospace;
+.video-error-message {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--surface);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.video-error-link {
+  color: var(--kinetic-lime);
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.video-error-link:hover,
+.video-error-link:focus-visible {
+  color: var(--electric-lavender);
 }
 
 /* Enrolment Modal */

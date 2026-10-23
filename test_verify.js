@@ -9,7 +9,7 @@ const js = fs.readFileSync('script.js', 'utf8');
 const criticalIds = [
   'header', 'hero', 'about', 'curriculum', 'projects', 'pricing', 'faq',
   'mobileMenuBtn', 'mobileDrawer', 'cardStack', 'carouselPrevBtn', 'carouselNextBtn',
-  'videoModal', 'enrollModal', 'heroVideoTrigger', 'closeVideoModal', 'closeEnrollModal',
+  'testimonialVideoModal', 'enrollModal', 'heroVideoTrigger', 'closeTestimonialModal', 'closeEnrollModal',
   'phase-outline-1', 'phase-outline-2', 'phase-outline-3', 'phase-outline-4'
 ];
 
