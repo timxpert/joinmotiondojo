@@ -1367,6 +1367,7 @@ p {
   transition: all 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
   will-change: transform, opacity;
+  cursor: pointer;
 }
 
 .card-inner {
@@ -1376,22 +1377,24 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--dojo-midnight);
 }
 
-.bg-motion-violet {
-  background-color: var(--motion-violet);
-  color: var(--surface);
+.project-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-xl);
+  pointer-events: none;
+  transition: transform var(--transition-smooth);
 }
 
-.bg-kinetic-lime {
-  background-color: var(--kinetic-lime);
-  color: var(--dojo-midnight);
-}
-
-.bg-midnight-card {
-  background-color: var(--midnight-card-deep);
-  color: var(--surface);
+.stack-card.card-active:hover .project-poster-img {
+  transform: scale(1.02);
 }
 
 /* 3D Stack Layering */
@@ -1508,13 +1511,10 @@ p {
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition-normal), background-color var(--transition-normal);
   z-index: 15;
-}
-
-.carousel-play-btn.play-dark {
-  background-color: var(--dojo-midnight);
-  color: var(--kinetic-lime);
+  border: none;
+  cursor: pointer;
 }
 
 .carousel-play-btn svg {
@@ -1525,6 +1525,12 @@ p {
 
 .carousel-play-btn:hover {
   transform: translate(-50%, -50%) scale(1.1);
+  background-color: #FAF8FF;
+}
+
+.carousel-play-btn:focus-visible {
+  outline: 3px solid var(--kinetic-lime);
+  outline-offset: 3px;
 }
 
 /* Circular Arrow Controls */

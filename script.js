@@ -5,6 +5,43 @@
  */
 
 // ============================================================================
+// MOTION DOJO — PROJECTS CAROUSEL DATA CONFIGURATION
+// Centralised array supporting student motion design projects in the carousel.
+// ============================================================================
+const projects = [
+  {
+    id: 'p-inmagic',
+    name: 'Inmagic AI',
+    vimeoId: '1238697726',
+    vimeoHash: 'a5a200a87b',
+    poster: 'images/project-inmagic.webp',
+    alt: 'Inmagic AI motion design project preview',
+    videoTitle: 'Inmagic AI motion design project',
+    embedUrl: 'https://player.vimeo.com/video/1238697726?h=a5a200a87b&autoplay=1&dnt=1'
+  },
+  {
+    id: 'p-kuda',
+    name: 'Kuda',
+    vimeoId: '1238698161',
+    vimeoHash: 'ea2615b78c',
+    poster: 'images/project-kuda.webp',
+    alt: 'Kuda motion design project preview',
+    videoTitle: 'Kuda motion design project',
+    embedUrl: 'https://player.vimeo.com/video/1238698161?h=ea2615b78c&autoplay=1&dnt=1'
+  },
+  {
+    id: 'p-mysite',
+    name: 'Mysite AI',
+    vimeoId: '1238698598',
+    vimeoHash: '33f478d30d',
+    poster: 'images/project-mysite.webp',
+    alt: 'Mysite AI motion design project preview',
+    videoTitle: 'Mysite AI motion design project',
+    embedUrl: 'https://player.vimeo.com/video/1238698598?h=33f478d30d&autoplay=1&dnt=1'
+  }
+];
+
+// ============================================================================
 // MOTION DOJO — TESTIMONIALS DATA CONFIGURATION
 // Centralised array supporting student testimonial videos and posters.
 // Update videos, posters, quotes, or student bios easily in one place.
@@ -212,14 +249,81 @@ document.addEventListener('DOMContentLoaded', () => {
     prevBtn.addEventListener('click', prevProject);
   }
 
-  // Keyboard Navigation for Carousel
+  // Open Project Video in Lightbox Modal
+  const openProjectModal = (index, triggerEl) => {
+    const item = projects[index];
+    if (!item) return;
+
+    const modal = document.getElementById('testimonialVideoModal');
+    if (!modal) return;
+
+    const modalTitle = document.getElementById('testimonialModalTitle');
+    const modalSub = document.getElementById('testimonialModalSub');
+    const modalTag = modal.querySelector('.testimonial-modal-tag');
+    const modalQuoteWrap = document.getElementById('testimonialModalQuoteWrap');
+    const playerWrapper = document.getElementById('testimonialPlayerWrapper') || modal.querySelector('.testimonial-modal-player-wrapper');
+    const modalBox = modal.querySelector('.testimonial-modal-box');
+    const closeBtn = document.getElementById('closeTestimonialModal');
+
+    window.lastActiveModalTrigger = triggerEl || document.querySelector(`.stack-card[data-index="${index}"] .carousel-play-btn`);
+
+    if (modalTag) modalTag.textContent = 'STUDENT PROJECT';
+    if (modalTitle) modalTitle.textContent = item.name;
+    if (modalSub) {
+      modalSub.textContent = '';
+      modalSub.style.display = 'none';
+    }
+    if (modalQuoteWrap) modalQuoteWrap.style.display = 'none';
+
+    if (modalBox) {
+      modalBox.classList.remove('is-portrait');
+      modalBox.classList.add('is-landscape');
+    }
+
+    if (playerWrapper) {
+      playerWrapper.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://player.vimeo.com/video/${item.vimeoId}?h=${item.vimeoHash}&autoplay=1&dnt=1`;
+      iframe.title = `${item.name} motion design project`;
+      iframe.className = 'testimonial-vimeo-iframe';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+      iframe.setAttribute('allowfullscreen', 'true');
+      playerWrapper.appendChild(iframe);
+    }
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (closeBtn) setTimeout(() => closeBtn.focus(), 150);
+  };
+
+  // Card click, keyboard, and touch swipe navigation for Carousel
   if (cardStack) {
+    cardStack.addEventListener('click', (e) => {
+      const card = e.target.closest('.stack-card');
+      if (!card) return;
+      const idx = parseInt(card.getAttribute('data-index'), 10);
+
+      // Tapping the active card (or play button) opens full-screen video lightbox
+      if (card.classList.contains('card-active')) {
+        openProjectModal(idx, e.target.closest('.carousel-play-btn') || card);
+      } else {
+        // Tapping a background card cycles it to the front
+        currentProjectIndex = idx;
+        updateCarouselStack();
+      }
+    });
+
     cardStack.setAttribute('tabindex', '0');
     cardStack.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') {
         nextProject();
       } else if (e.key === 'ArrowLeft') {
         prevProject();
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openProjectModal(currentProjectIndex, cardStack.querySelector('.stack-card.card-active .carousel-play-btn'));
       }
     });
 
@@ -360,6 +464,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!item || item.type !== 'video') return;
 
       lastActiveTrigger = triggerEl || document.querySelector(`#testimonial-card-${index} .testimonial-play-btn`);
+      window.lastActiveModalTrigger = lastActiveTrigger;
+
+      const modalTag = modal ? modal.querySelector('.testimonial-modal-tag') : null;
+      if (modalTag) modalTag.textContent = 'STUDENT STORY';
 
       if (modalTitle) modalTitle.textContent = item.studentName;
       if (modalSub) {
@@ -415,7 +523,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
 
-      if (lastActiveTrigger && typeof lastActiveTrigger.focus === 'function') {
+      if (window.lastActiveModalTrigger && typeof window.lastActiveModalTrigger.focus === 'function') {
+        window.lastActiveModalTrigger.focus();
+        window.lastActiveModalTrigger = null;
+      } else if (lastActiveTrigger && typeof lastActiveTrigger.focus === 'function') {
         lastActiveTrigger.focus();
       }
     };
