@@ -37,7 +37,7 @@
   <!-- Preload Critical Fonts & Poster -->
   <link rel="preload" href="assets/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="images/hero-video-poster.webp" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="/images/hero-poster.webp" as="image" type="image/webp" fetchpriority="high">
 
   <!-- Preconnect & DNS-Prefetch for Paystack -->
   <link rel="preconnect" href="https://js.paystack.co" crossorigin>
@@ -108,16 +108,6 @@
           "Keyframe Easing and Animation Principles",
           "Kinetic Typography and Audio Sync"
         ]
-      },
-      {
-        "@type": "VideoObject",
-        "@id": "https://joinmotiondojo.vercel.app/#video",
-        "name": "Motion Dojo Brand Identity & Smartphone Motion Design Preview",
-        "description": "Overview of the Motion Dojo smartphone motion design course and mobile animation workflow in Alight Motion.",
-        "thumbnailUrl": "https://joinmotiondojo.vercel.app/assets/hero-video-poster.jpg",
-        "uploadDate": "2026-10-22T10:22:58+01:00",
-        "embedUrl": "https://player.vimeo.com/video/1238403606",
-        "contentUrl": "https://vimeo.com/1238403606"
       },
       {
         "@type": "FAQPage",
@@ -278,19 +268,15 @@
           </p>
         </div>
 
-        <!-- Hero Video Player Simulation -->
+        <!-- Hero Video (Seamless multiply blend over solid #F7F5FF) -->
         <div class="hero-media-col">
-          <button type="button" class="video-preview-card" id="heroVideoTrigger" aria-label="Play the Motion Dojo smartphone motion design preview video">
-            <video class="hero-loop-video" id="heroLoopVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="images/hero-video-poster.webp" width="1280" height="720">
+          <div class="hero-video-wrapper" id="heroVideoTrigger">
+            <img src="/images/hero-poster.webp" alt="Motion Dojo model creating a motion design on a smartphone" class="hero-poster-img" width="720" height="1280" fetchpriority="high">
+            <video class="hero-loop-video" id="heroLoopVideo" autoplay muted loop playsinline preload="auto" poster="/images/hero-poster.webp" width="720" height="1280" aria-hidden="true" alt="Motion Dojo model creating a motion design on a smartphone">
+              <source src="/videos/hero-loop.mp4" type="video/mp4">
               <source src="videos/hero-loop.mp4" type="video/mp4">
-              <source src="videos/hero-loop.webm" type="video/webm">
             </video>
-            <div class="play-button-kinetic" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon" aria-hidden="true">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-          </button>
+          </div>
         </div>
       </div>
     </section>

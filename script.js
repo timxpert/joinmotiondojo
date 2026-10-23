@@ -479,12 +479,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ------------------------------------------------------------------------
-  // 6. Hero Video Preview Loop & Full Video Player
+  // 6. Project Preview Modal & Hero Video Performance Controller
   // ------------------------------------------------------------------------
   const videoModal = document.getElementById('videoModal');
   const closeVideoModal = document.getElementById('closeVideoModal');
-  const heroVideoTrigger = document.getElementById('heroVideoTrigger');
   const heroLoopVideo = document.getElementById('heroLoopVideo');
+  const heroPosterImg = document.querySelector('.hero-poster-img');
+  const heroVideoWrapper = document.getElementById('heroVideoTrigger') || document.querySelector('.hero-video-wrapper') || heroLoopVideo;
   const carouselPlayButtons = document.querySelectorAll('.carousel-play-btn');
   const modalVideoTitle = document.getElementById('modalVideoTitle');
 
@@ -509,162 +510,101 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   let isHeroVideoInView = true;
-  let isFullVideoLoaded = false;
-  let autoplayFailed = false;
 
   if (heroLoopVideo) {
-    // Explicitly enforce muted & inline playback for mobile browser policies
+    // Explicitly enforce muted and inline playback for mobile browser policies
     heroLoopVideo.muted = true;
     heroLoopVideo.defaultMuted = true;
     heroLoopVideo.playsInline = true;
 
-    // Diagnostic logging for mobile video autoplay verification
-    const logDiagnostics = (context, err = null) => {
-      console.log(`[Hero Video - ${context}]`, {
-        paused: heroLoopVideo.paused,
-        readyState: heroLoopVideo.readyState,
-        networkState: heroLoopVideo.networkState,
-        currentSrc: heroLoopVideo.currentSrc,
-        playPromiseError: err ? (err.name || err.message || String(err)) : null,
-        prefersReducedMotion: window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false,
-        saveData: Boolean(navigator.connection && navigator.connection.saveData)
-      });
-    };
-
-    const attemptAutoplay = () => {
-      if (isFullVideoLoaded || shouldPreventAutoplay()) return;
-
-      heroLoopVideo.muted = true;
-      heroLoopVideo.defaultMuted = true;
-      heroLoopVideo.playsInline = true;
-
-      const playPromise = heroLoopVideo.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            autoplayFailed = false;
-            logDiagnostics('Autoplay Succeeded');
-          })
-          .catch((err) => {
-            autoplayFailed = true;
-            logDiagnostics('Autoplay Prevented', err);
-            // Browser policy blocked unprompted autoplay; attach gesture listener on first touch or scroll
-            setupGestureUnlock();
-          });
-      }
-    };
-
-    // Unlock playback on first user gesture (touch or scroll) if initially blocked by mobile policy
-    let gestureListenerAttached = false;
-    const unlockOnGesture = () => {
-      if (isFullVideoLoaded || !autoplayFailed || shouldPreventAutoplay()) return;
-      heroLoopVideo.muted = true;
-      heroLoopVideo.defaultMuted = true;
-      const p = heroLoopVideo.play();
-      if (p !== undefined) {
-        p.then(() => {
-          autoplayFailed = false;
-          logDiagnostics('Gesture Unlock Succeeded');
-        }).catch(() => {});
-      }
-    };
-
-    const setupGestureUnlock = () => {
-      if (gestureListenerAttached) return;
-      gestureListenerAttached = true;
-      const gestureEvents = ['touchstart', 'touchend', 'scroll', 'pointerdown'];
-      const onFirstGesture = () => {
-        gestureEvents.forEach((evt) => window.removeEventListener(evt, onFirstGesture, { passive: true }));
-        unlockOnGesture();
-      };
-      gestureEvents.forEach((evt) => window.addEventListener(evt, onFirstGesture, { passive: true, once: true }));
-    };
-
-    if (shouldPreventAutoplay()) {
+    const applyPosterMode = () => {
       heroLoopVideo.pause();
-      heroLoopVideo.removeAttribute('autoplay');
-      try { heroLoopVideo.currentTime = 0; } catch (_) {}
-      logDiagnostics('Autoplay Prevented By Preference (Reduced Motion / Data Saver)');
-    } else {
-      attemptAutoplay();
+      heroLoopVideo.style.display = 'none';
+      if (heroPosterImg) heroPosterImg.style.display = 'block';
+    };
 
-      // Also attempt playback once media data has loaded
+    const applyVideoMode = () => {
+      heroLoopVideo.style.display = 'block';
+      if (heroPosterImg) heroPosterImg.style.display = 'none';
+      if (isHeroVideoInView) {
+        const playPromise = heroLoopVideo.play();
+        if (playPromise !== undefined) playPromise.catch(() => {});
+      }
+    };
+
+    const updateMediaState = () => {
+      if (shouldPreventAutoplay()) {
+        applyPosterMode();
+      } else {
+        applyVideoMode();
+      }
+    };
+
+    // Initial preference check
+    updateMediaState();
+
+    // Call play() with a catch as a backup
+    if (!shouldPreventAutoplay()) {
+      const initialPlayPromise = heroLoopVideo.play();
+      if (initialPlayPromise !== undefined) {
+        initialPlayPromise.catch(() => {
+          // If browser policy prevents unprompted autoplay, resume on first gesture
+          const unlockPlayback = () => {
+            ['touchstart', 'touchend', 'scroll', 'pointerdown'].forEach((evt) => {
+              window.removeEventListener(evt, unlockPlayback, { passive: true });
+            });
+            if (!shouldPreventAutoplay() && isHeroVideoInView) {
+              heroLoopVideo.play().catch(() => {});
+            }
+          };
+          ['touchstart', 'touchend', 'scroll', 'pointerdown'].forEach((evt) => {
+            window.addEventListener(evt, unlockPlayback, { passive: true, once: true });
+          });
+        });
+      }
+
+      // Also trigger playback backup once media data loads
       heroLoopVideo.addEventListener('loadeddata', () => {
-        if (heroLoopVideo.paused && !isFullVideoLoaded && isHeroVideoInView && !shouldPreventAutoplay()) {
-          attemptAutoplay();
+        if (heroLoopVideo.paused && isHeroVideoInView && !shouldPreventAutoplay()) {
+          const p = heroLoopVideo.play();
+          if (p !== undefined) p.catch(() => {});
         }
       }, { once: true });
     }
 
-    // Save Data and Battery: IntersectionObserver pauses preview when off-screen
+    // Save Data and Battery: IntersectionObserver pauses video when off-screen and resumes when visible
     if ('IntersectionObserver' in window) {
       const heroObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           isHeroVideoInView = entry.isIntersecting;
-          if (isFullVideoLoaded) return;
+          if (shouldPreventAutoplay()) {
+            heroLoopVideo.pause();
+            return;
+          }
 
           if (entry.isIntersecting) {
-            if (!shouldPreventAutoplay() && !autoplayFailed) {
-              const p = heroLoopVideo.play();
-              if (p !== undefined) p.catch(() => {});
-            }
+            const p = heroLoopVideo.play();
+            if (p !== undefined) p.catch(() => {});
           } else {
             heroLoopVideo.pause();
           }
         });
       }, { rootMargin: '50px 0px 50px 0px', threshold: 0 });
 
-      heroObserver.observe(heroVideoTrigger || heroLoopVideo);
+      heroObserver.observe(heroVideoWrapper || heroLoopVideo);
     }
 
     // Respect dynamic changes to reduced-motion preference
     if (window.matchMedia) {
       const motionMql = window.matchMedia('(prefers-reduced-motion: reduce)');
       if (motionMql.addEventListener) {
-        motionMql.addEventListener('change', () => {
-          if (shouldPreventAutoplay()) {
-            heroLoopVideo.pause();
-          } else if (isHeroVideoInView && !isFullVideoLoaded) {
-            attemptAutoplay();
-          }
-        });
+        motionMql.addEventListener('change', updateMediaState);
       }
     }
-  }
 
-  const playHeroVideo = () => {
-    if (!heroVideoTrigger || heroVideoTrigger.classList.contains('is-playing')) return;
-    isFullVideoLoaded = true;
-    heroVideoTrigger.classList.add('is-playing');
-    heroVideoTrigger.setAttribute('aria-expanded', 'true');
-
-    if (heroLoopVideo) {
-      heroLoopVideo.pause();
+    if (navigator.connection && typeof navigator.connection.addEventListener === 'function') {
+      navigator.connection.addEventListener('change', updateMediaState);
     }
-
-    const iframe = document.createElement('iframe');
-    iframe.src = 'https://player.vimeo.com/video/1238403606?autoplay=1&autopause=0&dnt=1';
-    iframe.className = 'hero-video-iframe';
-    iframe.title = 'Motion Dojo Smartphone Motion Design Course';
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share');
-    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-    iframe.setAttribute('allowfullscreen', 'true');
-
-    heroVideoTrigger.appendChild(iframe);
-
-    iframe.addEventListener('load', () => {
-      if (heroLoopVideo) heroLoopVideo.style.display = 'none';
-      const posterWrap = heroVideoTrigger.querySelector('.video-poster-wrapper');
-      if (posterWrap) posterWrap.style.display = 'none';
-    });
-
-    const playBtn = heroVideoTrigger.querySelector('.play-button-kinetic');
-    if (playBtn) playBtn.style.display = 'none';
-  };
-
-  if (heroVideoTrigger) {
-    heroVideoTrigger.addEventListener('click', playHeroVideo);
   }
 
   carouselPlayButtons.forEach(btn => {
@@ -841,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (v.dataset.pausedByEnrollModal === 'true') {
         delete v.dataset.pausedByEnrollModal;
         if (v === heroLoopVideo) {
-          if (!isFullVideoLoaded && !shouldPreventAutoplay() && isHeroVideoInView) {
+          if (!shouldPreventAutoplay() && isHeroVideoInView) {
             v.play().catch(() => {});
           }
         } else {
