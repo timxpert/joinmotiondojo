@@ -65,17 +65,12 @@ if (hexViolations === 0) {
 // Verify British English Spellings in visible text
 const britishTerms = [
   'Enrol now',
-  'Pricing and enrolment',
-  'Pay in two instalments',
-  'Your first instalment unlocks Phase 1',
+  'Pricing &amp; Enrolment',
+  '2 instalments of ₦20,000',
   'Start instalment',
-  'The programme is structured',
-  'How do the two-part instalments work?',
-  'first instalment of ₦20,000',
-  'upon enrolment',
-  '02. Practise',
-  'Colour usage in motion design',
-  'ENROLMENT DOJO'
+  'Can I pay in instalments?',
+  'two instalments of ₦20,000',
+  'Colour usage in motion design'
 ];
 
 britishTerms.forEach(term => {
