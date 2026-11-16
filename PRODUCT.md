@@ -58,7 +58,7 @@ Joining currently happens through the Black Belt site, where the community manag
 ## Brand Commitments
 
 - Palette: Dojo Midnight #140A2E, Motion Violet #6D32E8, Electric Lavender #A77BFF, Kinetic Lime #C8FF3D, White #F7F5FF. Light backgrounds about 80% of the time, Midnight for selected sections, Lime sparingly.
-- Type: Clash Display for headings, Sora for text.
+- Type: Plus Jakarta Sans for everything (headings and text).
 - Personality: minimal, editorial, premium, expressive, motion-inspired, modern, community-driven.
 - Visual language comes from motion design itself: keyframes, motion paths, timelines, graph-editor curves. The dojo idea shapes the philosophy, not the imagery: no martial-arts clichés, Japanese symbols or samurai graphics.
 - Voice: simple, clear, short sentences, no jargon or corporate language. Introduce the benefit before the product or identity name.

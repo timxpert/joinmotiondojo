@@ -26,8 +26,8 @@
   --line-dark: rgba(247, 245, 255, 0.12);
 
 
-  --font-display: 'Clash Display', 'Sora', system-ui, sans-serif;
-  --font-body: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   --gutter: clamp(20px, 5vw, 56px);
   --max: 1200px;
@@ -133,17 +133,17 @@ button {
 .h2,
 .h3 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   text-wrap: balance;
 }
 .display {
   font-size: clamp(2.4rem, 5vw, 4.25rem);
-  line-height: 0.98;
+  line-height: 1.05;
   letter-spacing: -0.03em;
 }
 .h2 {
   font-size: clamp(2rem, 4.4vw, 3.5rem);
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: -0.025em;
 }
 .h3 {
@@ -481,7 +481,7 @@ main > .section:last-child {
 /* Two lines at every width, left-aligned: the size follows the screen so
    "to figure it all out alone" always fits, capped at 3.25rem */
 .hero .display {
-  font-size: min(3.25rem, calc((100vw - 2 * var(--gutter)) / 13));
+  font-size: min(3.25rem, calc((100vw - 2 * var(--gutter)) / 15));
   text-align: left;
 }
 .hero .display .line {
