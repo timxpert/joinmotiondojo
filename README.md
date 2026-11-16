@@ -1,116 +1,62 @@
-# Motion Dojo — Website & Paystack Integration
+# Motion Dojo
 
-Motion Dojo website with interactive curriculum, student stories, project showcase, and Paystack payment enrolment with server-side verification.
+The main brand and community website for Motion Dojo — where motion designers come to grow together.
 
----
+Built with Next.js 15 (App Router) and plain CSS (`src/app/globals.css`).
 
-## Hosting Platform
-
-This project is configured and set up for **Vercel** (`vercel.json` in the root directory).
-
-When deployed to Vercel:
-- Static assets (`index.html`, `styles.css`, `script.js`, `assets/`, etc.) are served from the global edge network.
-- Serverless functions located in the [`/api`](./api) folder (`api/verify-payment.js` and `api/paystack-webhook.js`) run automatically as Vercel Serverless Functions on Node.js.
-
----
-
-## Serverless Payment Endpoints
-
-### 1. Payment Verification Endpoint: `/api/verify-payment`
-- **Method**: `POST` (or `GET`)
-- **Payload**: `{ "reference": "MD-..." }`
-- **Purpose**: Called automatically by the front-end when Paystack Inline returns a successful transaction.
-- **Security & Integrity Checks**:
-  - Securely queries `GET https://api.paystack.co/transaction/verify/:reference` using the server-side `PAYSTACK_SECRET_KEY`.
-  - Confirms `status === "success"`.
-  - Confirms `amount === 4000000` (4,000,000 kobo = ₦40,000).
-  - Confirms `currency === "NGN"`.
-  - Only when all checks pass does it return `{ "verified": true }`, allowing the client to transition to the success screen.
-
-### 2. Paystack Webhook Handler: `/api/paystack-webhook`
-- **Method**: `POST`
-- **Headers**: `x-paystack-signature`
-- **Purpose**: Receives asynchronous event notifications directly from Paystack (e.g. `charge.success`).
-- **Security & Integrity Checks**:
-  - Computes HMAC SHA512 of the raw request payload with `PAYSTACK_SECRET_KEY`.
-  - Compares hash against the incoming `x-paystack-signature` header; rejects unauthenticated requests with `401 Unauthorized`.
-  - Logs verified successful charges with transaction reference, customer details, amount, and timestamp.
-
----
-
-## Environment Variables
-
-Configure the following environment variable on your hosting platform:
-
-| Variable | Description | Where to Set | Example (Test) | Example (Live) |
-|---|---|---|---|---|
-| `PAYSTACK_SECRET_KEY` | Secret key used for server-side transaction verification and webhook signature validation | **Vercel Project Settings > Environment Variables** (or local shell) | `sk_test_...` | `sk_live_...` |
-
-> [!WARNING]
-> **Never commit or expose your Secret Key (`PAYSTACK_SECRET_KEY`) on the client side or in git.** Only the Public Key belongs on the front end.
-
----
-
-## Client Configuration (`config.js`)
-
-Public settings are located in [`config.js`](./config.js):
-
-```javascript
-window.MOTION_DOJO_CONFIG = Object.freeze({
-  PAYSTACK_PUBLIC_KEY: 'pk_test_REPLACE_ME', // Replace with your Paystack Public Key
-  AMOUNT_KOBO: 4000000,                      // ₦40,000 in kobo
-  COURSE_NAME: 'Black Belt in Motion Design',
-  CURRENCY: 'NGN'
-});
-```
-
----
-
-## How to Switch from Test Keys to Live Keys
-
-Follow these steps when moving to production:
-
-1. **Obtain Live Keys from Paystack**:
-   - Log in to your [Paystack Dashboard](https://dashboard.paystack.com/).
-   - Go to **Settings > API Keys & Webhooks**.
-   - Copy your **Live Public Key** (`pk_live_...`) and **Live Secret Key** (`sk_live_...`).
-
-2. **Update Client Public Key**:
-   - Open [`config.js`](./config.js).
-   - Replace `'pk_test_REPLACE_ME'` with your Live Public Key:
-     ```javascript
-     PAYSTACK_PUBLIC_KEY: 'pk_live_YOUR_LIVE_PUBLIC_KEY',
-     ```
-
-3. **Update Server Secret Key in Vercel**:
-   - Go to your Vercel Dashboard and select the **Motion Dojo** project.
-   - Navigate to **Settings > Environment Variables**.
-   - Add or update `PAYSTACK_SECRET_KEY` with your Live Secret Key (`sk_live_YOUR_LIVE_SECRET_KEY`).
-   - Ensure it is checked for **Production** (and **Preview** if desired).
-   - Trigger a new deployment (or redeploy the latest commit) for the environment variable changes to take effect.
-
-4. **Set Paystack Live Webhook URL**:
-   - In your Paystack Dashboard (**Settings > API Keys & Webhooks**):
-   - Set **Live Webhook URL** to:
-     ```
-     https://your-domain.com/api/paystack-webhook
-     ```
-   - Click **Save Changes**.
-
----
-
-## Running Locally
-
-To test locally:
 ```bash
-# Set your Paystack secret key in your terminal session
-# PowerShell:
-$env:PAYSTACK_SECRET_KEY="sk_test_YOUR_TEST_SECRET_KEY"
-
-# Or Bash:
-export PAYSTACK_SECRET_KEY="sk_test_YOUR_TEST_SECRET_KEY"
-
-# Start the local development server (supports both static files and /api endpoints)
-node serve.js
+npm install
+npm run dev     # http://localhost:3000
+npm run build
 ```
-The application will be accessible at `http://127.0.0.1:3000/`.
+
+## Updating links — `src/config/site.ts`
+
+| Setting | What it controls |
+| --- | --- |
+| `COMMUNITY_JOIN_URL` | Every "Join the community" / "Join Motion Dojo" button |
+| `COURSE_URL` | "Explore the course" (Black Belt in Motion Design) |
+| `DOJO_AI_URL` | Footer link to Dojo’s AI. Hidden while it’s empty (the homepage no longer has a Dojo’s AI tile) |
+| `NINJAS_SHOWCASE_URL` | Footer link to the Keyframe Ninjas showcase |
+| `SOCIAL_LINKS` | Footer social links |
+| `CONTACT` | Footer contact details (hidden while empty) |
+| `NAV` | Header, mobile menu and footer navigation |
+
+## Updating content — `src/data/content.ts`
+
+- **`TESTIMONIALS`** — video testimonials supplied by the team (Vimeo links).
+- **`COURSE_PHASES`** — the four Black Belt phases.
+
+## Homepage sections (in order)
+
+Hero + 16:9 reel → Introduction → Meet the team → What's inside the dojo → Black Belt in Motion Design → The community → Testimonials → Final call to action → Footer.
+
+## Course page — `/blackbelt`
+
+Black Belt in Motion Design has its own page at `/blackbelt` (`src/app/blackbelt/page.tsx`). Links to it from the homepage open it in a new tab. Course copy, curriculum, sample projects, pricing and FAQs live in `src/data/blackbelt.ts`.
+
+Payment uses Paystack. Only the **public** key is in the code (`ENROL.paystackPublicKey`). Before going live:
+
+1. In Vercel → this project → Settings → Environment Variables, add `PAYSTACK_SECRET_KEY` (never commit it).
+2. In the Paystack dashboard, set the webhook URL to `https://<your domain>/api/paystack-webhook`.
+3. To serve the page at `joinmotiondojo.com/blackbelt`, add `joinmotiondojo.com` as a domain of this Vercel project.
+
+Payments are confirmed on the server by `/api/verify-payment` (₦40,000, NGN) before the visitor sees "Payment received".
+
+## Motion Dojo Connect
+
+Connect lives in its own repo: [timxpert/connect](https://github.com/timxpert/connect).
+
+This site still feeds it: when a course payment succeeds, the Paystack webhook (`src/app/api/paystack-webhook`) records the student's email in Connect's Supabase `enrolments` table, which turns on their Keyframe Ninja badge. For that, set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in this Vercel project to the same Supabase project Connect uses. Without them, the webhook skips this step.
+
+## Fonts
+
+Sora (Google Fonts) for text and Clash Display (Fontshare) for headings, both loaded in `src/app/layout.tsx`.
+
+## Motion
+
+The logo reel under the hero is the only thing that moves on its own. Nothing animates on scroll. Hover states change colour only. All motion is off for visitors who prefer reduced motion. Styles are at the end of `globals.css`.
+
+## Design context
+
+`PRODUCT.md` records who the site is for, the brand commitments and what content must not be invented. Design tools such as Impeccable read it.

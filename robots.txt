@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://joinmotiondojo.vercel.app/sitemap.xml

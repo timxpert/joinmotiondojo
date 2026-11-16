@@ -1,0 +1,156 @@
+[
+  {
+    "slug": "chidi-okafor",
+    "name": "Chidi Okafor",
+    "specialty": "3D Motion & Title Sequences",
+    "status": "graduate",
+    "phase": "Black Belt",
+    "cohort": "Cohort 01",
+    "openToWork": true,
+    "photo": "/assets/George Junior.jpg",
+    "bio": "Chidi is a motion designer obsessed with cinematic lighting, procedural typography, and title sequences that grip viewers from the first frame. Through Motion Dojo, he transitioned from static graphic design into creating high-impact title packages for indie films and brand anthems. When not keyframing in Cinema 4D and After Effects, he mentors rising designers.",
+    "project": {
+      "title": "Aether: Cinematic Title Sequence",
+      "video": "https://vimeo.com/1238665663",
+      "note": "A 45-second speculative title sequence exploring dark matter and refractive glass typography.",
+      "poster": "/images/project-inmagic.webp"
+    },
+    "links": {
+      "instagram": "chidi_motion",
+      "x": "chidiokafor",
+      "linkedin": "chidi-okafor-motion",
+      "behance": "chidiokafor",
+      "youtube": "chidicreative",
+      "website": "chidiokafor.design",
+      "email": "chidi@motiondojo.example"
+    },
+    "isSample": true
+  },
+  {
+    "slug": "amara-diallo",
+    "name": "Amara Diallo",
+    "specialty": "2D Explainer & Character Motion",
+    "status": "graduate",
+    "phase": "Black Belt",
+    "cohort": "Cohort 02",
+    "openToWork": false,
+    "photo": "/assets/Osho Elizabeth Oluwatobiloba.jpg",
+    "bio": "Amara translates complex tech concepts into delightful, fluid 2D animations that make audiences smile and convert. Her Black Belt journey solidified her mastery of timing, secondary motion, and character rigging in After Effects. Currently leading product animation at an African fintech while contributing experimental character loops to the Motion Dojo creative circle.",
+    "project": {
+      "title": "Kora: Financial Inclusion Reimagined",
+      "video": "https://vimeo.com/1238666245",
+      "note": "60-second character-driven explainer film breaking down decentralized cross-border savings.",
+      "poster": "/images/project-kuda.webp"
+    },
+    "links": {
+      "instagram": "amara_keyframes",
+      "x": "amaradiallo",
+      "linkedin": "amara-diallo",
+      "behance": "amaradiallo",
+      "whatsapp": "+2348012345678",
+      "email": "amara@motiondojo.example"
+    },
+    "isSample": true
+  },
+  {
+    "slug": "tobi-alabi",
+    "name": "Tobi Alabi",
+    "specialty": "UI Micro-interactions & Brand Motion",
+    "status": "training",
+    "phase": "Phase 02",
+    "cohort": "Cohort 03",
+    "openToWork": true,
+    "photo": "/assets/Timxpert.jpg",
+    "bio": "Tobi bridges product design and animation, crafting tactile user interface transitions and kinetic design systems. Currently honing speed curves and physics-based motion in Phase 02 of the Black Belt course, Tobi believes interactive digital products should feel as responsive and alive as physical instruments. Focused on fintech and design systems.",
+    "project": {
+      "title": "Verve: Mobile Banking Motion System",
+      "video": "https://vimeo.com/1238668293",
+      "note": "A cohesive motion specification showing navigation gestures, card flips, and micro-haptic feedback.",
+      "poster": "/images/project-mysite.webp"
+    },
+    "links": {
+      "x": "tobialabi_ux",
+      "linkedin": "tobi-alabi",
+      "website": "tobialabi.dev",
+      "email": "tobi@motiondojo.example"
+    },
+    "isSample": true
+  },
+  {
+    "slug": "zainab-bello",
+    "name": "Zainab Bello",
+    "specialty": "Kinetic Typography & Social Loops",
+    "status": "graduate",
+    "phase": "Black Belt",
+    "cohort": "Cohort 01",
+    "openToWork": true,
+    "photo": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+    "bio": "Zainab specializes in rhythmic type animation, expressive audio-reactive motion, and high-energy social idents. Her discipline and precision earned her the Motion Dojo Black Belt after producing an acclaimed 10-part kinetic series for an independent record label. She approaches motion with a music producer's ear for tempo, pause, and dramatic drops.",
+    "project": {
+      "title": "Echoes: Audio-Reactive Type Experiment",
+      "video": "https://vimeo.com/1238665663",
+      "note": "A kinetic tribute to contemporary Afrobeats rhythm using variable fonts and custom expressions.",
+      "poster": "/images/hero-video-poster.webp"
+    },
+    "links": {
+      "instagram": "zainab_type",
+      "x": "zainabbello",
+      "tiktok": "zainabmotion",
+      "behance": "zainabbello",
+      "website": "zainabbello.art",
+      "email": "zainab@motiondojo.example"
+    },
+    "isSample": true
+  },
+  {
+    "slug": "emmanuel-eze",
+    "name": "Emmanuel Eze",
+    "specialty": "Broadcast Packaging & Idents",
+    "status": "training",
+    "phase": "Phase 03",
+    "cohort": "Cohort 03",
+    "openToWork": false,
+    "photo": "/assets/Muhammad Fatihi Abdullahi.jpg",
+    "bio": "Emmanuel brings a broadcast mindset to modern motion branding. In Phase 03 of Black Belt training, he is developing comprehensive television network ident systems, lower thirds, and promo stings. His goal is elevating African storytelling on global sports and entertainment networks through crisp geometry, bold palettes, and dynamic camera choreography.",
+    "project": {
+      "title": "SuperLiga: Matchday Broadcast Package",
+      "video": "https://vimeo.com/1238666245",
+      "note": "Full modular broadcast toolkit featuring live score bugs, team intros, and animated lower-thirds.",
+      "poster": "/images/project-inmagic.webp"
+    },
+    "links": {
+      "linkedin": "emmanuel-eze-motion",
+      "behance": "emmanueleze",
+      "youtube": "emmanuelezetv",
+      "email": "emmanuel@motiondojo.example"
+    },
+    "isSample": true
+  },
+  {
+    "slug": "kemi-adeyemi",
+    "name": "Kemi Adeyemi",
+    "specialty": "Abstract 3D & Product Renders",
+    "status": "graduate",
+    "phase": "Black Belt",
+    "cohort": "Cohort 02",
+    "openToWork": true,
+    "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80",
+    "bio": "Kemi transforms physical objects into hyper-tactile 3D narratives. From soft cloth physics to high-gloss luxury tech reveals, she combines octane materials, simulated collisions, and silky camera swoops. Graduating with honours from Black Belt Cohort 02, Kemi now partners with forward-thinking consumer hardware brands across London and Lagos.",
+    "project": {
+      "title": "Aura: Wireless Acoustic Reveal",
+      "video": "https://vimeo.com/1238668293",
+      "note": "A 30-second seamless product launch piece highlighting anodized aluminium and organic mesh.",
+      "poster": "/images/hero-poster.webp"
+    },
+    "links": {
+      "instagram": "kemi.renders",
+      "x": "kemiadeyemi",
+      "linkedin": "kemi-adeyemi-motion",
+      "behance": "kemiadeyemi",
+      "website": "kemiadeyemi.studio",
+      "whatsapp": "+2348098765432",
+      "email": "kemi@motiondojo.example"
+    },
+    "isSample": true
+  }
+]
