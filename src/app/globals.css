@@ -2159,3 +2159,29 @@ details[open] > :not(summary) {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Student ID shown after payment */
+.enrol-id {
+  display: grid;
+  gap: 4px;
+  margin: 4px 0 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--tint);
+  text-align: center;
+}
+.enrol-id span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.enrol-id strong {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  user-select: all;
+}
+.enrol-id small {
+  font-size: 0.8rem;
+  color: var(--muted);
+}

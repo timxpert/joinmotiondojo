@@ -9,6 +9,34 @@ export const dynamic = 'force-dynamic';
 const EXPECTED_AMOUNT = 4000000; // ₦40,000 in kobo
 const EXPECTED_CURRENCY = 'NGN';
 
+/** Records the enrolment in Connect and returns the student's sign-in ID (null until Supabase is set up). */
+async function enrol(email: string | undefined, reference: string): Promise<string | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key || !email) return null;
+  try {
+    const res = await fetch(`${url}/rest/v1/rpc/mark_enrolled`, {
+      method: 'POST',
+      headers: {
+        apikey: key,
+        ...(key.startsWith('eyJ') ? { Authorization: `Bearer ${key}` } : {}),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ student_email: email, payment_reference: reference }),
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      console.error('[connect] mark_enrolled failed', res.status, await res.text());
+      return null;
+    }
+    const id = await res.json().catch(() => null);
+    return typeof id === 'string' ? id : null;
+  } catch (e) {
+    console.error('[connect] mark_enrolled error', e);
+    return null;
+  }
+}
+
 async function verify(reference: string | null | undefined) {
   const secret = process.env.PAYSTACK_SECRET_KEY;
   if (!secret) {
@@ -46,7 +74,9 @@ async function verify(reference: string | null | undefined) {
   }
 
   const customer = (data.customer || {}) as { email?: string };
+  const studentId = await enrol(customer.email, String(data.reference || ref));
   return Response.json({
+    studentId,
     verified: true,
     reference: data.reference,
     amount: data.amount,

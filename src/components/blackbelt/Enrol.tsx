@@ -61,6 +61,7 @@ export function EnrolModal() {
   const [status, setStatus] = useState('');
   const [showFallback, setShowFallback] = useState(false);
   const [reference, setReference] = useState('');
+  const [studentId, setStudentId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const panelRef = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
@@ -151,6 +152,7 @@ export function EnrolModal() {
             if (res.ok && data?.verified === true) {
               setBusy(false);
               setReference(finalRef);
+              setStudentId(typeof data.studentId === 'string' ? data.studentId : null);
               setStep('success');
             } else {
               fail(
@@ -283,6 +285,13 @@ export function EnrolModal() {
               Our community manager will reach out on WhatsApp shortly to give you access. Keep your reference:{' '}
               <strong>{reference}</strong>
             </p>
+            {studentId && (
+              <div className="enrol-id">
+                <span>Your student ID</span>
+                <strong>{studentId}</strong>
+                <small>Use it with this email to sign in to Motion Dojo Connect. Screenshot it and keep it safe.</small>
+              </div>
+            )}
             <a className="btn btn-lime" href={ENROL.accountNumberUrl} target="_blank" rel="noopener noreferrer">
               Message us on WhatsApp
             </a>
