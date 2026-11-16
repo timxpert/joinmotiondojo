@@ -289,7 +289,7 @@ export function EnrolModal() {
               <div className="enrol-id">
                 <span>Your student ID</span>
                 <strong>{studentId}</strong>
-                <small>Use it with this email to sign in to Motion Dojo Connect. Screenshot it and keep it safe.</small>
+                <small>You’ll sign in to Motion Dojo Connect with this ID and the email you paid with. Take a screenshot of it.</small>
               </div>
             )}
             <a className="btn btn-lime" href={ENROL.accountNumberUrl} target="_blank" rel="noopener noreferrer">
