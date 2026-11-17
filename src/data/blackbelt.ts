@@ -91,8 +91,6 @@ export const PROJECTS = [
 export const PERKS = [
   'Get quick answers, feedback breakdowns, and practical guidance from experienced peers.',
   'Showcase your animations to build visibility, gain exposure, and attract real project inquiries.',
-  'Stay committed to daily practice with mutual accountability that keeps procrastination at bay.',
-  'From your first render to signing your dream client, share your milestones with creators who care.',
   'Expand your commercial network, discover paid referrals, and collaborate with like-minded ninjas.',
 ];
 
