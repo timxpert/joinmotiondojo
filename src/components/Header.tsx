@@ -84,7 +84,7 @@ export function Header({ nav = NAV, cta = { href: COMMUNITY_JOIN_URL, label: 'Jo
             ))}
           </ul>
         </nav>
-        <a href={cta.href} {...ctaTab} className="btn btn-lime" tabIndex={open ? 0 : -1} onClick={() => setOpen(false)}>
+        <a href={cta.href} {...ctaTab} className="btn btn-primary" tabIndex={open ? 0 : -1} onClick={() => setOpen(false)}>
           {cta.label}
         </a>
       </div>

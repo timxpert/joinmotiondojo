@@ -2342,13 +2342,20 @@ details[open] > :not(summary) {
   padding-bottom: clamp(48px, 6vw, 80px);
 }
 
-/* Hamburger: white round button on the dark header */
+/* Mobile menu: a white panel with dark links; the menu button stays plain */
 .header .menu-btn {
-  background: #fff;
-  color: var(--midnight);
+  color: #fff;
 }
+.header.is-open,
 .header .menu-btn[aria-expanded="true"] {
-  color: var(--midnight);
+  color: var(--ink);
+}
+.mobile-nav {
+  background: #fff;
+  color: var(--ink);
+}
+.mobile-nav.is-open li:nth-child(5) {
+  transition-delay: 0.32s;
 }
 
 /* ---------- What Motion Dojo is built around: numbered steps ---------- */
