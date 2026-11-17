@@ -3098,3 +3098,56 @@ details[open] > :not(summary) {
   width: 17px;
   height: 17px;
 }
+
+/* ---------- Dojo lavender, used across the page ---------- */
+/* circled words on the dark sections (hero, closing) */
+.dark-section .mark,
+.home .hero .mark {
+  color: var(--lavender);
+}
+/* big step numbers in "What Motion Dojo is built around" */
+.step-n {
+  color: var(--lavender);
+}
+/* header links light up lavender on hover */
+.nav a:hover {
+  color: var(--lavender);
+}
+/* the growth band: the closing words in lavender */
+.home .different .different-line em {
+  font-style: normal;
+  color: var(--lavender);
+}
+/* timeline: playhead trail in lavender, keyframes turn violet when reached */
+.who-playhead {
+  background: var(--lavender);
+}
+.who-playhead::after {
+  background: var(--violet);
+}
+/* small card numbers and the bio badge */
+.stack-n {
+  color: inherit;
+}
+.tone-lime .stack-n,
+.tone-white .stack-n {
+  color: var(--violet);
+  opacity: 1;
+}
+.tone-violet .stack-n {
+  color: #d9c8ff;
+  opacity: 1;
+}
+/* footer: tagline and link icons */
+.footer-tagline {
+  color: var(--violet);
+}
+.footer-socials a:hover {
+  background: var(--lavender);
+  color: #fff;
+}
+/* text selection */
+::selection {
+  background: var(--lavender);
+  color: #fff;
+}
