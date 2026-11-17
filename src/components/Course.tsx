@@ -65,7 +65,7 @@ export function Course() {
       <div className="wrap stack-layout">
         <div className="stack-head">
           <h2 className="h2" id="ecosystem-title">
-            Motion Dojo, Black Belt and Connect
+            Pick where to start
           </h2>
         </div>
         <ul className="stack" ref={list}>
