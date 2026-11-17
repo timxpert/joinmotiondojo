@@ -76,13 +76,6 @@ export function Course() {
               </span>
               <h3 className="stack-name">{p.name}</h3>
               <p>{p.body}</p>
-              {p.points && (
-                <ul className="stack-points">
-                  {p.points.map((x) => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              )}
               <a
                 href={p.link.href}
                 className={`${p.link.className} btn-sm`}
