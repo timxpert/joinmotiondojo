@@ -1,5 +1,6 @@
 import React from 'react';
 import { COMMUNITY_JOIN_URL } from '@/config/site';
+import { DojoGlow } from './ui/DojoGlow';
 
 export function FinalCTA({
   title = '',
@@ -13,9 +14,10 @@ export function FinalCTA({
 }) {
   return (
     <section
-      className={title ? 'section dark-section final' : 'section dark-section final no-title'}
+      className={title ? 'section dark-section final live-bg' : 'section dark-section final no-title live-bg'}
       {...(title ? { 'aria-labelledby': 'final-title' } : { 'aria-label': 'Join Motion Dojo' })}
     >
+      <DojoGlow speed={1.2} />
       <div className="wrap">
         <svg className="final-art" viewBox="0 0 800 500" aria-hidden="true">
           <path className="trail" d="M40 380 C 200 380, 240 90, 400 120 S 620 330, 760 60" />

@@ -3,6 +3,7 @@ import { ENROL, FAQS, INCLUDED, PERKS, WHO_FOR } from '@/data/blackbelt';
 import { TEAM } from '@/data/content';
 import { EnrolButton } from './Enrol';
 import { Mark } from '../Mark';
+import { DojoGlow } from '../ui/DojoGlow';
 import { Audience } from '../Audience';
 export { Curriculum } from './Phases';
 
@@ -69,7 +70,8 @@ export function WhoFor() {
 
 export function Experience() {
   return (
-    <section className="section dark-section" id="experience" aria-labelledby="experience-title">
+    <section className="section dark-section live-bg" id="experience" aria-labelledby="experience-title">
+      <DojoGlow speed={1.1} />
       <div className="wrap">
         <div className="section-head">
           <h2 className="h2" id="experience-title">

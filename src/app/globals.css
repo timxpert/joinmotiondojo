@@ -3350,21 +3350,25 @@ details[open] > :not(summary) {
   height: 100%;
 }
 /* in the home hero it's a layer behind the text */
-.hero-live {
+.hero-live,
+.live-bg {
   position: relative;
   isolation: isolate;
   overflow: hidden;
 }
-.hero-live > .hero-bg {
+.hero-live > .hero-bg,
+.live-bg > .hero-bg {
   position: absolute;
   inset: 0;
   z-index: -1;
 }
-.hero-live > .wrap {
+.hero-live > .wrap,
+.live-bg > .wrap {
   position: relative;
 }
 /* a little dimmer than full strength so the headline and lavender word always read */
-.hero-live > .hero-bg .velaris-canvas {
+.hero-live > .hero-bg .velaris-canvas,
+.live-bg > .hero-bg .velaris-canvas {
   opacity: 0.72;
 }
 
