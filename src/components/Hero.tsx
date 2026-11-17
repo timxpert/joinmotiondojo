@@ -1,11 +1,14 @@
 import React from 'react';
 import { COMMUNITY_JOIN_URL } from '@/config/site';
 import { Mark } from './Mark';
+import Velaris from './ui/velaris';
 
 /* Dark hero: the headline, then the logo reel on its own band below (page.tsx) */
 export function Hero() {
   return (
-    <section className="hero" id="top" aria-labelledby="hero-title">
+    <section className="hero hero-live" id="top" aria-labelledby="hero-title">
+      {/* moving gradient behind the hero, in Motion Dojo colours */}
+      <Velaris className="hero-bg" bg="#140a2e" colors={['#6d32e8', '#a77bff', '#3a1a8c', '#140a2e']} speed={1.4} grain={0.35} />
       <div className="wrap">
         <div className="hero-copy">
           <h1 className="display" id="hero-title">
