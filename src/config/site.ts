@@ -15,6 +15,9 @@ export const COMMUNITY_JOIN_URL = 'https://wa.link/be49ci';
 /** Black Belt in Motion Design: the course page on this site. */
 export const COURSE_URL = '/blackbelt';
 
+/** Motion Dojo Connect: the members' space (profiles, feed, chat). */
+export const CONNECT_URL = 'https://connect.joinmotiondojo.com';
+
 /** Dojo's AI — access link. Empty until the tool is ready to share. */
 export const DOJO_AI_URL = '';
 
@@ -44,6 +47,7 @@ export const SITE_METADATA = {
 export const NAV = [
   { href: '/#intro', label: 'About' },
   { href: '/#pillars', label: 'What we do' },
+  { href: '/#connect', label: 'Connect' },
   { href: '/#team', label: 'Team' },
   { href: '/blackbelt', label: 'The course' },
 ];

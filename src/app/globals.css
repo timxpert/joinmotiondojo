@@ -2185,3 +2185,176 @@ details[open] > :not(summary) {
   font-size: 0.8rem;
   color: var(--muted);
 }
+
+/* =====================================================================
+   Same calm palette as Connect: a warm white page instead of lavender,
+   neutral greys for quiet surfaces, lighter panel shadows.
+   ===================================================================== */
+:root {
+  --ground: #fbfaf8;
+  --white: #f2f0ec;
+  --tint: #f2f0ec;
+  --line: #ebe8e3;
+  --muted: #6c6873;
+  --panel-shadow: 0 1px 2px rgba(20, 10, 46, 0.04), 0 8px 24px -16px rgba(20, 10, 46, 0.12);
+}
+.btn-light {
+  background: var(--tint);
+  color: var(--ink);
+}
+.btn-light:hover {
+  background: #e9e6e0;
+}
+
+/* ---------- Motion Dojo Connect ---------- */
+.connect {
+  display: grid;
+  gap: clamp(40px, 6vw, 72px);
+  align-items: center;
+}
+.connect-text {
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+}
+.connect-points {
+  display: grid;
+  gap: 18px;
+  margin-top: 8px;
+}
+.connect-points li {
+  display: grid;
+  gap: 2px;
+}
+.connect-points h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.connect-points p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.connect-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-top: 8px;
+}
+.connect-note {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* drawing of the app */
+.connect-mock {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  max-width: 400px;
+  width: 100%;
+  justify-self: center;
+  padding: 22px;
+  border-radius: 28px;
+  background: var(--ground);
+}
+.cm-card {
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--panel-shadow);
+}
+.cm-cover {
+  height: 72px;
+  background: var(--midnight);
+}
+.cm-who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  margin-top: -22px;
+  line-height: 1.3;
+}
+.cm-who > span:nth-child(2) {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  padding-top: 24px;
+}
+.cm-who strong {
+  font-size: 0.98rem;
+}
+.cm-who small {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.cm-avatar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--violet);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--paper);
+}
+.cm-belt {
+  align-self: end;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #e3f3e8;
+  color: #1f6b3a;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.cm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 16px;
+}
+.cm-grid span {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: var(--tint);
+}
+.cm-grid span:nth-child(2) {
+  background: var(--midnight);
+}
+.cm-grid span:nth-child(3) {
+  background: var(--violet);
+}
+.cm-chat {
+  display: grid;
+  gap: 8px;
+}
+.cm-msg {
+  max-width: 80%;
+  padding: 9px 14px;
+  border-radius: 16px 16px 16px 4px;
+  background: var(--paper);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.cm-msg.is-mine {
+  justify-self: end;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--violet);
+  color: #fff;
+}
+.cm-ticks {
+  margin-left: 8px;
+  font-size: 0.72rem;
+  letter-spacing: -0.2em;
+  color: var(--lime);
+}
+@media (min-width: 900px) {
+  .connect {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}

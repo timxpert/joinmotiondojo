@@ -1,6 +1,6 @@
 import React from 'react';
 import { BackToTop } from './BackToTop';
-import { CONTACT, COURSE_URL, DOJO_AI_URL, NINJAS_SHOWCASE_URL, SOCIAL_LINKS } from '@/config/site';
+import { CONNECT_URL, CONTACT, COURSE_URL, DOJO_AI_URL, NINJAS_SHOWCASE_URL, SOCIAL_LINKS } from '@/config/site';
 
 type IconName =
   | 'belt'
@@ -9,6 +9,7 @@ type IconName =
   | 'info'
   | 'people'
   | 'team'
+  | 'chat'
   | 'instagram'
   | 'youtube'
   | 'whatsapp'
@@ -49,6 +50,7 @@ function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
         <path d="M15.5 5.6a3 3 0 0 1 0 5.8M17.5 14.8c1.9.6 3.1 2.2 3.5 4.7" />
       </>
     ),
+    chat: <path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 17H10l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5Z" />,
     team: (
       <>
         <circle cx="12" cy="12" r="9" />
@@ -138,6 +140,7 @@ export function Footer() {
   ];
   const dojo: FLink[] = [
     { label: 'About', href: '/#intro', icon: 'info' },
+    { label: 'Motion Dojo Connect', href: CONNECT_URL, icon: 'chat', external: true },
     { label: 'Meet the team', href: '/#team', icon: 'team' },
   ];
   const socials = [
