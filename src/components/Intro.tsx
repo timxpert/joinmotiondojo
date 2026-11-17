@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mark } from './Mark';
+import { COMMUNITY_JOIN_URL } from '@/config/site';
 
 export function Intro() {
   return (
@@ -18,6 +19,9 @@ export function Intro() {
             your potential, share ideas, get feedback, collaborate with other creatives, and build confidence in your
             abilities.
           </p>
+          <a href={COMMUNITY_JOIN_URL} className="btn btn-primary">
+            Join the community
+          </a>
         </div>
       </div>
     </section>

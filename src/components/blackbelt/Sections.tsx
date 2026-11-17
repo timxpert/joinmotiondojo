@@ -24,8 +24,8 @@ export function CourseHero() {
             Motion and create professional animations, all on your phone.
           </p>
           <div className="btn-pair">
-            <EnrolButton className="btn btn-lime">Enrol now</EnrolButton>
-            <a href="#curriculum" className="btn btn-primary">
+            <EnrolButton className="btn btn-primary">Enrol now</EnrolButton>
+            <a href="#curriculum" className="btn btn-light">
               See the curriculum
             </a>
           </div>

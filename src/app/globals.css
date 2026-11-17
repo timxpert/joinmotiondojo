@@ -3160,16 +3160,23 @@ details[open] > :not(summary) {
 .bb-page > #faq {
   background: var(--ground);
 }
-/* hero: dark, headline left, phone on a lavender panel right */
+/* hero: white, headline left, phone on a lavender panel right */
+.bb-page .hero {
+  background: #fff;
+  color: var(--ink);
+}
+.bb-page .hero .mark {
+  color: var(--violet);
+}
 .bb-page .bb-hero .lede {
-  color: var(--on-dark-muted);
+  color: var(--muted);
 }
 .bb-page .bb-hero .lede strong {
-  color: #fff;
+  color: var(--ink);
   font-weight: 600;
 }
 .bb-page .bb-price-note {
-  color: var(--on-dark-muted);
+  color: var(--muted);
 }
 .bb-page .bb-phone {
   border-radius: 28px;
