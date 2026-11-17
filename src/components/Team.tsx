@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { TEAM } from '@/data/content';
+import { Mark } from './Mark';
 
 function WhatsAppIcon() {
   return (
@@ -13,13 +14,41 @@ function WhatsAppIcon() {
 
 /* Cards hanging from a sagging line. Swipe sideways to see everyone; tap a
    card and it swings on its string and flips over to the person's bio. */
+/* a small badge for each role, in place of an arrow */
+function RoleIcon({ role }: { role: string }) {
+  const r = role.toLowerCase();
+  const path = r.includes('moderator') ? (
+    // shield
+    <path d="M12 3 5 6v5c0 4.4 3 8.2 7 9.5 4-1.3 7-5.1 7-9.5V6l-7-3Z" />
+  ) : r.includes('social') ? (
+    // megaphone
+    <>
+      <path d="M4 10v4h3l6 4V6l-6 4H4Z" />
+      <path d="M17 9.5a3.5 3.5 0 0 1 0 5" />
+    </>
+  ) : (
+    // two people: community
+    <>
+      <circle cx="9" cy="9" r="3" />
+      <path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" />
+      <path d="M16 6.5a2.6 2.6 0 0 1 0 5.2M17.5 14.6c1.6.5 2.7 1.9 3.1 4.4" />
+    </>
+  );
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {path}
+    </svg>
+  );
+}
+
 const DROPS = [20, 52, 30, 46, 24];
 const TILTS = [-3, 2, -1.5, 2.5, -2];
 const SAG = 34; // how far the middle of the line hangs below its ends, in px
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export function Team() {
-  const [flipped, setFlipped] = useState<Set<number>>(() => new Set());
+  // only one card shows its bio at a time
+  const [flipped, setFlipped] = useState<number | null>(null);
   const [swings, setSwings] = useState<number[]>(() => TEAM.map(() => 0));
   const line = useRef<HTMLUListElement>(null);
 
@@ -49,12 +78,7 @@ export function Team() {
   }, []);
 
   const tap = (i: number) => {
-    setFlipped((f) => {
-      const next = new Set(f);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
-      return next;
-    });
+    setFlipped((f) => (f === i ? null : i));
     setSwings((s) => s.map((n, j) => (j === i ? n + 1 : n)));
   };
 
@@ -65,7 +89,9 @@ export function Team() {
           <h2 className="team-title" id="team-title">
             Meet the people
             <br />
-            <span>behind the work.</span>
+            <span>
+              behind the <Mark>work</Mark>
+            </span>
           </h2>
         </div>
         <div className="team-aside">
@@ -79,7 +105,7 @@ export function Team() {
             <path d="M0 0 Q50 20 100 0" />
           </svg>
           {TEAM.map((t, i) => {
-            const on = flipped.has(i);
+            const on = flipped === i;
             const swing = swings[i];
             return (
               <li
@@ -104,7 +130,7 @@ export function Team() {
                 >
                   <div className="team-face team-front" aria-hidden={on}>
                     <span className="team-top">
-                      <span>Team · Dojo</span>
+                      <span>Dojo Team</span>
                       <span>#{pad(i + 1)}</span>
                     </span>
                     <span className="team-pic">
@@ -113,11 +139,9 @@ export function Team() {
                     <strong className="team-name">{t.name}</strong>
                     <span className="team-role">{t.role}</span>
                     <span className="team-foot">
-                      <span>View bio</span>
-                      <span className="team-go">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                          <path d="M7 17 17 7M9 7h8v8" />
-                        </svg>
+                      <span>Tap to see {t.short}’s bio</span>
+                      <span className="team-go" title={t.role}>
+                        <RoleIcon role={t.role} />
                       </span>
                     </span>
                   </div>

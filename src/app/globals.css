@@ -2820,7 +2820,10 @@ details[open] > :not(summary) {
   color: #111;
 }
 .team-title span {
-  color: #ab9de0;
+  color: var(--lavender);
+}
+.team-title .mark {
+  color: inherit;
 }
 .team-aside {
   max-width: 300px;
@@ -3067,8 +3070,9 @@ details[open] > :not(summary) {
 .team-go {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  flex: none;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #111;
   color: #fff;
@@ -3082,7 +3086,8 @@ details[open] > :not(summary) {
 }
 .team-back p {
   color: #111;
-  line-height: 1.6;
+  font-size: 0.86rem;
+  line-height: 1.55;
 }
 .team-back .btn {
   gap: 8px;
