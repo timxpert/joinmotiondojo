@@ -21,7 +21,7 @@ const PARTS = [
   },
   {
     name: 'Motion Dojo Connect',
-    body: 'An in-house platform where you can connect with other members, post your work, get feedback and never miss important updates.',
+    body: 'An in-house platform where you can connect with other members, post your work, get feedbacks, and never miss important updates.',
     link: { href: CONNECT_URL, label: 'Open Connect', className: 'btn btn-primary' },
     tone: 'white',
   },
