@@ -62,7 +62,6 @@ export function Team() {
     <section className="section team-section" id="team" aria-labelledby="team-title">
       <div className="wrap team-head">
         <div>
-          <p className="team-label">Motion Dojo · The team</p>
           <h2 className="team-title" id="team-title">
             Meet the people
             <br />
@@ -71,9 +70,6 @@ export function Team() {
         </div>
         <div className="team-aside">
           <p>The people who run the community, answer your questions and keep things moving.</p>
-          <p className="team-label team-label-lime">
-            {pad(TEAM.length)} people, one team
-          </p>
         </div>
       </div>
 
@@ -146,10 +142,6 @@ export function Team() {
         </ul>
       </div>
 
-      <div className="wrap team-bottom">
-        <span>The people make the Dojo</span>
-        <span>Tap a card to flip · Swipe to see all</span>
-      </div>
     </section>
   );
 }

@@ -2837,7 +2837,7 @@ details[open] > :not(summary) {
     align-items: start;
   }
   .team-aside {
-    padding-top: 44px;
+    padding-top: 14px;
   }
 }
 .team-bottom {
