@@ -3384,3 +3384,13 @@ body {
 .home .hero .mark {
   color: var(--lime);
 }
+
+/* lavender button (hero "Learn more"); dark text keeps it readable */
+.btn-lavender {
+  background: var(--lavender);
+  color: var(--midnight);
+}
+.btn-lavender:hover:not(:disabled) {
+  background: #b994ff;
+  box-shadow: none;
+}
