@@ -1,7 +1,10 @@
 import React from 'react';
-import { CURRICULUM, ENROL, FAQS, INCLUDED, PERKS, WHO_FOR } from '@/data/blackbelt';
+import { ENROL, FAQS, INCLUDED, PERKS, WHO_FOR } from '@/data/blackbelt';
 import { TEAM } from '@/data/content';
 import { EnrolButton } from './Enrol';
+import { Mark } from '../Mark';
+import { Audience } from '../Audience';
+export { Curriculum } from './Phases';
 
 /* ------------------------------------------------------------------
    Black Belt in Motion Design: page sections.
@@ -14,14 +17,17 @@ export function CourseHero() {
       <div className="wrap bb-hero-grid">
         <div className="hero-copy">
           <h1 className="display" id="bb-title">
-            Become a dangerously good motion designer
+            Become a dangerously <Mark>good</Mark> motion designer
           </h1>
           <p className="lede">
             <strong>Black Belt in Motion Design</strong> is the Motion Dojo community’s complete course. Master Alight
             Motion and create professional animations, all on your phone.
           </p>
           <div className="btn-pair">
-            <EnrolButton>Enrol now</EnrolButton>
+            <EnrolButton className="btn btn-lime">Enrol now</EnrolButton>
+            <a href="#curriculum" className="btn btn-primary">
+              See the curriculum
+            </a>
           </div>
           <p className="bb-price-note">
             Pay {ENROL.priceLabel} one-time, or 2 payments of {ENROL.instalmentLabel}.
@@ -47,84 +53,40 @@ export function CourseHero() {
 
 export function WhoFor() {
   return (
-    <section className="section" id="who" aria-labelledby="who-title">
-      <div className="wrap">
-        <div className="section-head">
-          <h2 className="h2" id="who-title">
-            Is this for you?
-          </h2>
-          <p className="lede">A motion design course for anyone with a smartphone and big ambition.</p>
-        </div>
-        <ul className="bb-grid">
-          {WHO_FOR.map((w) => (
-            <li key={w.title} className="bb-card">
-              <h3 className="h3">{w.title}</h3>
-              <p>{w.body}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="bb-aside">
-          Not for you if you want overnight results without practice. This is a dojo. We train.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-export function Curriculum() {
-  return (
-    <section className="section" id="curriculum" aria-labelledby="curriculum-title">
-      <div className="wrap">
-        <div className="section-head">
-          <h2 className="h2" id="curriculum-title">
-            One journey, four phases
-          </h2>
-          <p className="lede">
-            A complete motion design course with Alight Motion, from your first keyframe to landing clients.
-          </p>
-        </div>
-        <div className="bb-phases">
-          {CURRICULUM.map((p, i) => (
-            <details key={p.title} className="bb-phase" open={i === 0}>
-              <summary>
-                <span className="bb-phase-num" aria-hidden="true">
-                  0{i + 1}
-                </span>
-                <span className="bb-phase-title">
-                  <span className="sr-only">Phase {i + 1}: </span>
-                  {p.title}
-                </span>
-                <span className="bb-phase-count">{p.lessons.length} lessons</span>
-                <span className="bb-chev" aria-hidden="true" />
-              </summary>
-              <ol className="bb-lessons">
-                {p.lessons.map((l) => (
-                  <li key={l}>{l}</li>
-                ))}
-              </ol>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Audience
+      id="who"
+      title={
+        <>
+          Is this <Mark>for</Mark> you?
+        </>
+      }
+      lede="A motion design course for anyone with a smartphone and big ambition."
+      people={WHO_FOR}
+      after={<p className="bb-aside">Not for you if you want overnight results without practice. This is a dojo. We train.</p>}
+    />
   );
 }
 
 export function Experience() {
   return (
-    <section className="section" id="experience" aria-labelledby="experience-title">
-      <div className="wrap bb-split">
-        <div className="bb-split-copy">
+    <section className="section dark-section" id="experience" aria-labelledby="experience-title">
+      <div className="wrap">
+        <div className="section-head">
           <h2 className="h2" id="experience-title">
-            The Dojo’s Experience
+            The Dojo’s <Mark>experience</Mark>
           </h2>
           <p className="lede">Accelerate your growth alongside designers who push standards higher every single day.</p>
         </div>
-        <ul className="bb-perks">
-          {PERKS.map((p) => (
-            <li key={p}>{p}</li>
+        <ol className="perks">
+          {PERKS.map((p, i) => (
+            <li key={p}>
+              <span className="step-n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p>{p}</p>
+            </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
   );
@@ -136,7 +98,7 @@ export function Pricing() {
       <div className="wrap">
         <div className="section-head">
           <h2 className="h2" id="pricing-title">
-            Choose how you want to pay
+            Choose how you want to <Mark>pay</Mark>
           </h2>
           <p className="lede">One course, one price. Pay in full or split it in two.</p>
         </div>
@@ -177,7 +139,7 @@ export function Faq() {
       <div className="wrap bb-split">
         <div className="bb-split-copy">
           <h2 className="h2" id="faq-title">
-            Questions, answered
+            Questions, <Mark>answered</Mark>
           </h2>
           <p className="lede">
             Still unsure?{' '}

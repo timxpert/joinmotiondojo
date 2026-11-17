@@ -19,19 +19,16 @@ export const ENROL = {
 export const WHO_FOR = [
   {
     title: 'Motion design enthusiast',
-    body: 'You have a smartphone and big ambition. Learn to create world-class motion with the tools you already have.',
+    body: 'You have a smartphone and are passionate about creating industry standard motion graphics and animations.',
   },
-  {
-    title: 'The stuck beginner',
-    body: 'You’ve watched countless YouTube tutorials but still can’t create something you’re proud of. Get a clear path that works.',
-  },
+  { title: 'Beginner', body: 'You’ve watched countless YouTube tutorials but still can’t create industry standard videos.' },
   {
     title: 'Business owner',
     body: 'You sell products or services and want to make scroll-stopping animations for your own brand, by yourself.',
   },
   {
     title: 'Graphic designer',
-    body: 'Add motion to your skills, raise your rates, and stop losing clients to motion designers.',
+    body: 'You want to add motion to your skills, raise your rates, and stop losing clients to motion designers.',
   },
 ];
 

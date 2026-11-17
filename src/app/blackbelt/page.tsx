@@ -3,6 +3,7 @@ import React from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { FinalCTA } from '@/components/FinalCTA';
+import { Mark } from '@/components/Mark';
 import { Projects } from '@/components/blackbelt/Projects';
 import { Stories } from '@/components/blackbelt/Stories';
 import { EnrolButton, EnrolModal } from '@/components/blackbelt/Enrol';
@@ -42,7 +43,7 @@ export default function BlackBeltPage() {
         Skip to content
       </a>
       <Header nav={NAV} cta={{ href: '#pricing', label: 'Enrol now' }} />
-      <main id="main">
+      <main id="main" className="home bb-page">
         <CourseHero />
         <WhoFor />
         <Curriculum />
@@ -52,7 +53,11 @@ export default function BlackBeltPage() {
         <Pricing />
         <Faq />
         <FinalCTA
-          title="Train like a ninja, create like a master."
+          title={
+            <>
+              Train like a ninja, create like a <Mark>master</Mark>
+            </>
+          }
           lede="Join an active dojo for motion designers."
           action={<EnrolButton className="btn btn-lime">Claim your spot</EnrolButton>}
         />

@@ -3151,3 +3151,174 @@ details[open] > :not(summary) {
   background: var(--lavender);
   color: #fff;
 }
+
+/* =====================================================================
+   Black Belt course page, in the home page's style
+   ===================================================================== */
+.bb-page > #curriculum,
+.bb-page > #stories,
+.bb-page > #faq {
+  background: var(--ground);
+}
+/* hero: dark, headline left, phone on a lavender panel right */
+.bb-page .bb-hero .lede {
+  color: var(--on-dark-muted);
+}
+.bb-page .bb-hero .lede strong {
+  color: #fff;
+  font-weight: 600;
+}
+.bb-page .bb-price-note {
+  color: var(--on-dark-muted);
+}
+.bb-page .bb-phone {
+  border-radius: 28px;
+  background: #ece4ff;
+}
+.bb-page .bb-hero .display {
+  max-width: 12ch;
+}
+
+/* the four phases: stacked cards in belt colours */
+.phase-card {
+  align-content: start;
+  gap: 10px;
+}
+.phase-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.phase-belt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.phase-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.phase-card .stack-n {
+  margin: 0;
+  opacity: 0.75;
+  color: inherit;
+}
+.phase-count {
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+.phase-lessons {
+  display: grid;
+  gap: 6px 24px;
+  margin-top: 8px;
+  padding: 0;
+  list-style: none;
+  counter-reset: lesson;
+}
+.phase-lessons li {
+  position: relative;
+  padding-left: 30px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  counter-increment: lesson;
+}
+.phase-lessons li::before {
+  content: counter(lesson, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 700px) {
+  .phase-lessons {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.belt-white {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(20, 10, 46, 0.05), 0 -12px 30px -18px rgba(20, 10, 46, 0.3);
+}
+.belt-white .phase-belt {
+  background: var(--ground);
+}
+.belt-white .phase-dot {
+  background: #fff;
+  box-shadow: inset 0 0 0 2px #cfcad6;
+}
+.belt-yellow {
+  background: #ffd84a;
+  color: var(--midnight);
+}
+.belt-yellow .phase-belt {
+  background: rgba(255, 255, 255, 0.45);
+}
+.belt-yellow .phase-dot {
+  background: #e0a800;
+}
+.belt-green {
+  background: #1e8f52;
+  color: #fff;
+}
+.belt-green .phase-dot {
+  background: #7fe0a6;
+}
+.belt-black {
+  background: #0d0b12;
+  color: #fff;
+}
+.belt-black .phase-dot {
+  background: #0d0b12;
+  box-shadow: inset 0 0 0 2px var(--lavender);
+}
+
+/* the Dojo's experience: dark band, numbered in lavender */
+.perks {
+  display: grid;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.perks li {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+.perks p {
+  color: var(--on-dark-muted);
+  max-width: 36ch;
+}
+@media (min-width: 760px) {
+  .perks {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 48px;
+  }
+}
+@media (min-width: 1100px) {
+  .perks {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.bb-page .bb-aside {
+  margin-top: clamp(32px, 4vw, 48px);
+  color: var(--muted);
+}
+/* long group names wrap instead of growing into the next column */
+.who-key h3 {
+  text-wrap: balance;
+  padding-right: 10%;
+}

@@ -6,7 +6,7 @@ import { Mark } from './Mark';
 /* Who Motion Dojo is for, drawn as an animation timeline: each group is a
    keyframe on one track, and a playhead moves along it as you scroll.
    Left to right on computers, top to bottom on phones. */
-const PEOPLE = [
+const DEFAULT_PEOPLE = [
   {
     title: 'Motion design enthusiast',
     body: 'You have a smartphone and are passionate about creating industry standard motion graphics and animations.',
@@ -22,7 +22,22 @@ const PEOPLE = [
   },
 ];
 
-export function Audience() {
+type Person = { title: string; body: string };
+
+export function Audience({
+  id = 'who',
+  title,
+  lede = 'Anyone animating on a phone who wants to get better, wherever they’re starting from.',
+  people = DEFAULT_PEOPLE,
+  after,
+}: {
+  id?: string;
+  title?: React.ReactNode;
+  lede?: string;
+  people?: Person[];
+  after?: React.ReactNode;
+}) {
+  const PEOPLE = people;
   const track = useRef<HTMLOListElement>(null);
   const [p, setP] = useState(0);
 
@@ -56,13 +71,17 @@ export function Audience() {
   const last = PEOPLE.length - 1;
 
   return (
-    <section className="section" id="who" aria-labelledby="who-title">
+    <section className="section" id={id} aria-labelledby={`${id}-title`}>
       <div className="wrap who">
         <div className="who-head">
-          <h2 className="h2" id="who-title">
-            Who Motion Dojo is <Mark>for</Mark>
+          <h2 className="h2" id={`${id}-title`}>
+            {title ?? (
+              <>
+                Who Motion Dojo is <Mark>for</Mark>
+              </>
+            )}
           </h2>
-          <p className="lede">Anyone animating on a phone who wants to get better, wherever they’re starting from.</p>
+          <p className="lede">{lede}</p>
         </div>
 
         <ol className="who-track" ref={track} style={{ '--p': p } as React.CSSProperties}>
@@ -76,6 +95,7 @@ export function Audience() {
             </li>
           ))}
         </ol>
+        {after}
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import { Mark } from '../Mark';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TESTIMONIALS } from '@/data/content';
 import { VideoModal } from '../VideoModal';
@@ -59,7 +60,7 @@ export function Stories() {
         <h2 className="h2 stories-title" id="stories-title">
           <span className="line">Hear what community</span>{' '}
           <span className="line">
-            members <span className="accent">are saying.</span>
+            members are <Mark>saying</Mark>
           </span>
         </h2>
 

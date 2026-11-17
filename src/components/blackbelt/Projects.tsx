@@ -1,5 +1,6 @@
 'use client';
 
+import { Mark } from '../Mark';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PROJECTS } from '@/data/blackbelt';
 import { VideoModal } from '../VideoModal';
@@ -37,7 +38,7 @@ export function Projects() {
         <div className="carousel-head">
           <div className="section-head">
             <h2 className="h2" id="projects-title">
-              What you will make
+              What you will <Mark>make</Mark>
             </h2>
             <p className="lede">Projects made in the Dojo with Alight Motion, on a smartphone.</p>
           </div>
