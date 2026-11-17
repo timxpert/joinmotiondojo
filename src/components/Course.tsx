@@ -9,20 +9,19 @@ import { COMMUNITY_JOIN_URL, CONNECT_URL, COURSE_URL } from '@/config/site';
 const PARTS = [
   {
     name: 'Motion Dojo',
-    body: 'The community. Smartphone motion designers and creative enthusiasts learning and growing together.',
+    body: 'A home for smartphone motion designers and creative enthusiasts who want to learn and grow together.',
     link: { href: COMMUNITY_JOIN_URL, label: 'Join the community', className: 'btn btn-paper' },
     tone: 'violet',
   },
   {
     name: 'Black Belt in Motion Design',
-    body: 'The course. Structured training for members who want a guided learning experience.',
+    body: 'A structured, beginner-to-pro training that teaches you how to create industry-standard videos with your smartphone.',
     link: { href: COURSE_URL, label: 'See the course', className: 'btn btn-ink' },
     tone: 'lime',
   },
   {
     name: 'Motion Dojo Connect',
-    body: 'The members’ space, without the WhatsApp noise.',
-    points: ['Your profile as a portfolio', 'A feed for motion work', 'Chats with voice notes and files'],
+    body: 'An in-house platform where you can connect with other members, post your work, get feedback and never miss important updates.',
     link: { href: CONNECT_URL, label: 'Open Connect', className: 'btn btn-primary' },
     tone: 'white',
   },
