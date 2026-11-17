@@ -2729,36 +2729,56 @@ details[open] > :not(summary) {
   }
 }
 
-/* Footer links: always shown as white rows with a violet icon tile that
-   sits inside the row (no tilt), and the arrow always visible */
+/* Footer links: every link shows the white row, the tilted violet tile and
+   the arrow by default. The row has room on all sides so the tilted tile
+   stays inside it. Hover/tap still animates: the tile springs the other
+   way and the arrow nudges on. */
 .footer-col ul {
   gap: 10px;
 }
 .footer-link {
   margin-inline: 0;
-  padding: 8px 16px 8px 8px;
-  border-radius: 16px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 18px;
   background: var(--paper);
 }
-.footer-ico,
-.footer-link:hover .footer-ico {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+.footer-ico {
   background: var(--violet);
   color: #fff;
   box-shadow: none;
-  transform: none;
+  transform: rotate(-6deg) scale(1.06);
 }
-.footer-go,
-.footer-link:hover .footer-go {
+.footer-link:hover .footer-ico,
+.footer-link:focus-visible .footer-ico {
+  transform: rotate(6deg) scale(1.1);
+}
+.footer-link:active .footer-ico {
+  transform: rotate(-6deg) scale(0.94);
+}
+.footer-go {
   opacity: 1;
   transform: none;
   color: var(--violet);
 }
-.footer-link:hover {
-  background: var(--paper);
+.footer-link:hover .footer-go,
+.footer-link:focus-visible .footer-go {
+  transform: translateX(4px);
 }
-.footer-link:hover .footer-go {
-  transform: translateX(3px);
+/* the tiles tilt in, one after another, as the footer comes into view */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .footer-ico {
+      animation: tile-in linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 90%;
+    }
+  }
+}
+/* separate properties, so the hover tilt (transform) still animates smoothly */
+@keyframes tile-in {
+  from {
+    scale: 0.6;
+    rotate: 12deg;
+    opacity: 0;
+  }
 }
