@@ -2491,7 +2491,11 @@ details[open] > :not(summary) {
   background: var(--ground);
 }
 .home > #pillars {
-  background: var(--paper);
+  background: var(--ground);
+  padding-top: 0;
+}
+.home > #intro {
+  padding-bottom: clamp(48px, 6vw, 80px);
 }
 
 /* Hamburger: white round button on the dark header */
@@ -2553,9 +2557,15 @@ details[open] > :not(summary) {
 .home .different .wrap {
   text-align: center;
 }
-.home .different .h2 {
+/* same type as the closing line ("Join smartphone motion designers…"), centred */
+.home .different .different-line {
+  max-width: 36ch;
   margin-inline: auto;
-  max-width: 20ch;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--on-dark);
 }
 
 /* ---------- Motion Dojo, Black Belt and the Ninjas: stacked cards ---------- */
