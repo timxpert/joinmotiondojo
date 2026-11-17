@@ -126,7 +126,6 @@ function VideoModal({ story, onClose }: { story: T; onClose: () => void }) {
           <Close />
         </button>
         <div className="modal-video">
-          {!loaded && <span>Loading video…</span>}
           <iframe
             src={getVimeoEmbedUrl(story.videoUrl)}
             title={`${story.name}’s story`}

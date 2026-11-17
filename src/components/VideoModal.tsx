@@ -44,7 +44,6 @@ export function VideoModal({
           <Close />
         </button>
         <div className="modal-video">
-          {!loaded && <span>Loading video…</span>}
           <iframe
             src={getVimeoEmbedUrl(url)}
             title={title}
