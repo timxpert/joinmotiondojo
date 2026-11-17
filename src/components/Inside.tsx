@@ -1,4 +1,5 @@
 import React from 'react';
+import { Mark } from './Mark';
 
 /* The three things Motion Dojo is built around, in Motion Dojo's own words. */
 const PILLARS = [
@@ -25,7 +26,7 @@ export function Inside() {
       <div className="wrap">
         <div className="section-head">
           <h2 className="h2" id="pillars-title">
-            What Motion Dojo is built around
+            What Motion Dojo is <Mark>built</Mark> around
           </h2>
         </div>
 

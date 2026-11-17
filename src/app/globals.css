@@ -2678,3 +2678,64 @@ details[open] > :not(summary) {
     left: 0;
   }
 }
+
+/* ---------- Accent word: italic serif in a hand-drawn loop ---------- */
+.mark {
+  position: relative;
+  display: inline-block;
+  margin-inline: 0.12em 0.04em;
+  padding-inline: 0.06em;
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.04em;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--violet);
+  white-space: nowrap;
+}
+.dark-section .mark,
+.home .hero .mark {
+  color: var(--lime);
+}
+.mark-loop {
+  position: absolute;
+  left: -0.26em;
+  right: -0.3em;
+  top: -0.12em;
+  bottom: -0.2em;
+  width: calc(100% + 0.56em);
+  height: calc(100% + 0.32em);
+  overflow: visible;
+  pointer-events: none;
+  rotate: -3deg;
+}
+.mark-loop path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+/* the loop draws itself in */
+@media (prefers-reduced-motion: no-preference) {
+  .home .hero .mark-loop path {
+    stroke-dashoffset: 1;
+    animation: loop-draw 1.1s var(--ease) 0.7s forwards;
+  }
+  @supports (animation-timeline: view()) {
+    .section .mark-loop path {
+      stroke-dashoffset: 1;
+      animation: loop-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 40% cover 40%;
+    }
+  }
+}
+@keyframes loop-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

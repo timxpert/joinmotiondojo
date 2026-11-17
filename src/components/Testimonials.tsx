@@ -7,7 +7,7 @@ import { Close, Play } from './Icons';
 
 type T = (typeof TESTIMONIALS)[number];
 
-export function Testimonials({ title = 'From our members' }: { title?: string }) {
+export function Testimonials({ title = 'From our members' }: { title?: React.ReactNode }) {
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState<T | null>(null);
   const playRef = useRef<HTMLButtonElement>(null);

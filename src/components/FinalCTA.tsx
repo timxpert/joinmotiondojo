@@ -6,7 +6,7 @@ export function FinalCTA({
   lede = 'Join smartphone motion designers who learn, share their work and get better together.',
   action,
 }: {
-  title?: string;
+  title?: React.ReactNode;
   lede?: string;
   /** Replaces the default "Join Motion Dojo" link */
   action?: React.ReactNode;

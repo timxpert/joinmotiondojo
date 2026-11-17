@@ -1,5 +1,6 @@
 import React from 'react';
 import { COMMUNITY_JOIN_URL } from '@/config/site';
+import { Mark } from './Mark';
 
 /* Dark hero: the headline, then the logo reel on its own band below (page.tsx) */
 export function Hero() {
@@ -9,7 +10,9 @@ export function Hero() {
         <div className="hero-copy">
           <h1 className="display" id="hero-title">
             <span className="line">You were never meant</span>
-            <span className="line">to figure it all out alone</span>
+            <span className="line">
+              to figure it all out <Mark>alone</Mark>
+            </span>
           </h1>
 
           <p className="lede">

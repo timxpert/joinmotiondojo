@@ -1,11 +1,12 @@
 import React from 'react';
+import { Mark } from './Mark';
 
 export function Intro() {
   return (
     <section className="section" id="intro" aria-labelledby="intro-title">
       <div className="wrap intro-grid">
         <h2 className="h2" id="intro-title">
-          A community for smartphone motion designers
+          A <Mark>community</Mark> for smartphone motion designers
         </h2>
         <div className="intro-copy">
           <p className="lede">

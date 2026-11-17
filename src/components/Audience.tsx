@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { Mark } from './Mark';
 
 /* Who Motion Dojo is for, drawn as an animation timeline: each group is a
    keyframe on one track, and a playhead moves along it as you scroll.
@@ -50,7 +51,7 @@ export function Audience() {
       <div className="wrap who">
         <div className="who-head">
           <h2 className="h2" id="who-title">
-            Who Motion Dojo is for
+            Who Motion Dojo is <Mark>for</Mark>
           </h2>
           <p className="lede">Anyone animating on a phone who wants to get better, wherever they’re starting from.</p>
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { COMMUNITY_JOIN_URL, CONNECT_URL, COURSE_URL } from '@/config/site';
+import { Mark } from './Mark';
 
 /* Motion Dojo, Black Belt and Connect: what each name means.
    Stacked cards: each one slides up over the last, and the card underneath
@@ -65,7 +66,7 @@ export function Course() {
       <div className="wrap stack-layout">
         <div className="stack-head">
           <h2 className="h2" id="ecosystem-title">
-            Pick where to start
+            Pick where to <Mark>start</Mark>
           </h2>
         </div>
         <ul className="stack" ref={list}>

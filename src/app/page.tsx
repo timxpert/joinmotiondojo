@@ -9,6 +9,7 @@ import { Course } from '@/components/Course';
 import { Audience } from '@/components/Audience';
 import { Different } from '@/components/Different';
 import { Testimonials } from '@/components/Testimonials';
+import { Mark } from '@/components/Mark';
 import { FinalCTA } from '@/components/FinalCTA';
 import { Footer } from '@/components/Footer';
 
@@ -28,9 +29,19 @@ export default function HomePage() {
         <Different />
         <Course />
         <Team />
-        <Testimonials />
+        <Testimonials
+          title={
+            <>
+              From our <Mark>members</Mark>
+            </>
+          }
+        />
         <FinalCTA
-          title="Be part of the Dojo experience"
+          title={
+            <>
+              Be part of the Dojo <Mark>experience</Mark>
+            </>
+          }
           lede="Join smartphone motion designers who learn, share their work and get better together."
         />
       </main>

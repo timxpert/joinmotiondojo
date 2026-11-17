@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { TEAM } from '@/data/content';
+import { Mark } from './Mark';
 
 function WhatsAppIcon() {
   return (
@@ -24,7 +25,7 @@ export function Team() {
     <section className="section team-section" id="team" aria-labelledby="team-title">
       <div className="wrap team-layout">
         <h2 className="h2" id="team-title">
-          Meet the team
+          Meet the <Mark>team</Mark>
         </h2>
 
         <div className="team-body">
