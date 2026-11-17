@@ -6,6 +6,7 @@ import { Intro } from '@/components/Intro';
 import { Team } from '@/components/Team';
 import { Inside } from '@/components/Inside';
 import { Course } from '@/components/Course';
+import { Audience } from '@/components/Audience';
 import { Different } from '@/components/Different';
 import { Testimonials } from '@/components/Testimonials';
 import { FinalCTA } from '@/components/FinalCTA';
@@ -23,11 +24,15 @@ export default function HomePage() {
         <Reel />
         <Intro />
         <Inside />
+        <Audience />
         <Different />
         <Course />
         <Team />
         <Testimonials />
-        <FinalCTA />
+        <FinalCTA
+          title="Be part of the Dojo experience"
+          lede="Join smartphone motion designers who learn, share their work and get better together."
+        />
       </main>
       <Footer />
     </>
