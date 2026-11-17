@@ -80,8 +80,7 @@ export function Course() {
               <a
                 href={p.link.href}
                 className={`${p.link.className} btn-sm`}
-                target="_blank"
-                rel={/^https?:/.test(p.link.href) ? 'noopener noreferrer' : 'noopener'}
+                {...(/^https?:/.test(p.link.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               >
                 {p.link.label}
               </a>

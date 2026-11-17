@@ -8,11 +8,7 @@ type Link = { href: string; label: string };
 export function Header({ nav = NAV, cta = { href: COMMUNITY_JOIN_URL, label: 'Join the community' } }: { nav?: Link[]; cta?: Link }) {
   const [open, setOpen] = useState(false);
   // Links to the course page open it in a new tab; in-page links (#pricing) don't
-  const ctaTab = /^https?:/.test(cta.href)
-    ? { target: '_blank', rel: 'noopener noreferrer' }
-    : cta.href.startsWith('/blackbelt')
-      ? { target: '_blank', rel: 'noopener' }
-      : {};
+  const ctaTab = /^https?:/.test(cta.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {};
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {

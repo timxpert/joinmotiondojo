@@ -31,7 +31,7 @@ export function FinalCTA({
         )}
         <p className="lede">{lede}</p>
         {action ?? (
-          <a href={COMMUNITY_JOIN_URL} target="_blank" rel="noopener noreferrer" className="btn btn-lime">
+          <a href={COMMUNITY_JOIN_URL} className="btn btn-lime">
             Join the community
           </a>
         )}

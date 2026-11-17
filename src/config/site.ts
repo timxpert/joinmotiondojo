@@ -5,12 +5,8 @@
  * of linking to a dead page.
  */
 
-/**
- * Where "Join the community" sends people.
- * The community is open to members who aren't on the course, so this goes to the
- * community manager on WhatsApp for now. Replace with the group invite link when ready.
- */
-export const COMMUNITY_JOIN_URL = 'https://wa.link/be49ci';
+/** Where "Join the community" sends people: the Black Belt course page. */
+export const COMMUNITY_JOIN_URL = '/blackbelt';
 
 /** Black Belt in Motion Design: the course page on this site. */
 export const COURSE_URL = '/blackbelt';
