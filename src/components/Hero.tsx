@@ -13,7 +13,8 @@ export function Hero() {
           </h1>
 
           <p className="lede">
-            Motion design is about discovering your creative voice and finding people who understand your ambition.
+            Growing as a motion designer takes good teaching and people around you who are a step ahead. Motion Dojo gives you
+            both.
           </p>
 
           <div className="btn-pair">
