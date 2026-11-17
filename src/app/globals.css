@@ -3398,3 +3398,38 @@ body {
   background: #b994ff;
   box-shadow: none;
 }
+
+/* On the moving gradient: pure white text, electric lime accents */
+.hero-live,
+.live-bg,
+.hero-live .lede,
+.live-bg .lede,
+.live-bg p,
+.live-bg .perks p,
+.live-bg .h2,
+.live-bg .display {
+  color: #fff;
+}
+.hero-live .mark,
+.live-bg .mark,
+.live-bg .step-n,
+.home .different .different-line em {
+  color: var(--lime);
+}
+.live-bg .final-art path,
+.live-bg .final-art line,
+.live-bg .final-art polyline {
+  stroke: var(--lime);
+}
+.live-bg .final-art rect,
+.live-bg .final-art circle {
+  stroke: var(--lime);
+}
+.home .hero-live .lede,
+.bb-page .live-bg .lede {
+  color: #fff;
+}
+.btn-paper:hover:not(:disabled) {
+  background: #f1eefb;
+  box-shadow: none;
+}
