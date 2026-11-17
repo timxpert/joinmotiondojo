@@ -3367,3 +3367,20 @@ details[open] > :not(summary) {
 .hero-live > .hero-bg .velaris-canvas {
   opacity: 0.72;
 }
+
+/* Phones: the group names grow 8% when reached; keep the grown size inside
+   the column so the page never gets wider than the screen */
+.who-key h3 {
+  width: 92%;
+  padding-right: 0;
+}
+/* safety net: nothing can widen the page sideways */
+html,
+body {
+  overflow-x: clip;
+}
+
+/* hero: "alone" in electric lime */
+.home .hero .mark {
+  color: var(--lime);
+}
