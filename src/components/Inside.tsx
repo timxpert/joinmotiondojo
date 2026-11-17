@@ -29,14 +29,17 @@ export function Inside() {
           </h2>
         </div>
 
-        <dl className="pillars">
-          {PILLARS.map((p) => (
-            <div key={p.key} className={`pillar pillar-${p.key}`}>
-              <dt>{p.title}</dt>
-              <dd>{p.body}</dd>
-            </div>
+        <ol className="steps">
+          {PILLARS.map((p, i) => (
+            <li key={p.key} className="step">
+              <span className="step-n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
           ))}
-        </dl>
+        </ol>
       </div>
     </section>
   );

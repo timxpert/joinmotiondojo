@@ -17,9 +17,6 @@ export function Intro() {
             your potential, share ideas, get feedback, collaborate with other creatives, and build confidence in your
             abilities.
           </p>
-          <a href="#team" className="btn btn-primary">
-            Get to know us
-          </a>
         </div>
       </div>
     </section>

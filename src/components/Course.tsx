@@ -7,32 +7,38 @@ export function Course() {
     {
       name: 'Motion Dojo',
       body: 'The community. Smartphone motion designers and creative enthusiasts learning and growing together.',
-      link: { href: COMMUNITY_JOIN_URL, label: 'Join the community', newTab: true, className: 'btn btn-primary' },
+      link: { href: COMMUNITY_JOIN_URL, label: 'Join the community', newTab: true, className: 'btn btn-paper' },
+      tone: 'violet',
     },
     {
       name: 'Black Belt in Motion Design',
       body: 'The course. Structured training for members who want a guided learning experience.',
-      link: { href: COURSE_URL, label: 'See the course', newTab: true, className: 'btn btn-lime' },
+      link: { href: COURSE_URL, label: 'See the course', newTab: true, className: 'btn btn-ink' },
+      tone: 'lime',
     },
     {
       name: 'Keyframe Ninjas',
       body: 'The students. Everyone enrolled in Black Belt in Motion Design is a Keyframe Ninja.',
-      link: { href: NINJAS_SHOWCASE_URL, label: 'See their work', newTab: true, className: 'btn btn-light' },
+      link: { href: NINJAS_SHOWCASE_URL, label: 'See their work', newTab: true, className: 'btn btn-paper' },
+      tone: 'dark',
     },
   ];
 
   return (
     <section className="section" id="ecosystem" aria-labelledby="ecosystem-title">
-      <div className="wrap">
-        <div className="section-head">
+      <div className="wrap stack-layout">
+        <div className="stack-head">
           <h2 className="h2" id="ecosystem-title">
             Motion Dojo, Black Belt and the Ninjas
           </h2>
         </div>
-        <ul className="eco">
-          {parts.map((p) => (
-            <li key={p.name} className="eco-row">
-              <h3 className="eco-name">{p.name}</h3>
+        <ul className="stack">
+          {parts.map((p, i) => (
+            <li key={p.name} className={`stack-card tone-${p.tone}`} style={{ '--i': i } as React.CSSProperties}>
+              <span className="stack-n">
+                {String(i + 1).padStart(2, '0')} / {String(parts.length).padStart(2, '0')}
+              </span>
+              <h3 className="stack-name">{p.name}</h3>
               <p>{p.body}</p>
               {p.link.href && (
                 <a
