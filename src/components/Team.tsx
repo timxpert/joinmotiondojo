@@ -12,59 +12,87 @@ function WhatsAppIcon() {
   );
 }
 
-/**
- * Three round portraits in one row with name and role.
- * Tapping one shows that person's bio and WhatsApp button underneath. The first person starts selected,
- * so visitors see straight away what tapping does.
- */
+/* Cards hanging from a line. Swipe sideways to see everyone; tap a card and
+   it swings on its string and flips over to show the person's bio. */
+const DROPS = [26, 52, 34, 46, 30];
+const TILTS = [-3, 2, -1.5, 2.5, -2];
+
 export function Team() {
-  const [active, setActive] = useState(0);
-  const m = TEAM[active];
+  const [flipped, setFlipped] = useState<Set<number>>(() => new Set());
+  // bumping the count restarts the swing each tap
+  const [swings, setSwings] = useState<number[]>(() => TEAM.map(() => 0));
+
+  const tap = (i: number) => {
+    setFlipped((f) => {
+      const next = new Set(f);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+    setSwings((s) => s.map((n, j) => (j === i ? n + 1 : n)));
+  };
 
   return (
     <section className="section team-section" id="team" aria-labelledby="team-title">
-      <div className="wrap team-layout">
+      <div className="wrap team-head">
         <h2 className="h2" id="team-title">
-          Meet the <Mark>team</Mark>
+          Meet the people behind the <Mark>work</Mark>
         </h2>
+        <p className="team-hint">Tap a card to read about them. Swipe to see everyone.</p>
+      </div>
 
-        <div className="team-body">
-          <ul className="team-row" role="tablist" aria-label="Team members">
-            {TEAM.map((t, i) => (
-              <li key={t.name} role="presentation">
-                <button
-                  type="button"
-                  role="tab"
-                  id={`team-tab-${i}`}
-                  aria-selected={i === active}
-                  aria-controls="team-panel"
-                  tabIndex={i === active ? 0 : -1}
-                  className="team-pick"
-                  onClick={() => setActive(i)}
+      <div className="team-rail">
+        <ul className="team-line" aria-label="The team">
+          {TEAM.map((t, i) => {
+            const on = flipped.has(i);
+            const swing = swings[i];
+            return (
+              <li
+                key={t.name}
+                className={['team-hang', swing ? (swing % 2 ? 'swing-a' : 'swing-b') : ''].join(' ').trim()}
+                style={{ '--drop': `${DROPS[i % DROPS.length]}px`, '--tilt': `${TILTS[i % TILTS.length]}deg`, '--d': `${i * 0.6}s` } as React.CSSProperties}
+              >
+                <span className="team-string" aria-hidden="true" />
+                <div
+                  className={on ? 'team-card is-flipped' : 'team-card'}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={on}
+                  aria-label={on ? `${t.short}: show photo` : `${t.short}: read bio`}
+                  onClick={() => tap(i)}
                   onKeyDown={(e) => {
-                    const n = TEAM.length;
-                    if (e.key === 'ArrowRight') setActive((active + 1) % n);
-                    if (e.key === 'ArrowLeft') setActive((active - 1 + n) % n);
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      tap(i);
+                    }
                   }}
                 >
-                  <span className="team-photo">
-                    <img src={t.photo} alt="" loading="lazy" style={{ objectPosition: t.focus }} />
-                  </span>
-                  <span className="team-name">{t.short}</span>
-                  <span className="team-role">{t.role}</span>
-                </button>
+                  <div className="team-face team-front" aria-hidden={on}>
+                    <span className="team-pic">
+                      <img src={t.photo} alt="" loading="lazy" style={{ objectPosition: t.focus }} />
+                    </span>
+                    <strong className="team-name">{t.name}</strong>
+                    <span className="team-role">{t.role}</span>
+                  </div>
+                  <div className="team-face team-back" aria-hidden={!on}>
+                    <p>{t.bio}</p>
+                    <a
+                      className="btn btn-primary btn-sm"
+                      href={t.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      tabIndex={on ? 0 : -1}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <WhatsAppIcon />
+                      Connect with {t.short}
+                    </a>
+                  </div>
+                </div>
               </li>
-            ))}
-          </ul>
-
-          <div key={active} className="team-panel" id="team-panel" role="tabpanel" aria-labelledby={`team-tab-${active}`}>
-            <p className="team-panel-bio">{m.bio}</p>
-            <a className="btn btn-primary btn-sm" href={m.whatsapp} target="_blank" rel="noopener noreferrer">
-              <WhatsAppIcon />
-              Connect with {m.short}
-            </a>
-          </div>
-        </div>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );

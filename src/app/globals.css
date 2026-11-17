@@ -2782,3 +2782,194 @@ details[open] > :not(summary) {
     opacity: 0;
   }
 }
+
+/* ---------- Meet the people behind the work: cards on a line ---------- */
+.home > .team-section > .team-head {
+  display: grid;
+  gap: 12px;
+}
+.team-hint {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.team-rail {
+  margin-top: clamp(20px, 3vw, 36px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.team-rail::-webkit-scrollbar {
+  display: none;
+}
+.team-line {
+  position: relative;
+  display: flex;
+  gap: clamp(18px, 3vw, 36px);
+  width: max-content;
+  min-width: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 18px max(var(--gutter), calc((100vw - var(--max)) / 2)) 48px;
+}
+/* the line the cards hang from */
+.team-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18px;
+  height: 2px;
+  background: #cfcad6;
+}
+.team-hang {
+  position: relative;
+  flex: none;
+  width: clamp(230px, 62vw, 270px);
+  padding-top: var(--drop);
+  scroll-snap-align: center;
+  transform-origin: 50% 0;
+  rotate: var(--tilt);
+}
+/* string and clip */
+.team-string {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: calc(var(--drop) + 8px);
+  translate: -50% 0;
+  background: #cfcad6;
+}
+.team-string::before,
+.team-string::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+}
+.team-string::before {
+  top: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #b9b3c2;
+}
+.team-string::after {
+  bottom: -4px;
+  width: 18px;
+  height: 12px;
+  border-radius: 4px;
+  background: #b9b3c2;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .team-hang {
+    animation: hang-sway 5s ease-in-out var(--d) infinite alternate;
+  }
+  .team-hang.swing-a {
+    animation: hang-swing-a 1.6s cubic-bezier(0.3, 0, 0.3, 1), hang-sway 5s ease-in-out 1.6s infinite alternate;
+  }
+  .team-hang.swing-b {
+    animation: hang-swing-b 1.6s cubic-bezier(0.3, 0, 0.3, 1), hang-sway 5s ease-in-out 1.6s infinite alternate;
+  }
+}
+@keyframes hang-sway {
+  from { rotate: var(--tilt); }
+  to { rotate: calc(var(--tilt) * -0.6); }
+}
+/* a swing that dies down, like a card knocked on its string */
+@keyframes hang-swing-a {
+  0% { rotate: var(--tilt); }
+  15% { rotate: 9deg; }
+  35% { rotate: -6deg; }
+  55% { rotate: 3.5deg; }
+  75% { rotate: -1.5deg; }
+  100% { rotate: var(--tilt); }
+}
+@keyframes hang-swing-b {
+  0% { rotate: var(--tilt); }
+  15% { rotate: -9deg; }
+  35% { rotate: 6deg; }
+  55% { rotate: -3.5deg; }
+  75% { rotate: 1.5deg; }
+  100% { rotate: var(--tilt); }
+}
+
+/* the card flips over to the bio */
+.team-card {
+  position: relative;
+  display: grid;
+  cursor: pointer;
+  perspective: 1200px;
+  -webkit-tap-highlight-color: transparent;
+}
+.team-card:focus-visible {
+  outline: none;
+}
+.team-card:focus-visible .team-face {
+  box-shadow: 0 0 0 3px var(--violet);
+}
+.team-face {
+  grid-area: 1 / 1;
+  display: grid;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 10, 46, 0.05), 0 18px 36px -22px rgba(20, 10, 46, 0.35);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 0.8s var(--spring);
+}
+.team-back {
+  transform: rotateY(180deg);
+}
+.team-card.is-flipped .team-front {
+  transform: rotateY(-180deg);
+}
+.team-card.is-flipped .team-back {
+  transform: rotateY(0deg);
+}
+.team-front {
+  gap: 2px;
+  padding: 12px 12px 18px;
+}
+.team-pic {
+  display: block;
+  aspect-ratio: 4 / 4.4;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--tint);
+}
+.team-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.team-name {
+  padding-inline: 4px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.team-role {
+  padding-inline: 4px;
+  font-size: 0.9rem;
+  color: var(--violet);
+}
+.team-back {
+  place-content: center;
+  justify-items: center;
+  gap: 20px;
+  padding: 28px 22px;
+  text-align: center;
+}
+.team-back p {
+  color: var(--ink);
+  line-height: 1.6;
+}
+.team-back .btn {
+  gap: 8px;
+}
