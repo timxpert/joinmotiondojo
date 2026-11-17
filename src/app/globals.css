@@ -2783,17 +2783,76 @@ details[open] > :not(summary) {
   }
 }
 
-/* ---------- Meet the people behind the work: cards on a line ---------- */
-.home > .team-section > .team-head {
-  display: grid;
-  gap: 12px;
+/* ---------- Meet the people behind the work: cards on a sagging line ---------- */
+.home > .team-section {
+  background: #fff;
 }
-.team-hint {
-  font-size: 0.92rem;
-  color: var(--muted);
+.team-head {
+  display: grid;
+  gap: 24px;
+}
+.team-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8c8a93;
+}
+.team-label::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--violet);
+}
+.team-label-lime::before {
+  background: #2bb673;
+}
+.team-title {
+  font-size: clamp(2.3rem, 5vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #111;
+}
+.team-title span {
+  color: #ab9de0;
+}
+.team-aside {
+  max-width: 300px;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: #8c8a93;
+}
+.team-aside .team-label {
+  margin: 14px 0 0;
+}
+@media (min-width: 860px) {
+  .team-head {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+  .team-aside {
+    padding-top: 44px;
+  }
+}
+.team-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a5a3ab;
 }
 .team-rail {
-  margin-top: clamp(20px, 3vw, 36px);
+  margin-top: clamp(16px, 3vw, 32px);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -2807,41 +2866,46 @@ details[open] > :not(summary) {
 .team-line {
   position: relative;
   display: flex;
-  gap: clamp(18px, 3vw, 36px);
+  gap: clamp(16px, 2.6vw, 30px);
   width: max-content;
   min-width: 100%;
   justify-content: center;
   margin: 0;
-  padding: 18px max(var(--gutter), calc((100vw - var(--max)) / 2)) 48px;
+  padding: 14px max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))) 48px;
 }
-/* the line the cards hang from */
-.team-line::before {
-  content: '';
+/* the sagging line */
+.team-cord {
   position: absolute;
   left: 0;
-  right: 0;
-  top: 18px;
-  height: 2px;
-  background: #cfcad6;
+  top: 14px;
+  width: 100%;
+  height: 34px;
+  overflow: visible;
+}
+.team-cord path {
+  fill: none;
+  stroke: #b9b8bf;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
 }
 .team-hang {
   position: relative;
   flex: none;
-  width: clamp(230px, 62vw, 270px);
-  padding-top: var(--drop);
+  width: clamp(200px, 58vw, 232px);
+  padding-top: calc(var(--y, 0px) + var(--drop));
   scroll-snap-align: center;
-  transform-origin: 50% 0;
+  transform-origin: 50% calc(var(--y, 0px) * -1);
   rotate: var(--tilt);
 }
-/* string and clip */
+/* string, ring and clip */
 .team-string {
   position: absolute;
   left: 50%;
-  top: 0;
-  width: 2px;
-  height: calc(var(--drop) + 8px);
+  top: var(--y, 0px);
+  width: 1.5px;
+  height: calc(var(--drop) + 6px);
   translate: -50% 0;
-  background: #cfcad6;
+  background: #b9b8bf;
 }
 .team-string::before,
 .team-string::after {
@@ -2852,17 +2916,18 @@ details[open] > :not(summary) {
 }
 .team-string::before {
   top: -4px;
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #b9b3c2;
+  background: #a9a8b0;
 }
 .team-string::after {
-  bottom: -4px;
-  width: 18px;
+  bottom: -6px;
+  width: 14px;
   height: 12px;
-  border-radius: 4px;
-  background: #b9b3c2;
+  border: 2px solid #a9a8b0;
+  border-radius: 5px 5px 3px 3px;
+  background: #e9e8ec;
 }
 @media (prefers-reduced-motion: no-preference) {
   .team-hang {
@@ -2879,7 +2944,6 @@ details[open] > :not(summary) {
   from { rotate: var(--tilt); }
   to { rotate: calc(var(--tilt) * -0.6); }
 }
-/* a swing that dies down, like a card knocked on its string */
 @keyframes hang-swing-a {
   0% { rotate: var(--tilt); }
   15% { rotate: 9deg; }
@@ -2912,14 +2976,32 @@ details[open] > :not(summary) {
   box-shadow: 0 0 0 3px var(--violet);
 }
 .team-face {
+  position: relative;
   grid-area: 1 / 1;
   display: grid;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(20, 10, 46, 0.05), 0 18px 36px -22px rgba(20, 10, 46, 0.35);
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #f6f6f7, #ececee);
+  color: #111;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 16px 30px -20px rgba(0, 0, 0, 0.3);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transition: transform 0.8s var(--spring);
+}
+/* shimmer: a soft sheen crosses the card on hover */
+.team-front::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.65) 50%, transparent 65%);
+  translate: -120% 0;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .team-card:hover .team-front::after {
+    translate: 120% 0;
+    transition: translate 0.9s ease;
+  }
 }
 .team-back {
   transform: rotateY(180deg);
@@ -2931,16 +3013,25 @@ details[open] > :not(summary) {
   transform: rotateY(0deg);
 }
 .team-front {
-  gap: 2px;
-  padding: 12px 12px 18px;
+  padding: 10px 10px 12px;
+}
+.team-top {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 2px 8px;
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8c8a93;
 }
 .team-pic {
   display: block;
-  aspect-ratio: 4 / 4.4;
+  aspect-ratio: 1 / 0.92;
   margin-bottom: 12px;
   overflow: hidden;
-  border-radius: 14px;
-  background: var(--tint);
+  border-radius: 10px;
+  background: #e2e1e6;
 }
 .team-pic img {
   width: 100%;
@@ -2948,16 +3039,39 @@ details[open] > :not(summary) {
   object-fit: cover;
 }
 .team-name {
-  padding-inline: 4px;
-  font-size: 1.08rem;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  padding-inline: 2px;
+  font-size: 1.12rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #111;
 }
 .team-role {
-  padding-inline: 4px;
-  font-size: 0.9rem;
-  color: var(--violet);
+  padding-inline: 2px;
+  font-size: 0.82rem;
+  color: #55535c;
+}
+.team-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 10px 2px 0;
+  border-top: 1px solid #dddce1;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #333;
+}
+.team-go {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
 }
 .team-back {
   place-content: center;
@@ -2967,9 +3081,15 @@ details[open] > :not(summary) {
   text-align: center;
 }
 .team-back p {
-  color: var(--ink);
+  color: #111;
   line-height: 1.6;
 }
 .team-back .btn {
   gap: 8px;
+  background: #111;
+}
+.team-back .btn svg {
+  flex: none;
+  width: 17px;
+  height: 17px;
 }
