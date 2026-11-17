@@ -56,7 +56,7 @@ export const TESTIMONIALS: (Story & { portrait?: boolean })[] = [
   {
     id: 'mary',
     name: 'Mary',
-    role: 'Keyframe Ninja, Cohort 01',
+    role: 'Black Belt, Cohort 01',
     poster: '/images/testimonial-mary.webp',
     videoUrl: 'https://vimeo.com/1238665663/df4d75a3d5',
     summary:
@@ -65,7 +65,7 @@ export const TESTIMONIALS: (Story & { portrait?: boolean })[] = [
   {
     id: 'roseline',
     name: 'Roseline',
-    role: 'Keyframe Ninja, Cohort 02',
+    role: 'Black Belt, Cohort 02',
     poster: '/images/testimonial-roseline.webp',
     videoUrl: 'https://vimeo.com/1238666245/5ac2fba1a7',
     summary: 'Direct mentor critiques, self-paced momentum, and learning a professional motion workflow.',
@@ -74,7 +74,7 @@ export const TESTIMONIALS: (Story & { portrait?: boolean })[] = [
   {
     id: 'fatihi',
     name: 'Muhammad Fatihi',
-    role: 'Keyframe Ninja, Cohort 02',
+    role: 'Black Belt, Cohort 02',
     poster: '/images/testimonial-fatihi.webp',
     videoUrl: 'https://vimeo.com/1238668293/f2b3558f85',
     summary: 'From design theory to fast client delivery, levelling up his portfolio and earning the Black Belt.',

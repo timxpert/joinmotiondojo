@@ -1,7 +1,7 @@
 import React from 'react';
-import { COMMUNITY_JOIN_URL, COURSE_URL, NINJAS_SHOWCASE_URL } from '@/config/site';
+import { COMMUNITY_JOIN_URL, CONNECT_URL, COURSE_URL } from '@/config/site';
 
-/* Motion Dojo, Black Belt and Keyframe Ninjas: what each name means. */
+/* Motion Dojo, Black Belt and Connect: what each name means. */
 export function Course() {
   const parts = [
     {
@@ -17,9 +17,9 @@ export function Course() {
       tone: 'lime',
     },
     {
-      name: 'Keyframe Ninjas',
-      body: 'The students. Everyone enrolled in Black Belt in Motion Design is a Keyframe Ninja.',
-      link: { href: NINJAS_SHOWCASE_URL, label: 'See their work', newTab: true, className: 'btn btn-paper' },
+      name: 'Motion Dojo Connect',
+      body: 'The members’ space. Your profile and work, a feed for motion design and messages, away from WhatsApp noise.',
+      link: { href: CONNECT_URL, label: 'Open Connect', newTab: true, className: 'btn btn-paper' },
       tone: 'dark',
     },
   ];
@@ -29,7 +29,7 @@ export function Course() {
       <div className="wrap stack-layout">
         <div className="stack-head">
           <h2 className="h2" id="ecosystem-title">
-            Motion Dojo, Black Belt and the Ninjas
+            Motion Dojo, Black Belt and Connect
           </h2>
         </div>
         <ul className="stack">

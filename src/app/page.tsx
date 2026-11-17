@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
+import { Reel } from '@/components/Reel';
 import { Intro } from '@/components/Intro';
 import { Team } from '@/components/Team';
 import { Inside } from '@/components/Inside';
@@ -20,6 +21,7 @@ export default function HomePage() {
       <Header />
       <main id="main" className="home">
         <Hero />
+        <Reel />
         <Intro />
         <Inside />
         <Different />

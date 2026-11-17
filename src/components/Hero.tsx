@@ -1,12 +1,11 @@
 import React from 'react';
 import { COMMUNITY_JOIN_URL } from '@/config/site';
-import { Reel } from './Reel';
 
-/* Dark hero: headline on the left, the logo reel on the right */
+/* Dark hero: the headline, then the logo reel on its own band below (page.tsx) */
 export function Hero() {
   return (
     <section className="hero" id="top" aria-labelledby="hero-title">
-      <div className="wrap hero-grid">
+      <div className="wrap">
         <div className="hero-copy">
           <h1 className="display" id="hero-title">
             <span className="line">You were never meant</span>
@@ -21,13 +20,11 @@ export function Hero() {
             <a href={COMMUNITY_JOIN_URL} target="_blank" rel="noopener noreferrer" className="btn btn-lime">
               Join the community
             </a>
-            <a href="#intro" className="btn btn-dark-ghost">
+            <a href="#intro" className="btn btn-primary">
               Learn more
             </a>
           </div>
         </div>
-
-        <Reel />
       </div>
     </section>
   );

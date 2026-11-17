@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       email: customer.email,
       metadata: d.metadata,
     });
-    // Course paid in full: the student's Connect account gets the Keyframe Ninja badge
+    // Course paid in full: the student's Connect account gets the Black Belt badge
     if (customer.email && d.amount === 4000000 && d.currency === 'NGN') {
       await markEnrolled(customer.email, String(d.reference || ''));
     }

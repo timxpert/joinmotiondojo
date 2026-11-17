@@ -45,6 +45,7 @@ export function Reel() {
 
   return (
     <section className="reel" ref={box} aria-label="Motion Dojo logo animation">
+      <div className="reel-frame">
       {still || failed ? (
         <img src={POSTER} alt="The Motion Dojo logo" />
       ) : (
@@ -60,6 +61,7 @@ export function Reel() {
           aria-label="The Motion Dojo logo animation"
         />
       )}
+      </div>
     </section>
   );
 }

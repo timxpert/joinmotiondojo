@@ -1,6 +1,6 @@
 import React from 'react';
 import { BackToTop } from './BackToTop';
-import { CONNECT_URL, CONTACT, COURSE_URL, DOJO_AI_URL, NINJAS_SHOWCASE_URL, SOCIAL_LINKS } from '@/config/site';
+import { CONNECT_URL, CONTACT, COURSE_URL, DOJO_AI_URL, SOCIAL_LINKS } from '@/config/site';
 
 type IconName =
   | 'belt'
@@ -135,12 +135,11 @@ const SOCIAL_ICON: Record<string, IconName> = { Instagram: 'instagram', YouTube:
 export function Footer() {
   const learn: FLink[] = [
     { label: 'Black Belt in Motion Design', href: COURSE_URL, icon: 'belt' },
-    { label: 'Keyframe Ninjas', href: NINJAS_SHOWCASE_URL, icon: 'ninja', external: true },
+    { label: 'Motion Dojo Connect', href: CONNECT_URL, icon: 'chat', external: true },
     ...(DOJO_AI_URL ? [{ label: 'Dojo’s AI', href: DOJO_AI_URL, icon: 'spark' as IconName }] : []),
   ];
   const dojo: FLink[] = [
     { label: 'About', href: '/#intro', icon: 'info' },
-    { label: 'Motion Dojo Connect', href: CONNECT_URL, icon: 'chat', external: true },
     { label: 'Meet the team', href: '/#team', icon: 'team' },
   ];
   const socials = [
