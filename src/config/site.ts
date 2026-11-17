@@ -47,7 +47,7 @@ export const SITE_METADATA = {
 export const NAV = [
   { href: '/#intro', label: 'About' },
   { href: '/#pillars', label: 'What we do' },
-  { href: '/#connect', label: 'Connect' },
+  { href: '/#ecosystem', label: 'Connect' },
   { href: '/#team', label: 'Team' },
   { href: '/blackbelt', label: 'The course' },
 ];
