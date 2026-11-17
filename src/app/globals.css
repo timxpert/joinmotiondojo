@@ -2728,3 +2728,37 @@ details[open] > :not(summary) {
     stroke-dashoffset: 0;
   }
 }
+
+/* Footer links: always shown as white rows with a violet icon tile that
+   sits inside the row (no tilt), and the arrow always visible */
+.footer-col ul {
+  gap: 10px;
+}
+.footer-link {
+  margin-inline: 0;
+  padding: 8px 16px 8px 8px;
+  border-radius: 16px;
+  background: var(--paper);
+}
+.footer-ico,
+.footer-link:hover .footer-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--violet);
+  color: #fff;
+  box-shadow: none;
+  transform: none;
+}
+.footer-go,
+.footer-link:hover .footer-go {
+  opacity: 1;
+  transform: none;
+  color: var(--violet);
+}
+.footer-link:hover {
+  background: var(--paper);
+}
+.footer-link:hover .footer-go {
+  transform: translateX(3px);
+}
