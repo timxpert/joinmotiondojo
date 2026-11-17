@@ -7,10 +7,10 @@ import { Mark } from './Mark';
    keyframe on one track, and a playhead moves along it as you scroll.
    Left to right (top to bottom on phones) it's also the path most members take. */
 const PEOPLE = [
-  { time: '00:00', title: 'Beginners', body: 'You’ve never animated before and want to start with the phone you already have.' },
-  { time: '00:12', title: 'Self-taught animators', body: 'You learned from YouTube and want structure, feedback and fewer gaps.' },
-  { time: '00:24', title: 'Content creators', body: 'You make content for your own pages or for brands and want it to move.' },
-  { time: '00:36', title: 'Freelancers', body: 'You want paid motion work and need the portfolio and the people to get it.' },
+  { title: 'Beginners', body: 'You’ve never animated before and want to start with the phone you already have.' },
+  { title: 'Self-taught animators', body: 'You learned from YouTube and want structure, feedback and fewer gaps.' },
+  { title: 'Content creators', body: 'You make content for your own pages or for brands and want it to move.' },
+  { title: 'Freelancers', body: 'You want paid motion work and need the portfolio and the people to get it.' },
 ];
 
 export function Audience() {
@@ -61,9 +61,6 @@ export function Audience() {
           <span className="who-playhead" aria-hidden="true" />
           {PEOPLE.map((x, i) => (
             <li key={x.title} className={p >= (i / last) * 0.92 ? 'who-key is-on' : 'who-key'}>
-              <span className="who-time" aria-hidden="true">
-                {x.time}
-              </span>
               <span className="who-dia" aria-hidden="true" />
               <h3>{x.title}</h3>
               <p>{x.body}</p>

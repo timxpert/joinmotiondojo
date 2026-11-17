@@ -2575,13 +2575,13 @@ details[open] > :not(summary) {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: -6px;
-  width: 12px;
-  height: 12px;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   translate: -50% 0;
   background: var(--violet);
-  box-shadow: 0 0 0 4px #fff;
+  box-shadow: 0 0 0 3px #fff;
 }
 .who-key {
   position: relative;
@@ -2591,27 +2591,18 @@ details[open] > :not(summary) {
 .who-dia {
   position: absolute;
   left: -40px;
-  top: 4px;
+  top: 10px;
   width: var(--dia);
   height: var(--dia);
-  border: 2px solid var(--line);
   border-radius: 3px;
-  background: #fff;
+  background: var(--lavender);
   rotate: 45deg;
   scale: 0.85;
   transition: background-color 0.3s ease, border-color 0.3s ease, scale 0.5s var(--bounce);
 }
 .who-key.is-on .who-dia {
-  border-color: var(--midnight);
-  background: var(--lime);
-  scale: 1;
-}
-.who-time {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
+  background: var(--violet);
+  scale: 1.05;
 }
 .who-key h3 {
   font-size: clamp(1.6rem, 2.6vw, 2.1rem);
@@ -2619,10 +2610,12 @@ details[open] > :not(summary) {
   line-height: 1.1;
   letter-spacing: -0.03em;
   color: #bdb8c4;
-  transition: color 0.4s ease;
+  transform-origin: 0 50%;
+  transition: color 0.4s ease, scale 0.5s var(--spring);
 }
 .who-key.is-on h3 {
   color: var(--ink);
+  scale: 1.08;
 }
 .who-key p {
   max-width: 32ch;
@@ -2634,12 +2627,12 @@ details[open] > :not(summary) {
   .who-track {
     grid-template-columns: repeat(4, 1fr);
     gap: 32px;
-    padding: 64px 0 0;
+    padding: 48px 0 0;
   }
   .who-track::before {
     left: 0;
     right: 0;
-    top: 42px;
+    top: 26px;
     bottom: auto;
     width: auto;
     height: 2px;
@@ -2649,33 +2642,28 @@ details[open] > :not(summary) {
     position: absolute;
     left: 0;
     right: 0;
-    top: 22px;
+    top: 6px;
     height: 12px;
     background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 24px);
     -webkit-mask: linear-gradient(#000, #000);
   }
   .who-playhead {
     left: calc((100% - 2px) * var(--p));
-    top: 10px;
+    top: -4px;
     width: 2px;
     height: 44px;
     bottom: auto;
   }
   .who-playhead::after {
-    top: -4px;
+    top: -2px;
     bottom: auto;
-    width: 14px;
-    height: 14px;
-    border-radius: 3px 3px 7px 7px;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px 2px 5px 5px;
   }
   .who-dia {
     left: 0;
     top: -30px;
-  }
-  .who-time {
-    position: absolute;
-    top: -64px;
-    left: 0;
   }
 }
 
