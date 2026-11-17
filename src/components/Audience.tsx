@@ -1,52 +1,50 @@
-import React from 'react';
+'use client';
 
-/* Who Motion Dojo is for. Outline icons on a 24px grid, 1.8px stroke,
-   the same style as the footer icons. */
-const ICONS = {
-  // a sprout: just starting
-  start: (
-    <>
-      <path d="M12 20v-8" />
-      <path d="M12 12c0-3.3-2.4-5.5-6-5.5 0 3.3 2.4 5.5 6 5.5Z" />
-      <path d="M12 14.5c0-3 2.2-5 5.5-5 0 3-2.2 5-5.5 5Z" />
-      <path d="M8 20h8" />
-    </>
-  ),
-  // a play button inside a phone-sized frame: learning from videos
-  self: (
-    <>
-      <rect x="3.5" y="5" width="17" height="12" rx="2.5" />
-      <path d="m10.5 8.8 4 2.2-4 2.2Z" />
-      <path d="M9 20h6" />
-    </>
-  ),
-  // a phone with a motion line: making content
-  creator: (
-    <>
-      <rect x="7" y="3" width="10" height="18" rx="2.5" />
-      <path d="M10 17.5h4" />
-      <path d="M9.5 11c1-1.6 2-1.6 2.5 0s1.5 1.6 2.5 0" />
-    </>
-  ),
-  // a briefcase: paid work
-  pro: (
-    <>
-      <rect x="3.5" y="7.5" width="17" height="12" rx="2.5" />
-      <path d="M9 7.5V6a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 6v1.5" />
-      <path d="M3.5 12.5h17" />
-      <path d="M11 12.5v1.5h2v-1.5" />
-    </>
-  ),
-};
+import React, { useEffect, useRef, useState } from 'react';
 
-const PEOPLE: { icon: keyof typeof ICONS; title: string; body: string }[] = [
-  { icon: 'start', title: 'Beginners', body: 'You’ve never animated before and want to start with the phone you already have.' },
-  { icon: 'self', title: 'Self-taught animators', body: 'You learned from YouTube and want structure, feedback and fewer gaps.' },
-  { icon: 'creator', title: 'Content creators', body: 'You make content for your own pages or for brands and want it to move.' },
-  { icon: 'pro', title: 'Freelancers', body: 'You want paid motion work and need the portfolio and the people to get it.' },
+/* Who Motion Dojo is for, drawn as an animation timeline: each group is a
+   keyframe on one track, and a playhead moves along it as you scroll.
+   Left to right (top to bottom on phones) it's also the path most members take. */
+const PEOPLE = [
+  { time: '00:00', title: 'Beginners', body: 'You’ve never animated before and want to start with the phone you already have.' },
+  { time: '00:12', title: 'Self-taught animators', body: 'You learned from YouTube and want structure, feedback and fewer gaps.' },
+  { time: '00:24', title: 'Content creators', body: 'You make content for your own pages or for brands and want it to move.' },
+  { time: '00:36', title: 'Freelancers', body: 'You want paid motion work and need the portfolio and the people to get it.' },
 ];
 
 export function Audience() {
+  const track = useRef<HTMLOListElement>(null);
+  const [p, setP] = useState(0);
+
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setP(1);
+      return;
+    }
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      setP(Math.min(1, Math.max(0, (vh * 0.8 - r.top) / (r.height + vh * 0.3))));
+    };
+    const on = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', on);
+      window.removeEventListener('resize', on);
+    };
+  }, []);
+
+  const last = PEOPLE.length - 1;
+
   return (
     <section className="section" id="who" aria-labelledby="who-title">
       <div className="wrap who">
@@ -56,19 +54,21 @@ export function Audience() {
           </h2>
           <p className="lede">Anyone animating on a phone who wants to get better, wherever they’re starting from.</p>
         </div>
-        <ul className="who-list">
-          {PEOPLE.map((p) => (
-            <li key={p.title} className="who-item">
-              <span className="who-ico" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  {ICONS[p.icon]}
-                </svg>
+
+        <ol className="who-track" ref={track} style={{ '--p': p } as React.CSSProperties}>
+          <span className="who-ruler" aria-hidden="true" />
+          <span className="who-playhead" aria-hidden="true" />
+          {PEOPLE.map((x, i) => (
+            <li key={x.title} className={p >= (i / last) * 0.92 ? 'who-key is-on' : 'who-key'}>
+              <span className="who-time" aria-hidden="true">
+                {x.time}
               </span>
-              <h3>{p.title}</h3>
-              <p>{p.body}</p>
+              <span className="who-dia" aria-hidden="true" />
+              <h3>{x.title}</h3>
+              <p>{x.body}</p>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
   );
