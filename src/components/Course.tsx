@@ -21,15 +21,15 @@ const PARTS = [
   },
   {
     name: 'Motion Dojo Connect',
-    body: 'The members’ space, away from noisy WhatsApp groups where good work scrolls past in minutes.',
+    body: 'Where members share their work and talk, without the noise of a WhatsApp group.',
     points: [
-      'Your profile works as a portfolio: your work, your links and your belt, at one address you can send to clients.',
-      'A feed for motion design only. Post your work, ask for feedback and give it.',
-      'Messages that don’t get buried, with voice notes, renders and project files.',
-      'Members sign in with their email and member ID.',
+      'A profile you can send to clients, with your work and links.',
+      'A feed just for motion design. Post your work and ask for feedback.',
+      'Private messages with voice notes and project files.',
+      'Sign in with your email and member ID.',
     ],
-    link: { href: CONNECT_URL, label: 'Open Connect', className: 'btn btn-paper' },
-    tone: 'dark',
+    link: { href: CONNECT_URL, label: 'Open Connect', className: 'btn btn-primary' },
+    tone: 'white',
   },
 ];
 
