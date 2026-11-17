@@ -5,12 +5,21 @@ import { Mark } from './Mark';
 
 /* Who Motion Dojo is for, drawn as an animation timeline: each group is a
    keyframe on one track, and a playhead moves along it as you scroll.
-   Left to right (top to bottom on phones) it's also the path most members take. */
+   Left to right on computers, top to bottom on phones. */
 const PEOPLE = [
-  { title: 'Beginners', body: 'You’ve never animated before and want to start with the phone you already have.' },
-  { title: 'Self-taught animators', body: 'You learned from YouTube and want structure, feedback and fewer gaps.' },
-  { title: 'Content creators', body: 'You make content for your own pages or for brands and want it to move.' },
-  { title: 'Freelancers', body: 'You want paid motion work and need the portfolio and the people to get it.' },
+  {
+    title: 'Motion design enthusiast',
+    body: 'You have a smartphone and are passionate about creating industry standard motion graphics and animations.',
+  },
+  { title: 'Beginner', body: 'You’ve watched countless YouTube tutorials but still can’t create industry standard videos.' },
+  {
+    title: 'Business owner',
+    body: 'You sell products or services and want to make scroll-stopping animations for your own brand, by yourself.',
+  },
+  {
+    title: 'Graphic designer',
+    body: 'You want to add motion to your skills, raise your rates, and stop losing clients to motion designers.',
+  },
 ];
 
 export function Audience() {
