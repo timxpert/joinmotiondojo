@@ -12,6 +12,7 @@ type IconName =
   | 'chat'
   | 'instagram'
   | 'youtube'
+  | 'tiktok'
   | 'whatsapp'
   | 'mail'
   | 'up'
@@ -65,6 +66,8 @@ function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
         <circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none" />
       </>
     ),
+    // TikTok note, drawn in the same outline style as the other icons
+    tiktok: <path d="M14.8 2.8v12a4.5 4.5 0 1 1-4.5-4.5M14.8 2.8c.3 2.8 2.4 4.9 5.2 5.1" />,
     youtube: (
       <>
         <rect x="2.5" y="5" width="19" height="14" rx="4" />
@@ -130,7 +133,7 @@ function LinkList({ title, links }: { title: string; links: FLink[] }) {
   );
 }
 
-const SOCIAL_ICON: Record<string, IconName> = { Instagram: 'instagram', YouTube: 'youtube' };
+const SOCIAL_ICON: Record<string, IconName> = { Instagram: 'instagram', YouTube: 'youtube', TikTok: 'tiktok' };
 
 export function Footer() {
   const learn: FLink[] = [

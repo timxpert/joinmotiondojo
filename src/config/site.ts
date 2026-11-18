@@ -23,6 +23,7 @@ export const NINJAS_SHOWCASE_URL = 'https://ninjasmotiondojo.vercel.app';
 export const SOCIAL_LINKS: { label: string; url: string }[] = [
   { label: 'Instagram', url: 'https://www.instagram.com/joinmotiondojo' },
   { label: 'YouTube', url: 'https://www.youtube.com/@joinmotiondojo' },
+  { label: 'TikTok', url: 'https://www.tiktok.com/@joinmotiondojo' },
 ];
 
 /** Contact details shown in the footer. Empty values are hidden. */
