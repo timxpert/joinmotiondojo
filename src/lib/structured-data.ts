@@ -27,10 +27,11 @@ export const organization = {
     {
       '@type': 'Person',
       '@id': FOUNDER_ID,
-      name: 'Timxpert',
-      alternateName: 'Timothy Goodness',
+      name: 'Timothy Goodness',
+      alternateName: 'Timxpert',
       url: 'https://timxpert.com',
-      jobTitle: 'Motion designer',
+      jobTitle: 'Motion designer and video producer',
+      sameAs: ['https://www.instagram.com/timxpert', 'https://x.com/timxpert', 'https://www.linkedin.com/in/timothy-goodness-367708274'],
     },
     {
       '@type': 'WebSite',
