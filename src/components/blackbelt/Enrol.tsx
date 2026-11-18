@@ -17,6 +17,56 @@ const PAYSTACK_SRC = 'https://js.paystack.co/v2/inline.js';
 
 type PaystackPopLike = { newTransaction: (opts: Record<string, unknown>) => void };
 
+
+/* Icons for the ways to pay (24px grid, 1.8px stroke, like the rest of the site) */
+const PayIcon = ({ name }: { name: 'card' | 'split' | 'bank' | 'whatsapp' | 'lock' | 'arrow' }) => {
+  const common = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true };
+  switch (name) {
+    case 'card':
+      return (
+        <svg {...common}>
+          <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
+          <path d="M3 10h18M7 15h3" />
+        </svg>
+      );
+    case 'split':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="M12 3.5v17" />
+          <path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case 'bank':
+      return (
+        <svg {...common}>
+          <path d="M3.5 9 12 4.5 20.5 9" />
+          <path d="M5.5 10v7M10 10v7M14 10v7M18.5 10v7" />
+          <path d="M3.5 19.5h17" />
+        </svg>
+      );
+    case 'lock':
+      return (
+        <svg {...common} width={14} height={14}>
+          <rect x="5" y="10.5" width="14" height="10" rx="2.5" />
+          <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+        </svg>
+      );
+    case 'arrow':
+      return (
+        <svg {...common} width={18} height={18} strokeWidth={2}>
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      );
+    case 'whatsapp':
+      return (
+        <svg width={13} height={13} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z" />
+        </svg>
+      );
+  }
+};
+
 export function EnrolButton({ className = 'btn btn-primary', children }: { className?: string; children: React.ReactNode }) {
   return (
     <button type="button" className={className} onClick={() => window.dispatchEvent(new Event(OPEN_EVENT))}>
@@ -198,30 +248,65 @@ export function EnrolModal() {
             <h2 className="enrol-title" id="enrol-title">
               How would you like to pay?
             </h2>
-            <p className="enrol-sub">{ENROL.courseName}</p>
+            <div className="pay-course">
+              <span className="pay-course-belt" aria-hidden="true" />
+              <span className="pay-course-name">{ENROL.courseName}</span>
+              <strong>{ENROL.priceLabel}</strong>
+            </div>
             <div className="enrol-options">
               <button type="button" className="enrol-option" onClick={() => setStep('details')}>
-                <span className="enrol-option-text">
-                  <span className="enrol-option-title">Pay now</span>
-                  <span>Card, bank transfer or USSD, through Paystack.</span>
+                <span className="pay-ico pay-ico-violet">
+                  <PayIcon name="card" />
                 </span>
-                <span className="enrol-option-price">{ENROL.priceLabel}</span>
+                <span className="enrol-option-text">
+                  <span className="enrol-option-title">
+                    Pay now
+                    <span className="enrol-option-price">{ENROL.priceLabel}</span>
+                  </span>
+                  <span>Card, bank transfer or USSD</span>
+                </span>
+                <span className="pay-go">
+                  <PayIcon name="arrow" />
+                </span>
               </button>
               <a className="enrol-option" href={ENROL.instalmentUrl} target="_blank" rel="noopener noreferrer">
-                <span className="enrol-option-text">
-                  <span className="enrol-option-title">Pay in two parts</span>
-                  <span>Half now, half later. We set it up with you on WhatsApp.</span>
+                <span className="pay-ico pay-ico-lavender">
+                  <PayIcon name="split" />
                 </span>
-                <span className="enrol-option-price">2 × {ENROL.instalmentLabel}</span>
+                <span className="enrol-option-text">
+                  <span className="enrol-option-title">
+                    Pay in 2 parts
+                    <span className="enrol-option-price">2 × {ENROL.instalmentLabel}</span>
+                  </span>
+                  <span className="pay-via">
+                    <PayIcon name="whatsapp" /> Half now, half later
+                  </span>
+                </span>
+                <span className="pay-go">
+                  <PayIcon name="arrow" />
+                </span>
               </a>
               <a className="enrol-option" href={ENROL.accountNumberUrl} target="_blank" rel="noopener noreferrer">
-                <span className="enrol-option-text">
-                  <span className="enrol-option-title">Transfer to our bank</span>
-                  <span>We send you our account number on WhatsApp.</span>
+                <span className="pay-ico pay-ico-lime">
+                  <PayIcon name="bank" />
                 </span>
-                <span className="enrol-option-price">{ENROL.priceLabel}</span>
+                <span className="enrol-option-text">
+                  <span className="enrol-option-title">
+                    Bank transfer
+                    <span className="enrol-option-price">{ENROL.priceLabel}</span>
+                  </span>
+                  <span className="pay-via">
+                    <PayIcon name="whatsapp" /> Get our account number
+                  </span>
+                </span>
+                <span className="pay-go">
+                  <PayIcon name="arrow" />
+                </span>
               </a>
             </div>
+            <p className="pay-safe">
+              <PayIcon name="lock" /> Card details go to Paystack, never to us.
+            </p>
           </div>
         )}
 

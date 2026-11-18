@@ -3605,3 +3605,109 @@ details .answer {
   transform: none;
   scale: 0.97;
 }
+
+/* ---------- Enrol: payment chooser with icons ---------- */
+.pay-course {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--midnight);
+  color: #fff;
+  font-size: 0.92rem;
+}
+.pay-course-belt {
+  flex: none;
+  width: 22px;
+  height: 8px;
+  border-radius: 3px;
+  background: #0d0b12;
+  box-shadow: inset 0 0 0 1.5px var(--lavender);
+}
+.pay-course-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--on-dark-muted);
+}
+.pay-course strong {
+  color: var(--lime);
+  font-variant-numeric: tabular-nums;
+}
+.enrol-option,
+.enrol-option:hover {
+  gap: 14px;
+  padding: 14px 12px 14px 14px;
+}
+.pay-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+.pay-ico-violet {
+  background: var(--violet);
+  color: #fff;
+}
+.pay-ico-lavender {
+  background: var(--lavender);
+  color: #fff;
+}
+.pay-ico-lime {
+  background: var(--lime);
+  color: var(--midnight);
+}
+.pay-via {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pay-via svg {
+  color: #25a35a;
+  flex: none;
+}
+.pay-go {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--muted);
+  transition: translate 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .enrol-option:hover .pay-go {
+    translate: 3px 0;
+    color: var(--violet);
+  }
+}
+.enrol-option-price {
+  font-size: 0.95rem;
+}
+.pay-safe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+.pay-safe svg {
+  flex: none;
+}
+.enrol-option-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.enrol-option-title .enrol-option-price {
+  font-size: 0.92rem;
+}
+.pay-via svg {
+  width: 14px;
+  height: 14px;
+}
