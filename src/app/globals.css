@@ -3723,3 +3723,102 @@ details .answer {
 .enrol-option-title {
   display: block;
 }
+
+/* ---------- Enrol: pick a way to pay, see the total, one button ---------- */
+.pay-methods {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+.pay-method {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--tint);
+  text-align: left;
+  transition: background-color 0.2s ease, box-shadow 0.25s ease, translate 0.25s var(--ease), scale 150ms ease-out;
+}
+.pay-method.is-on {
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 10, 46, 0.06), 0 12px 28px -14px rgba(20, 10, 46, 0.28);
+  translate: 0 -1px;
+}
+.pay-method .pay-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  color: var(--violet);
+}
+.pay-method-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 1px;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.pay-method-text strong {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* radio: an empty ring, filled violet when chosen */
+.pay-radio {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px #bdb8c4;
+  transition: box-shadow 0.2s ease;
+}
+.pay-method.is-on .pay-radio {
+  box-shadow: inset 0 0 0 1.5px var(--violet), inset 0 0 0 5px #fff, inset 0 0 0 10px var(--violet);
+}
+.pay-sum {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 0;
+  font-size: 0.9rem;
+}
+.pay-sum > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pay-sum dt {
+  color: var(--muted);
+}
+.pay-sum dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.pay-total {
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--line);
+}
+.pay-total dt {
+  color: var(--ink);
+  font-weight: 600;
+}
+.pay-total dd {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.btn.pay-cta {
+  width: 100%;
+  margin-top: 22px;
+  background: var(--midnight);
+  color: #fff;
+}
+.btn.pay-cta:hover:not(:disabled) {
+  background: #241848;
+  box-shadow: none;
+}

@@ -54,6 +54,12 @@ const PayIcon = ({ name }: { name: 'card' | 'split' | 'bank' | 'arrow' }) => {
   }
 };
 
+const METHODS: { id: 'now' | 'parts' | 'bank'; icon: 'card' | 'split' | 'bank'; title: string; line: string }[] = [
+  { id: 'now', icon: 'card', title: 'Pay now', line: 'Card, bank transfer or USSD' },
+  { id: 'parts', icon: 'split', title: 'Pay in 2 parts', line: `${ENROL.instalmentLabel} now, ${ENROL.instalmentLabel} later` },
+  { id: 'bank', icon: 'bank', title: 'Bank transfer', line: 'We send our account number on WhatsApp' },
+];
+
 export function EnrolButton({ className = 'btn btn-primary', children }: { className?: string; children: React.ReactNode }) {
   return (
     <button type="button" className={className} onClick={() => window.dispatchEvent(new Event(OPEN_EVENT))}>
@@ -97,6 +103,8 @@ export function EnrolModal() {
   const [step, setStepRaw] = useState<Step>('choose');
   // which way the steps slide: forward comes in from the right, back from the left
   const [dir, setDir] = useState<'next' | 'back'>('next');
+  // the selected way to pay on the first step
+  const [method, setMethod] = useState<'now' | 'parts' | 'bank'>('now');
   const ORDER: Step[] = ['choose', 'details', 'success'];
   const setStep = (to: Step) => {
     setDir(ORDER.indexOf(to) < ORDER.indexOf(step) ? 'back' : 'next');
@@ -235,49 +243,57 @@ export function EnrolModal() {
             <h2 className="enrol-title" id="enrol-title">
               How would you like to pay?
             </h2>
-            <p className="enrol-sub">
-              {ENROL.courseName} · {ENROL.priceLabel}
-            </p>
-            <div className="enrol-options">
-              <button type="button" className="enrol-option" onClick={() => setStep('details')}>
-                <span className="pay-ico">
-                  <PayIcon name="card" />
-                </span>
-                <span className="enrol-option-text">
-                  <span className="enrol-option-title">Pay now</span>
-                  <span>{ENROL.priceLabel} by card, bank transfer or USSD.</span>
-                </span>
-                <span className="pay-go">
-                  <PayIcon name="arrow" />
-                </span>
-              </button>
-              <a className="enrol-option" href={ENROL.instalmentUrl} target="_blank" rel="noopener noreferrer">
-                <span className="pay-ico">
-                  <PayIcon name="split" />
-                </span>
-                <span className="enrol-option-text">
-                  <span className="enrol-option-title">Pay in 2 parts</span>
-                  <span>
-                    {ENROL.instalmentLabel} now, {ENROL.instalmentLabel} later. We set it up on WhatsApp.
+            <div className="pay-methods" role="radiogroup" aria-label="Ways to pay">
+              {METHODS.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={method === m.id}
+                  className={method === m.id ? 'pay-method is-on' : 'pay-method'}
+                  onClick={() => setMethod(m.id)}
+                >
+                  <span className="pay-ico">
+                    <PayIcon name={m.icon} />
                   </span>
-                </span>
-                <span className="pay-go">
-                  <PayIcon name="arrow" />
-                </span>
-              </a>
-              <a className="enrol-option" href={ENROL.accountNumberUrl} target="_blank" rel="noopener noreferrer">
-                <span className="pay-ico">
-                  <PayIcon name="bank" />
-                </span>
-                <span className="enrol-option-text">
-                  <span className="enrol-option-title">Bank transfer</span>
-                  <span>Send {ENROL.priceLabel} to our account. We share the number on WhatsApp.</span>
-                </span>
-                <span className="pay-go">
-                  <PayIcon name="arrow" />
-                </span>
-              </a>
+                  <span className="pay-method-text">
+                    <strong>{m.title}</strong>
+                    <span>{m.line}</span>
+                  </span>
+                  <span className="pay-radio" aria-hidden="true" />
+                </button>
+              ))}
             </div>
+
+            <dl className="pay-sum">
+              <div>
+                <dt>{ENROL.courseName}</dt>
+                <dd>{ENROL.priceLabel}</dd>
+              </div>
+              <div>
+                <dt>Pay today</dt>
+                <dd>{method === 'parts' ? ENROL.instalmentLabel : ENROL.priceLabel}</dd>
+              </div>
+              <div className="pay-total">
+                <dt>Total</dt>
+                <dd>{ENROL.priceLabel}</dd>
+              </div>
+            </dl>
+
+            {method === 'now' ? (
+              <button type="button" className="btn pay-cta" onClick={() => setStep('details')}>
+                Continue to pay {ENROL.priceLabel}
+              </button>
+            ) : (
+              <a
+                className="btn pay-cta"
+                href={method === 'parts' ? ENROL.instalmentUrl : ENROL.accountNumberUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {method === 'parts' ? 'Start on WhatsApp' : 'Get our account number'}
+              </a>
+            )}
           </div>
         )}
 
