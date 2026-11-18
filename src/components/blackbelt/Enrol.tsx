@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { shakeField } from '@/lib/shake';
 import { ENROL } from '@/data/blackbelt';
 import { Close } from '../Icons';
 
@@ -110,6 +111,9 @@ export function EnrolModal() {
     const phone = form.phone.trim();
     if (!name || !email || !phone) {
       setStatus('Fill in your name, email address and WhatsApp number to continue.');
+      if (!name) shakeField(document.getElementById('enrol-name'));
+      if (!email) shakeField(document.getElementById('enrol-email'));
+      if (!phone) shakeField(document.getElementById('enrol-phone'));
       return;
     }
     setBusy(true);

@@ -158,7 +158,7 @@ export function Faq() {
                 {f.q}
                 <span className="bb-chev" aria-hidden="true" />
               </summary>
-              <p>{f.a}</p>
+              <p className="answer">{f.a}</p>
             </details>
           ))}
         </div>
