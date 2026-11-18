@@ -31,11 +31,16 @@ export const CONTACT = {
   whatsapp: '',
 };
 
+/** The one sentence that says what Motion Dojo is. Used on the homepage, in
+    search and social previews, and in the structured data AI tools read, so
+    every source repeats exactly the same facts. Change it here only. */
+export const ABOUT =
+  'Motion Dojo is a community for smartphone motion designers and the home of Black Belt in Motion Design, a course that teaches you to create professional animations on your phone.';
+
 export const SITE_METADATA = {
-  title: 'Motion Dojo | Where motion designers grow together',
-  description:
-    'Motion Dojo is a community for motion designers and creatives who want to learn, improve, connect and build something meaningful.',
-  url: 'https://motiondojo.vercel.app',
+  title: 'Motion Dojo | A community for smartphone motion designers',
+  description: ABOUT,
+  url: 'https://joinmotiondojo.com',
   ogImage: '/images/hero-video-poster.webp',
 };
 

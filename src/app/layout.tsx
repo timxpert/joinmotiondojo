@@ -2,11 +2,15 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { SITE_METADATA } from '@/config/site';
 import { Motion } from '@/components/Motion';
+import { ld, organization } from '@/lib/structured-data';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_METADATA.url),
   title: SITE_METADATA.title,
   description: SITE_METADATA.description,
+  applicationName: 'Motion Dojo',
+  alternates: { canonical: '/' },
+  robots: { index: true, follow: true },
   openGraph: {
     title: SITE_METADATA.title,
     description: SITE_METADATA.description,
@@ -48,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
       </head>
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(organization) }} />
         {children}
         <Motion />
       </body>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mark } from './Mark';
-import { COMMUNITY_JOIN_URL } from '@/config/site';
+import { ABOUT, COMMUNITY_JOIN_URL } from '@/config/site';
 
 export function Intro() {
   return (
@@ -10,10 +10,7 @@ export function Intro() {
           A <Mark>community</Mark> for smartphone motion designers
         </h2>
         <div className="intro-copy">
-          <p className="lede">
-            Motion Dojo is built for smartphone motion designers and creative enthusiasts who want to learn, improve,
-            connect, and grow together.
-          </p>
+          <p className="lede">{ABOUT}</p>
           <p className="lede">
             But it’s more than a place to learn how to animate. It’s where you develop your creative skills, discover
             your potential, share ideas, get feedback, collaborate with other creatives, and build confidence in your

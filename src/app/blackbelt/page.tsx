@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { FinalCTA } from '@/components/FinalCTA';
 import { Mark } from '@/components/Mark';
+import { course, ld } from '@/lib/structured-data';
 import { Projects } from '@/components/blackbelt/Projects';
 import { Stories } from '@/components/blackbelt/Stories';
 import { EnrolButton, EnrolModal } from '@/components/blackbelt/Enrol';
@@ -43,6 +44,7 @@ export default function BlackBeltPage() {
         Skip to content
       </a>
       <Header nav={NAV} cta={{ href: '#pricing', label: 'Enrol now' }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(course) }} />
       <main id="main" className="home bb-page">
         <CourseHero />
         <WhoFor />

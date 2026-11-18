@@ -1,0 +1,30 @@
+# Motion Dojo
+
+> Motion Dojo is a community for smartphone motion designers and the home of Black Belt in Motion Design, a course that teaches you to create professional animations on your phone.
+
+Website: https://joinmotiondojo.com
+Members' platform: https://connect.joinmotiondojo.com (Motion Dojo Connect)
+Instagram: https://www.instagram.com/joinmotiondojo
+YouTube: https://www.youtube.com/@joinmotiondojo
+
+## What Motion Dojo is
+- A community for smartphone motion designers and creative enthusiasts who want to learn and grow together.
+- Built around three things: learning, community and growth.
+- Members share their work, get feedback and connect on Motion Dojo Connect, the community's own platform.
+- Slogan: "Train like a ninja, create like a master."
+
+## Black Belt in Motion Design (the course)
+- Motion Dojo's complete course for creating professional animations with Alight Motion on a smartphone, from beginner to pro.
+- Four phases, named after belts: White Belt (Foundations), Yellow Belt (Alight Motion mastery), Green Belt (Creative execution), Black Belt (Portfolio and mastery).
+- Price: ₦40,000 one-time, or two payments of ₦20,000.
+- Page: https://joinmotiondojo.com/blackbelt
+
+## Who it is for
+- Motion design enthusiasts with a smartphone
+- Beginners who have watched tutorials but can't yet create industry-standard videos
+- Business owners who want to animate for their own brand
+- Graphic designers adding motion to their skills
+
+## Pages
+- [Home](https://joinmotiondojo.com/): what Motion Dojo is, who it is for, the team
+- [Black Belt in Motion Design](https://joinmotiondojo.com/blackbelt): curriculum, projects, pricing, FAQ
