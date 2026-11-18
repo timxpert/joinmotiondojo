@@ -119,10 +119,69 @@ export function EnrolModal() {
   const panelRef = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
 
+  /* The phone's back button works inside the window instead of leaving the page:
+     opening adds a history entry, going to the details step adds another.
+     Back from details returns to the first step; back from there closes. */
+  const depth = useRef(0); // history entries this window has added
+  const skipPop = useRef(0); // pops we caused ourselves while closing
+  const busyRef = useRef(false);
+  busyRef.current = busy;
+  const stepRef = useRef<Step>('choose');
+  stepRef.current = step;
+
   const close = useCallback(() => {
     setOpen(false);
+    if (depth.current > 0) {
+      skipPop.current += 1;
+      history.go(-depth.current);
+      depth.current = 0;
+    }
     lastFocus.current?.focus();
   }, []);
+
+  // keep Next.js's own data on every history entry we add, so its router
+  // treats back/forward as staying on this page instead of reloading
+  const mark = (enrol: Step) => ({ ...(history.state ?? {}), enrol });
+
+  const goDetails = () => {
+    history.pushState(mark('details'), '');
+    depth.current = 2;
+    setStep('details');
+  };
+  const goBack = () => history.back();
+
+  useEffect(() => {
+    if (!open) return;
+    const onPop = (e: PopStateEvent) => {
+      if (skipPop.current > 0) {
+        skipPop.current -= 1;
+        return;
+      }
+      // mid-payment: stay put
+      if (busyRef.current) {
+        history.pushState(mark(stepRef.current), '');
+        return;
+      }
+      const to = (e.state as { enrol?: string } | null)?.enrol;
+      if (to === 'choose' && stepRef.current === 'details') {
+        depth.current = 1;
+        setDir('back');
+        setStepRaw('choose');
+        return;
+      }
+      // anything else (first step, or after paying): close and stay on this page
+      const left = to ? depth.current - 1 : 0;
+      depth.current = 0;
+      setOpen(false);
+      if (left > 0) {
+        skipPop.current += 1;
+        history.go(-left);
+      }
+      lastFocus.current?.focus();
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [open]);
 
   useEffect(() => {
     const onOpen = () => {
@@ -130,6 +189,9 @@ export function EnrolModal() {
       setStep('choose');
       setStatus('');
       setShowFallback(false);
+      skipPop.current = 0;
+      history.pushState({ ...(history.state ?? {}), enrol: 'choose' }, '');
+      depth.current = 1;
       setOpen(true);
       loadPaystack().catch(() => {}); // warm up while the visitor reads
     };
@@ -209,6 +271,7 @@ export function EnrolModal() {
               setBusy(false);
               setReference(finalRef);
               setStudentId(typeof data.studentId === 'string' ? data.studentId : null);
+              history.replaceState({ ...(history.state ?? {}), enrol: 'success' }, '');
               setStep('success');
             } else {
               fail(
@@ -272,7 +335,7 @@ export function EnrolModal() {
             {method === 'parts' && <p className="pay-later">Then {ENROL.instalmentLabel} later. {ENROL.priceLabel} in all.</p>}
 
             {method === 'now' ? (
-              <button type="button" className="btn pay-cta" onClick={() => setStep('details')}>
+              <button type="button" className="btn pay-cta" onClick={goDetails}>
                 Continue to pay {ENROL.priceLabel}
               </button>
             ) : (
@@ -290,7 +353,7 @@ export function EnrolModal() {
 
         {step === 'details' && (
           <form onSubmit={pay} noValidate className={`enrol-step step enter ${dir}`} key="details">
-            <button type="button" className="enrol-back" onClick={() => setStep('choose')} disabled={busy}>
+            <button type="button" className="enrol-back" onClick={goBack} disabled={busy}>
               Back
             </button>
             <h2 className="enrol-title" id="enrol-title">
