@@ -5,6 +5,7 @@ import { ENROL } from '@/data/blackbelt';
 
 const URL = SITE_METADATA.url;
 const ORG_ID = `${URL}/#organization`;
+const FOUNDER_ID = 'https://timxpert.com/#person';
 
 export const organization = {
   '@context': 'https://schema.org',
@@ -18,8 +19,18 @@ export const organization = {
       logo: `${URL}/assets/favicon-128.png`,
       description: ABOUT,
       slogan: 'Train like a ninja, create like a master.',
+      foundingDate: '2025',
+      founder: { '@id': FOUNDER_ID },
       knowsAbout: ['Motion design', 'Smartphone animation', 'Alight Motion', 'Motion graphics', 'Video editing'],
       sameAs: [...SOCIAL_LINKS.map((s) => s.url), CONNECT_URL],
+    },
+    {
+      '@type': 'Person',
+      '@id': FOUNDER_ID,
+      name: 'Timxpert',
+      alternateName: 'Timothy Goodness',
+      url: 'https://timxpert.com',
+      jobTitle: 'Motion designer',
     },
     {
       '@type': 'WebSite',

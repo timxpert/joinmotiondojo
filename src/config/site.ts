@@ -34,8 +34,7 @@ export const CONTACT = {
 /** The one sentence that says what Motion Dojo is. Used on the homepage, in
     search and social previews, and in the structured data AI tools read, so
     every source repeats exactly the same facts. Change it here only. */
-export const ABOUT =
-  'Motion Dojo is a community for smartphone motion designers and the home of Black Belt in Motion Design, a course that teaches you to create professional animations on your phone.';
+export const ABOUT = 'Motion Dojo helps smartphone creatives become skilled motion designers, together.';
 
 export const SITE_METADATA = {
   title: 'Motion Dojo | A community for smartphone motion designers',
