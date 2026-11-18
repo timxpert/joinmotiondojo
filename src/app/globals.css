@@ -3711,3 +3711,15 @@ details .answer {
   width: 14px;
   height: 14px;
 }
+
+/* payment chooser, plainer: line icons in violet, no coloured tiles */
+.enrol-options .pay-ico {
+  width: 28px;
+  height: 28px;
+  border-radius: 0;
+  background: none;
+  color: var(--violet);
+}
+.enrol-option-title {
+  display: block;
+}
