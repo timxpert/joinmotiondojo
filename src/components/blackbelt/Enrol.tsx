@@ -56,7 +56,7 @@ const PayIcon = ({ name }: { name: 'card' | 'split' | 'bank' | 'arrow' }) => {
 
 const METHODS: { id: 'now' | 'parts' | 'bank'; icon: 'card' | 'split' | 'bank'; title: string; line: string }[] = [
   { id: 'now', icon: 'card', title: 'Pay now', line: 'Card, bank transfer or USSD' },
-  { id: 'parts', icon: 'split', title: 'Pay in 2 parts', line: `${ENROL.instalmentLabel} now, ${ENROL.instalmentLabel} later` },
+  { id: 'parts', icon: 'split', title: 'Pay in 2 parts', line: 'Half now, half later' },
   { id: 'bank', icon: 'bank', title: 'Bank transfer', line: 'We send our account number on WhatsApp' },
 ];
 
@@ -265,20 +265,11 @@ export function EnrolModal() {
               ))}
             </div>
 
-            <dl className="pay-sum">
-              <div>
-                <dt>{ENROL.courseName}</dt>
-                <dd>{ENROL.priceLabel}</dd>
-              </div>
-              <div>
-                <dt>Pay today</dt>
-                <dd>{method === 'parts' ? ENROL.instalmentLabel : ENROL.priceLabel}</dd>
-              </div>
-              <div className="pay-total">
-                <dt>Total</dt>
-                <dd>{ENROL.priceLabel}</dd>
-              </div>
-            </dl>
+            <p className="pay-today">
+              <span>Today</span>
+              <strong>{method === 'parts' ? ENROL.instalmentLabel : ENROL.priceLabel}</strong>
+            </p>
+            {method === 'parts' && <p className="pay-later">Then {ENROL.instalmentLabel} later. {ENROL.priceLabel} in all.</p>}
 
             {method === 'now' ? (
               <button type="button" className="btn pay-cta" onClick={() => setStep('details')}>
