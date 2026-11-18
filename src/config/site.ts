@@ -34,7 +34,7 @@ export const CONTACT = {
 /** The one sentence that says what Motion Dojo is. Used on the homepage, in
     search and social previews, and in the structured data AI tools read, so
     every source repeats exactly the same facts. Change it here only. */
-export const ABOUT = 'Motion Dojo helps smartphone creatives become skilled motion designers, together.';
+export const ABOUT = 'Motion Dojo is a creative community that helps smartphone creatives become skillful motion designers.';
 
 export const SITE_METADATA = {
   title: 'Motion Dojo | A community for smartphone motion designers',
