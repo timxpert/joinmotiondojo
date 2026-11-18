@@ -3521,3 +3521,35 @@ details .answer {
   border-color: #d93a46;
   box-shadow: 0 0 0 3px rgba(217, 58, 70, 0.14);
 }
+
+/* ---------- Step screens slide in the direction you're going ----------
+   Forward: the new step comes in from the right. Back: from the left.
+   (.next.enter / .back.enter start at ±100% and slide to 0.) */
+.step {
+  transition: translate 350ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.step.enter.next {
+  animation: step-from-right 350ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.step.enter.back {
+  animation: step-from-left 350ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+@keyframes step-from-right {
+  from {
+    translate: 100%;
+  }
+}
+@keyframes step-from-left {
+  from {
+    translate: -100%;
+  }
+}
+.enrol-panel {
+  overflow-x: clip;
+}
+@media (prefers-reduced-motion: reduce) {
+  .step.enter.next,
+  .step.enter.back {
+    animation: none;
+  }
+}

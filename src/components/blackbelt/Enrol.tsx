@@ -57,7 +57,14 @@ type Step = 'choose' | 'details' | 'success';
 
 export function EnrolModal() {
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<Step>('choose');
+  const [step, setStepRaw] = useState<Step>('choose');
+  // which way the steps slide: forward comes in from the right, back from the left
+  const [dir, setDir] = useState<'next' | 'back'>('next');
+  const ORDER: Step[] = ['choose', 'details', 'success'];
+  const setStep = (to: Step) => {
+    setDir(ORDER.indexOf(to) < ORDER.indexOf(step) ? 'back' : 'next');
+    setStepRaw(to);
+  };
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState('');
   const [showFallback, setShowFallback] = useState(false);
@@ -187,7 +194,7 @@ export function EnrolModal() {
         </button>
 
         {step === 'choose' && (
-          <div className="enrol-step" key="choose">
+          <div className={`enrol-step step enter ${dir}`} key="choose">
             <h2 className="enrol-title" id="enrol-title">
               How would you like to pay?
             </h2>
@@ -214,7 +221,7 @@ export function EnrolModal() {
         )}
 
         {step === 'details' && (
-          <form onSubmit={pay} noValidate className="enrol-step" key="details">
+          <form onSubmit={pay} noValidate className={`enrol-step step enter ${dir}`} key="details">
             <button type="button" className="enrol-back" onClick={() => setStep('choose')} disabled={busy}>
               Back
             </button>
@@ -277,7 +284,7 @@ export function EnrolModal() {
         )}
 
         {step === 'success' && (
-          <div className="enrol-step" key="success">
+          <div className={`enrol-step step enter ${dir}`} key="success">
             <svg className="enrol-check" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
               <circle cx="32" cy="32" r="29" />
               <path d="M20 33l8 8 16-17" />
