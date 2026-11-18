@@ -198,25 +198,30 @@ export function EnrolModal() {
             <h2 className="enrol-title" id="enrol-title">
               How would you like to pay?
             </h2>
-            <p className="enrol-sub">
-              {ENROL.courseName}: {ENROL.priceLabel}
-            </p>
+            <p className="enrol-sub">{ENROL.courseName}</p>
             <div className="enrol-options">
               <button type="button" className="enrol-option" onClick={() => setStep('details')}>
-                <span className="enrol-option-title">Pay with Paystack</span>
-                <span>Pay {ENROL.priceLabel} securely by card, bank transfer or USSD.</span>
+                <span className="enrol-option-text">
+                  <span className="enrol-option-title">Pay now</span>
+                  <span>Card, bank transfer or USSD, through Paystack.</span>
+                </span>
+                <span className="enrol-option-price">{ENROL.priceLabel}</span>
               </button>
+              <a className="enrol-option" href={ENROL.instalmentUrl} target="_blank" rel="noopener noreferrer">
+                <span className="enrol-option-text">
+                  <span className="enrol-option-title">Pay in two parts</span>
+                  <span>Half now, half later. We set it up with you on WhatsApp.</span>
+                </span>
+                <span className="enrol-option-price">2 × {ENROL.instalmentLabel}</span>
+              </a>
               <a className="enrol-option" href={ENROL.accountNumberUrl} target="_blank" rel="noopener noreferrer">
-                <span className="enrol-option-title">Request our account number</span>
-                <span>Prefer a direct bank transfer? Get our account number on WhatsApp.</span>
+                <span className="enrol-option-text">
+                  <span className="enrol-option-title">Transfer to our bank</span>
+                  <span>We send you our account number on WhatsApp.</span>
+                </span>
+                <span className="enrol-option-price">{ENROL.priceLabel}</span>
               </a>
             </div>
-            <p className="enrol-note">
-              Prefer two instalments? 2 × {ENROL.instalmentLabel} = {ENROL.priceLabel} total.{' '}
-              <a href={ENROL.instalmentUrl} target="_blank" rel="noopener noreferrer">
-                Start your instalment on WhatsApp
-              </a>
-            </p>
           </div>
         )}
 
